@@ -26,6 +26,7 @@ Silma Web es una plataforma que facilita el proceso para la aceptación de escri
 ### URLS del Ambiente
 
 * **Producción** - [TBD](TBD)
+* **QA** - [TBD](TBD)
 * **Desarrollo** - [TBD](TBD)
 
 ### Antlers
