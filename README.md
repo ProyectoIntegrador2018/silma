@@ -1,13 +1,13 @@
-# Nombre del proyecto
+# Silma
 
-Application to be awesome
+Silma Web es una plataforma que facilita el proceso para la aceptación de escritos dentro de la empresa Silma Editorial, dando seguimiento por medio de retroalimentación de lectores y administradores que guían al escritor durante el proceso.
 
 ## Table of contents
 
-* [Client Details](#client-details)
-* [Environment URLS](#environment-urls)
-* [Da Team](#team)
-* [Technology Stack](#technology-stack)
+* [Detalle de Clientes](#detalle-de-clientes)
+* [URLS del Ambiente](#urls-del-ambiente)
+* [Antlers](#antlers)
+* [Tecnología Utilizada](#tecnología-utilizada)
 * [Management resources](#management-resources)
 * [Setup the project](#setup-the-project)
 * [Running the stack for development](#running-the-stack-for-development)
@@ -18,32 +18,34 @@ Application to be awesome
 * [Checking code for potential issues](#checking-code-for-potential-issues)
 
 
-### Client Details
+### Detalle de Clientes
 
-| Name               | Email             | Role |
-| ------------------ | ----------------- | ---- |
-| Nombre del cliente | prueba@prueba.com | CEO  |
+| Nombre             | Email                | Rol              |
+| ------------------ | -------------------- | ---------------- |
+| Lorena Martínez    | lorenamtze@tec.mx    | CEO              |
+| Yolanda Chapa      | yoli.chapa@gmail.com | Editora en Jefe  |
 
 
-### Environment URLS
+### URLS del Ambiente
 
-* **Production** - [TBD](TBD)
-* **Development** - [TBD](TBD)
+* **Producción** - [TBD](TBD)
+* **Desarrollo** - [TBD](TBD)
 
-### Da team
+### Antlers
 
-| Name           | Email             | Role        |
-| -------------- | ----------------- | ----------- |
-| Nombre miembro | prueba@prueba.com | Development |
-| Nombre miembro | prueba@prueba.com | Development |
-| Nombre miembro | prueba@prueba.com | Development |
+| Nombre         | Email                         | Rol                     | 
+| -------------- | ----------------------------- | ------------------------|
+| Luisa Pineda   | fernandapinedaochoa@gmail.com | Scrum Master            |
+| Iván Ramírez   | ivanrmzmtz@gmail.com          | Admin. de Proyecto      |
+| Uriel Salazar  | usurquidi.96@gmail.com        | Admin. de Configuración |
+| Alfredo Ávila  | a00818666@itesm.mx            | Product Owner Proxy     |
 
-### Technology Stack
-| Technology    | Version      |
+### Tecnología Utilizada
+| Tecnologia    | Versión      |
 | ------------- | -------------|
-| Technology 1  | ##.##.##     |
-| Technology 2  | ##.##.##     |
-| Technology 3  | ##.##.##     |
+| Laravel       | 5.4          |
+| VueJs         | 2.6          |
+| Vuetify       | 2.2.17       |
 
 ### Management tools
 
