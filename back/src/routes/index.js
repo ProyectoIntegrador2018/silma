@@ -1,12 +1,10 @@
 import { Router } from "express";
+import { addWriterRoutes } from "./writer.route";
 
-const router = new Router();
+export const createRoutes = () => {
+  const router = new Router();
 
-router.get("/", (req, res) => {
-  res.json({
-    status: "API Its Working",
-    message: "Welcome to RESTHub crafted with love!"
-  });
-});
+  addWriterRoutes(router);
 
-export default router;
+  return router;
+};

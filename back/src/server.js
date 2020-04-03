@@ -2,7 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import mongoose from "mongoose";
-import router from "./routes";
+import { createRoutes } from "./routes";
 
 const mongoUrl = "mongodb://localhost/silma";
 const enabledCorsOrigins = "http://localhost:8080";
@@ -24,6 +24,7 @@ app.use(bodyParser.json());
 
 // Connect to Mongoose and set connection variable
 mongoose.connect(mongoUrl, {
+  useCreateIndex: true,
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
@@ -33,7 +34,7 @@ if (!db) console.log("Error connecting db");
 else console.log("Db connected successfully");
 
 // API Routes
-app.use("/", (req, res) => res.send("API is working!"));
+const router = createRoutes();
 app.use("/api", router);
 
 // Launch app to listen to specified port
