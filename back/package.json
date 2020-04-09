@@ -2,9 +2,9 @@
   "name": "silma-web",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "serve": "nodemon index.js"
+    "serve": "nodemon --exec babel-node src/server"
   },
   "author": "",
   "license": "ISC",
@@ -12,9 +12,14 @@
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "mongoose": "^5.9.6"
+    "mongoose": "^5.9.6",
+    "mongoose-beautiful-unique-validation": "^7.1.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.9.0",
+    "babel-plugin-root-import": "^6.5.0",
     "nodemon": "^2.0.2"
   }
 }
