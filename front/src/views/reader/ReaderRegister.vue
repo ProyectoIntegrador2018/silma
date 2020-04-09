@@ -106,7 +106,7 @@
 
 
 <script>
-import TimestampDateField from '../../../components/timestampDate.vue';
+import TimestampDateField from '@/components/timestampDate.vue';
 import {genres, administrators} from '@/utils/constants.js';
 import {requiredRule, emailRule, numericRule} from '@/utils/rules';
 
