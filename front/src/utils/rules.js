@@ -12,3 +12,5 @@ export const numericRule = entry => /^\d+$/.test(entry) || 'Solo se aceptan núm
 export const facebookRule = entry => /(https:\/\/www\.facebook\.com\/){1}(.)+/.test(entry) || "Perfil de facebook inválido"
 
 export const passwordMinRule = entry => /.{8,}/.test(entry) || "Mínimo 8 caracteres"
+
+export const phoneRule = entry => /\d{10}/.test(entry) || "Los 10 dígito de tu celular"

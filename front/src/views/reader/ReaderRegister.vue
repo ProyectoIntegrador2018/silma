@@ -47,7 +47,7 @@
             <v-text-field
               outlined
               label="Teléfono celular"
-              :rules="[requiredRule, numericRule]"
+              :rules="[requiredRule, numericRule, phoneRule]"
               v-model="reader.phone"
             ></v-text-field>
           </v-col>
@@ -121,8 +121,33 @@
         </v-col>
       </v-layout>
     </v-form>
-    <v-btn @click="create" color="success">Registrarse</v-btn>
-    <v-btn color="error" >Cancelar</v-btn>
+    <v-layout row wrap>
+      <v-dialog v-model="dialogSuccess" persistent max-width="290">
+        <v-card>
+          <v-card-title class="headline">Lector Registrado!</v-card-title>
+          <v-card-text>Serás reenviado a tu dashboard</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" text @click="dialogSuccess = false">Entendido</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model="dialogError" persistent max-width="290">
+        <v-card>
+          <v-card-title class="headline">Error en el registro</v-card-title>
+          <v-card-text>Por favor inténtelo más tarde</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="red darken-1" text @click="dialogSuccess = false">Entendido</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-layout>
+    <v-layout row wrap>
+      <v-col align="end">
+        <v-btn @click="create" color="success">Registrarse</v-btn>
+      </v-col>
+    </v-layout>
   </v-container>
 </template>
 
@@ -131,7 +156,7 @@
 import axios from 'axios';
 import TimestampDateField from '@/components/timestampDate.vue';
 import {genres, administrators} from '@/utils/constants.js';
-import {requiredRule, emailRule, numericRule, facebookRule, passwordMinRule} from '@/utils/rules';
+import {requiredRule, emailRule, numericRule, facebookRule, passwordMinRule, phoneRule} from '@/utils/rules';
 
 export default{
   components: {
@@ -153,6 +178,8 @@ export default{
         //from:'',
         //till:''
       },
+      dialogSuccess: false,
+      dialogError: false,
       genres,
       administrators,
       emailRule,
@@ -160,6 +187,7 @@ export default{
       numericRule,
       facebookRule,
       passwordMinRule,
+      phoneRule,
       showPassword: false
     };
   },
@@ -176,10 +204,11 @@ export default{
           password: this.reader.password
         }
         const responseAuth = await axios.post("http://localhost:3000/api/user/authentication", authUser)
-        console.log(responseAuth.data.token)
-        
+        console.log(responseAuth)
+        //const token = responseAuth.data.token
+        this.dialogSuccess = true
       } catch (error) {
-        alert("No se pudo registrar, intente de nuevo más tarde");
+        this.dialogError = true
       }
     }
   }
