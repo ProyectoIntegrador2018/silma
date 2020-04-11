@@ -10,6 +10,7 @@
               outlined
               label="Nombre completo"
               :rules="[requiredRule]"
+              v-model="reader.name"
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="3">
@@ -17,6 +18,7 @@
               outlined
               :rules="[requiredRule, emailRule]"
               label="E-mail"
+              v-model="reader.email"
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="3">
@@ -28,13 +30,33 @@
               @click:append="showPassword = !showPassword"
               :type="showPassword ? 'text' : 'password'"
               name="input-10-1"
+              v-model="reader.password"
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="3">
+            <TimestampDateField
+              label="Fecha de Nacimiento"
+              icon="event"
+              :rules="[requiredRule]"
+              v-model="reader.birthdate"
+          />
+        </v-col>
+      </v-layout>
+      <v-layout row wrap>
+          <v-col cols="12" sm="6">
             <v-text-field
               outlined
-              label="Edad"
+              label="Teléfono celular"
               :rules="[requiredRule, numericRule]"
+              v-model="reader.phone"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" sm="6">
+            <v-text-field
+              outlined
+              label="Link a perfil de facebook"
+              :rules="[requiredRule]"
+              v-model="reader.facebookLink"
             ></v-text-field>
           </v-col>
       </v-layout>
@@ -50,7 +72,7 @@
           ></v-select>
         </v-col>
         <v-col cols="12" sm="8">
-          <v-radio-group :rules="[requiredRule]" label='¿Cuánto te tardas en leer 200 páginas?' row>
+          <v-radio-group :rules="[requiredRule]" label='¿Cuánto te tardas en leer 200 páginas?' v-model="reader.readingProficiency" row>
             <v-radio 
               label="3 días o menos" 
               value="fast"
@@ -99,13 +121,14 @@
         </v-col>
       </v-layout>
     </v-form>
-    <v-btn color="success">Registrarse</v-btn>
+    <v-btn @click="create" color="success">Registrarse</v-btn>
     <v-btn color="error" >Cancelar</v-btn>
   </v-container>
 </template>
 
 
 <script>
+import axios from 'axios';
 import TimestampDateField from '@/components/timestampDate.vue';
 import {genres, administrators} from '@/utils/constants.js';
 import {requiredRule, emailRule, numericRule} from '@/utils/rules';
@@ -121,13 +144,14 @@ export default{
         email:'',
         phone:'',
         password:'',
-        facebook:'',
-        age:'',
-        preferences:'',
-        recommended:'',
-        speed:'',
-        from:'',
-        till:''
+        facebookLink:'',
+        birthdate:'',
+        //preferences:'',
+        //recommended:'',
+        readingProficiency:'',
+        //nationality:'',
+        //from:'',
+        //till:''
       },
       genres,
       administrators,
@@ -135,9 +159,24 @@ export default{
       requiredRule,
       numericRule,
       showPassword: false
+    };
+  },
+  methods: {
+    async create() {
+      if (!this.$refs.form.validate()) {
+        return;
+      }
+      try {
+        const api = "http://localhost:3000/Registro_Lector";
+        axios.post(api, this.reader).then((response) => {
+          console.log(response)
+        })
+      } catch (error) {
+        alert("Algo esta mal!");
+      }
     }
   }
-}
+};
 </script>
 
 <style scoped></style>
