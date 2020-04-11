@@ -3,7 +3,7 @@ import { send } from "@/utils/errors";
 
 export const getAdmins = (request, response) => {
   send(response, async () => {
-    const admins = await AdminModel.find();
+    const admins = await AdminModel.find().populate("user");
     return admins;
   });
 };
@@ -11,7 +11,7 @@ export const getAdmins = (request, response) => {
 export const getAdmin = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
-    const admin = await AdminModel.findById(id);
+    const admin = await AdminModel.findById(id).populate("user");
     return admin;
   });
 };
@@ -23,3 +23,4 @@ export const createAdmin = (request, response) => {
     return admin;
   });
 };
+
