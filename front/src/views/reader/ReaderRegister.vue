@@ -25,7 +25,7 @@
             <v-text-field
               outlined
               label="Contraseña"
-              :rules="[requiredRule]"
+              :rules="[requiredRule, passwordMinRule]"
               :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
               @click:append="showPassword = !showPassword"
               :type="showPassword ? 'text' : 'password'"
@@ -55,7 +55,7 @@
             <v-text-field
               outlined
               label="Link a perfil de facebook"
-              :rules="[requiredRule]"
+              :rules="[requiredRule, facebookRule]"
               v-model="reader.facebookLink"
             ></v-text-field>
           </v-col>
@@ -75,17 +75,17 @@
           <v-radio-group :rules="[requiredRule]" label='¿Cuánto te tardas en leer 200 páginas?' v-model="reader.readingProficiency" row>
             <v-radio 
               label="3 días o menos" 
-              value="fast"
+              value="3 or less"
               color="success"
             ></v-radio>
             <v-radio 
               label="5 días" 
-              value="average"
+              value="4 to 6"
               color="success"
             ></v-radio>
             <v-radio 
               label="7 días o más" 
-              value="slow"
+              value="7 or more"
               color="success"
             ></v-radio>
           </v-radio-group>
@@ -131,7 +131,7 @@
 import axios from 'axios';
 import TimestampDateField from '@/components/timestampDate.vue';
 import {genres, administrators} from '@/utils/constants.js';
-import {requiredRule, emailRule, numericRule} from '@/utils/rules';
+import {requiredRule, emailRule, numericRule, facebookRule, passwordMinRule} from '@/utils/rules';
 
 export default{
   components: {
@@ -149,7 +149,7 @@ export default{
         //preferences:'',
         //recommended:'',
         readingProficiency:'',
-        //nationality:'',
+        nationality:'mexicano',
         //from:'',
         //till:''
       },
@@ -158,6 +158,8 @@ export default{
       emailRule,
       requiredRule,
       numericRule,
+      facebookRule,
+      passwordMinRule,
       showPassword: false
     };
   },
@@ -167,12 +169,17 @@ export default{
         return;
       }
       try {
-        const api = "http://localhost:3000/Registro_Lector";
-        axios.post(api, this.reader).then((response) => {
-          console.log(response)
-        })
+        const responseCreate = await axios.post("http://localhost:3000/api/register/readers", this.reader);
+        console.log(responseCreate)
+        const authUser = {
+          email: this.reader.email,
+          password: this.reader.password
+        }
+        const responseAuth = await axios.post("http://localhost:3000/api/user/authentication", authUser)
+        console.log(responseAuth.data.token)
+        
       } catch (error) {
-        alert("Algo esta mal!");
+        alert("No se pudo registrar, intente de nuevo más tarde");
       }
     }
   }
