@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Home from "@/views/Home.vue";
 import RegisterReader from "@/views/reader/ReaderRegister.vue";
 import LogIn from "@/views/login/LogIn.vue";
+import Dashboard from "@/views/dashboards/DashboardWriter.vue";
 
 Vue.use(VueRouter);
 
@@ -21,6 +22,11 @@ const routes = [
     path: "/Iniciar_Sesion",
     name: 'LogIn',
     component: LogIn
+  },
+  {
+    path: "/dashboard",
+    name: 'Dashboard',
+    component: Dashboard
   }
 ];
 
