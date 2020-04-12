@@ -1,5 +1,4 @@
 <template>
-  <v-container>
     <v-menu
         v-model="menu"
         :close-on-content-click="false"
@@ -16,6 +15,7 @@
             outlined
             v-on="on"
             @click:clear="date = null"
+            @input="updateDate"
         ></v-text-field>
         </template>
         <v-date-picker
@@ -23,9 +23,9 @@
         header-color="green lighten-1"
         color="green lighten-1"
         @change="menu = false"
+        @input="updateDate"
         ></v-date-picker>
     </v-menu>
-  </v-container>
 </template>
 
 <script>
@@ -34,7 +34,7 @@
 
   export default {
     data: () => ({
-      date: new Date().toISOString().substr(0, 10),
+      date: '',
       menu: false
     }),
     props: ['label', 'rules', 'icon'],
@@ -46,5 +46,11 @@
         return this.date ? format(this.date, 'dddd, MMMM Do YYYY') : ''
       },
     },
+    methods: {
+      updateDate(date) {
+        const newDate = new Date(date);
+        this.$emit('input', newDate);
+      }
+    }
   }
 </script>
