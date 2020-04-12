@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Home from "@/views/Home.vue";
 
 import RegisterReader from "@/views/reader/ReaderRegister.vue";
+import RegisterWriter from "@/views/writer/WriterRegister.vue";
 
 Vue.use(VueRouter);
 
@@ -16,7 +17,12 @@ const routes = [
     path: '/Registro_Lector',
     name: 'RegisterReader',
     component: RegisterReader
-  }
+  },
+  {
+    path: "/Registro_Escritor",
+    name: "RegisterWriter",
+    component: RegisterWriter
+  },
 ];
 
 const router = new VueRouter({
