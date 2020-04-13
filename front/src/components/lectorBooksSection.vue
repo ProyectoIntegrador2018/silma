@@ -1,23 +1,23 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="desserts"
-    sort-by="calories"
+    :items="data"
+    sort-by="status"
     class="elevation-1"
   >
+     
     <template v-slot:top>
+        
       <v-toolbar flat color="white">
         <v-toolbar-title>Tus Escritos</v-toolbar-title>
-        <v-divider
-          class="mx-4"
-          inset
-          vertical
-        ></v-divider>
+        
+
+        
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
-          <template v-slot:activator="{ on }">
-            <v-btn color="primary" dark class="mb-2" v-on="on">Agregar Escrito</v-btn>
-          </template>
+            <template v-slot:activator="{ on }">
+              <v-btn color="primary" dark class="mb-2" v-on="on">Agregar Escrito</v-btn>
+            </template>
           <v-card>
             <v-card-title>
               <span class="headline">{{ formTitle }}</span>
@@ -27,19 +27,10 @@
               <v-container>
                 <v-row>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
+                    <v-text-field v-model="editedItem.name" label="Titulo"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.fat" label="Fat (g)"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.carbs" label="Carbs (g)"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
+                    <v-text-field v-model="editedItem.fecha" label="Fecha"></v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
@@ -69,8 +60,13 @@
         mdi-delete
       </v-icon>
     </template>
+
+    <template v-slot:item.status="{ item }">
+        <v-chip :color="getColor(item.status)" dark>{{ item.status }}</v-chip>
+      </template>
+
     <template v-slot:no-data>
-      <v-btn color="primary" @click="initialize">Reset</v-btn>
+      <v-btn color="primary" @click="initialize">Agregar mi primer escrito</v-btn>
     </template>
   </v-data-table>
 </template>
@@ -81,38 +77,32 @@
       dialog: false,
       headers: [
         {
-          text: 'Dessert (100g serving)',
+          text: 'Título',
           align: 'start',
           sortable: false,
           value: 'name',
         },
-        { text: 'Calories', value: 'calories' },
-        { text: 'Fat (g)', value: 'fat' },
-        { text: 'Carbs (g)', value: 'carbs' },
-        { text: 'Protein (g)', value: 'protein' },
+        { text: 'Fecha de registro', value: 'fecha' },
+        { text: 'Status', value: 'status' },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
-      desserts: [],
+      data: [],
       editedIndex: -1,
       editedItem: {
         name: '',
-        calories: 0,
-        fat: 0,
-        carbs: 0,
-        protein: 0,
+        fecha: '',
+        status: 0,
       },
       defaultItem: {
         name: '',
-        calories: 0,
-        fat: 0,
-        carbs: 0,
-        protein: 0,
+        fecha: '',
+        status: 0,
       },
     }),
 
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+        return this.editedIndex === -1 ? 'Nuevo Título' : 'Editar Título'
       },
     },
 
@@ -128,89 +118,39 @@
 
     methods: {
       initialize () {
-        this.desserts = [
+        this.data = [
           {
-            name: 'Frozen Yogurt',
-            calories: 159,
-            fat: 6.0,
-            carbs: 24,
-            protein: 4.0,
+            name: 'Cumbres Borroscosas',
+            fecha: '12/09/2019',
+            status: 1,
           },
           {
-            name: 'Ice cream sandwich',
-            calories: 237,
-            fat: 9.0,
-            carbs: 37,
-            protein: 4.3,
+            name: 'The Lord of the Rings',
+            fecha: '11/01/2020',
+            status: 0,
           },
           {
-            name: 'Eclair',
-            calories: 262,
-            fat: 16.0,
-            carbs: 23,
-            protein: 6.0,
+            name: 'El Alquimista',
+            fecha: '10/11/2008',
+            status: 1,
           },
           {
-            name: 'Cupcake',
-            calories: 305,
-            fat: 3.7,
-            carbs: 67,
-            protein: 4.3,
-          },
-          {
-            name: 'Gingerbread',
-            calories: 356,
-            fat: 16.0,
-            carbs: 49,
-            protein: 3.9,
-          },
-          {
-            name: 'Jelly bean',
-            calories: 375,
-            fat: 0.0,
-            carbs: 94,
-            protein: 0.0,
-          },
-          {
-            name: 'Lollipop',
-            calories: 392,
-            fat: 0.2,
-            carbs: 98,
-            protein: 0,
-          },
-          {
-            name: 'Honeycomb',
-            calories: 408,
-            fat: 3.2,
-            carbs: 87,
-            protein: 6.5,
-          },
-          {
-            name: 'Donut',
-            calories: 452,
-            fat: 25.0,
-            carbs: 51,
-            protein: 4.9,
-          },
-          {
-            name: 'KitKat',
-            calories: 518,
-            fat: 26.0,
-            carbs: 65,
-            protein: 7,
+            name: 'El Principito',
+            fecha: '03/01/2005',
+            status: 2,
           },
         ]
       },
 
       editItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
+        this.editedIndex = this.data.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.dialog = true
       },
 
       deleteItem (item) {
-        const index = this.desserts.indexOf(item)
-        confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
+        const index = this.data.indexOf(item)
+        confirm('Are you sure you want to delete this item?') && this.data.splice(index, 1)
       },
 
       close () {
@@ -223,12 +163,18 @@
 
       save () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          Object.assign(this.data[this.editedIndex], this.editedItem)
         } else {
-          this.desserts.push(this.editedItem)
+          this.data.push(this.editedItem)
         }
         this.close()
       },
+        getColor (status) {
+            if (status == 0) return 'red'
+            else if (status == 1) return 'green'
+            else return 'yellow'
+      },
+
     },
   }
 </script>

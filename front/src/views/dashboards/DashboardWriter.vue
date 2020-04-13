@@ -18,17 +18,15 @@
       </v-toolbar-title>
       
       <v-spacer />
-      <userMenu/>
-      <v-btn icon>
-        <v-icon>mdi-bell</v-icon>
-      </v-btn>
+      <typeOfUserSelection/>
+      <notificationCenter/>
       
     </v-app-bar>
     <v-content>
         <div align="center">
             <br>
+            <br>
             <h1>¡Bienvenido a Silma!</h1>
-            <a>Registra tu primer libro aquí</a>
             <myBooksSection/>
         </div>  
     </v-content>
@@ -37,12 +35,14 @@
 </template>
 
 <script>
-    import userMenu from '@/components/userMenu.vue';
+    import typeOfUserSelection from '@/components/typeOfUserSelection.vue';
     import myBooksSection from '@/components/lectorBooksSection.vue';
+    import notificationCenter from '@/components/notificationCenter.vue';
     export default{
     components: {
-        userMenu,
+        typeOfUserSelection,
         myBooksSection,
+        notificationCenter,
     }
     }
 </script>
