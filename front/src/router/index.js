@@ -1,6 +1,5 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "@/views/Home.vue";
 import RegisterReader from "@/views/reader/ReaderRegister.vue";
 import RegisterWriter from "@/views/writer/WriterRegister.vue";
 import LogIn from "@/views/login/LogIn.vue";
@@ -11,8 +10,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "Home",
-    component: Home
+    redirect: "/Iniciar_Sesion"
   },
   {
     path: '/Registro_Lector',
@@ -24,6 +22,7 @@ const routes = [
     name: "RegisterWriter",
     component: RegisterWriter
   },
+  {
     path: "/Iniciar_Sesion",
     name: 'LogIn',
     component: LogIn
