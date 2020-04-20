@@ -34,6 +34,10 @@ export const TextSchema = new Schema({
     min: 1,
     max: 4
   },
+  documentPath: {
+    type: String,
+    default: ''
+  }
 });
 TextSchema.plugin(beautifyUnique);
 

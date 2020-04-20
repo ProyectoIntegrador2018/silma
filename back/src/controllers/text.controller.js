@@ -31,3 +31,21 @@ export const createText = (request, response) => {
     return text;
   });
 };
+
+export const uploadTextDocument = (request, response) => {
+  send(response, async () => {
+    const { id } = request.params;
+    const documentPath = `texts/${id}/uploads`;
+    const text = await TextModel.updateOne({ _id: id }, { $set: { documentPath } });
+    return text;
+  });
+};
+
+export const retrieveTextDocument = (request, response) => {
+  try {
+    const { id } = request.params;
+    response.sendFile(`public/uploads/texts/${id}.md`, { root: '.' });
+  } catch (err) {
+    response.status(404).send({ message: 'File does not exist' });
+  }
+};
