@@ -65,7 +65,7 @@
         </v-card>
       </v-dialog>
 
-        <v-btn @click="login" class="btn btn-indigo">Login</v-btn>
+        <v-btn @click="login" class="btn btn-indigo" href="/">Login</v-btn>
          <br>
          <br>
          <p > ¿No tienes cuenta? </p>
@@ -103,11 +103,13 @@ export default {
                     password: this.user.password
                 }
                 const responseAuth = await axios.post("http://localhost:3000/api/user/authentication", authUser)
-                console.log(responseAuth)
-                if (responseAuth.data.token != null){
-                    //this.dialogSuccess = true
-                    document.cookie = "token=" + responseAuth.data.token;
-                    location.href = '/dashboard';
+                const { token } = responseAuth.data;
+                if (token) {
+                    this.$cookies.set('token', token);
+                    // FIXME: Access API to determine which type of user will be activated.
+                    if (!this.$cookies.isKey('user_type')) {
+                      this.$cookies.set('user_type', 'writer');
+                    }
                 } else {
                     this.dialogIncorrectInfo = true
                 }
