@@ -35,8 +35,7 @@ export const UserSchema = new Schema({
   roles: [{
     type: String,
     enums: ["admin", "writer", "reader"],
-    default: [],
-    unique: true
+    default: []
   }]
 });
 UserSchema.plugin(beautifyUnique);
