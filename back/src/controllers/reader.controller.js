@@ -2,8 +2,6 @@ import { ReaderModel } from "@/models/reader.model";
 import { send } from "@/utils/errors";
 import { createUser } from "@/controllers/user.controller"
 
-const bcrypt = require('bcrypt')
-
 
 export const getReaders = (request, response) => {
   send(response, async () => {
@@ -24,20 +22,19 @@ export const getReader = (request, response) => {
 
 export const createReader = (request, response) => {
   send(response, async () => {
-    var UserNew = await createUser(request,response)
-    var data = request.body
+    const UserNew = await createUser(request, response, "reader");
+    const data = request.body;
     const lookUserReader = await ReaderModel.findOne({ user: UserNew._id });
-    if(!lookUserReader){
-        var readerData = {
-          user: UserNew._id, 
-          facebookLink: data.facebookLink,
-          readingProficiency: data.readingProficiency,
-        }
-        var readerData = await ReaderModel.create(readerData);
-        readerData.user = UserNew
-        return readerData;
-    }else{
-      return ({ status: "The e-mail already has a reader account" })
+    if (!lookUserReader) {
+      const readerData = {
+        ...data,
+        user: UserNew._id
+      }
+      const newReader = await ReaderModel.create(readerData);
+      newReader.user = UserNew;
+      return newReader;
+    } else {
+      throw { error: "The e-mail already has a reader account" };
     }
   });
 };

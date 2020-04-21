@@ -18,9 +18,20 @@ export const getAdmin = (request, response) => {
 
 export const createAdmin = (request, response) => {
   send(response, async () => {
+    const newUser = await createUser(request, response, "admin");
     const data = request.body;
-    const admin = await AdminModel.create(data);
-    return admin;
+    const lookUserAdmin = await AdminModel.findOne({ user: UserNew._id });
+    if (!lookUserAdmin) {
+      const adminData = {
+        ...data,
+        user: newUser._id
+      }
+      const newAdmin = await AdminModel.create(adminData);
+      newAdmin.user = newUser;
+      return newAdmin;
+    } else {
+      throw { error: "The e-mail already has a admin account" };
+    }
   });
 };
 
