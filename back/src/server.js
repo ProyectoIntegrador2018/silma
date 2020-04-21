@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import mongoose from "mongoose";
 import { createRoutes } from "./routes";
-const jwt = require('./utils/jwt');
+import jwt from "./utils/jwt";
 
 const mongoUrl = "mongodb://localhost/silma";
 const enabledCorsOrigins = "http://localhost:8080";
@@ -23,6 +23,7 @@ app.use(
 );
 app.use(bodyParser.json());
 app.use(jwt());
+app.use(express.static('public'));
 
 // Connect to Mongoose and set connection variable
 mongoose.connect(mongoUrl, {
