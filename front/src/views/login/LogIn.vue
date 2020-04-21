@@ -65,7 +65,7 @@
         </v-card>
       </v-dialog>
 
-        <v-btn @click="login" class="btn btn-indigo" href="/">Login</v-btn>
+        <v-btn @click="login" class="btn btn-indigo">Login</v-btn>
          <br>
          <br>
          <p > ¿No tienes cuenta? </p>
@@ -102,14 +102,17 @@ export default {
                     email: this.user.email,
                     password: this.user.password
                 }
-                const responseAuth = await axios.post("http://localhost:3000/api/user/authentication", authUser)
-                const { token } = responseAuth.data;
+                const responseAuth = await axios.post("http://localhost:3000/api/user/authentication", authUser);
+                const { token, roles } = responseAuth.data;
                 if (token) {
                     this.$cookies.set('token', token);
-                    // FIXME: Access API to determine which type of user will be activated.
                     if (!this.$cookies.isKey('user_type')) {
-                      this.$cookies.set('user_type', 'writer');
+                      const role = roles.includes('admin')
+                        ? 'admin' : roles.includes('writer')
+                        ? 'writer' : 'reader';
+                      this.$cookies.set('user_type', role);
                     }
+                    this.$router.push('/');
                 } else {
                     this.dialogIncorrectInfo = true
                 }
