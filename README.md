@@ -39,13 +39,24 @@ Silma Web es una plataforma que facilita el proceso para la aceptación de escri
 | Alfredo Ávila  | a00818666@itesm.mx            | Product Owner Proxy     |
 
 ### Tecnología Utilizada
+Front end:
+| Tecnologia    | Versión      |
+| ------------- | -------------|
+| Node Js       | 12.15        |
+| Express       | 4.17.1       |
+| VueJs         | 2.6          |
+| Vuetify       | 2.2.17       |
+| vue-router    | 3.1.5        |
+| Axios         | 0.19.2       |
+
+Back-end:
 | Tecnologia    | Versión      |
 | ------------- | -------------|
 | Node Js       | 12.15        |
 | Mongoose      | 5.9.6        |
-| Express       | 4.17.1       |
-| VueJs         | 2.6          |
-| Vuetify       | 2.2.17       |
+| Express-jwt   | 5.3.3        |
+| jsonwebtoken  | 8.5.1        |
+| bcrypt        | 4.0.1        |
 
 ### Management tools
 
@@ -93,6 +104,17 @@ $ npm run serve
 
 ### Restoring the database
 
+Intialize Mongo DB on a terminal and type:
+
+`use mongodb://localhost/silma`
+
+Drop the following collections:
+```
+ db.users.drop()
+ db.admins.drop()
+ db.writers.drop()
+ db.readers.drop()
+```
 ### Debugging
 
 ### Running specs

@@ -1,11 +1,6 @@
 import { WriterModel } from "@/models/writer.model";
 import { send } from "@/utils/errors";
-import { createUser } from "@/controllers/user.controller"
-
-const config = require('@/config.json');
-const bcrypt = require('bcrypt')
-var jwt = require('jsonwebtoken');
-
+import { createUser } from "@/controllers/user.controller";
 
 export const getWriters = (request, response) => {
   send(response, async () => {
@@ -24,21 +19,19 @@ export const getWriter = (request, response) => {
 
 export const createWriter = (request, response) => {
   send(response, async () => {
-    var UserNew = await createUser(request,response)
-    var data = request.body
+    const UserNew = await createUser(request, response, "writer");
+    const data = request.body;
     const lookUserWriter = await WriterModel.findOne({ user: UserNew._id });
-    if(!lookUserWriter){
-        var writerData = {
-          user: UserNew._id, 
-          pseudonym: data.pseudonym,
-          phase: data.phase,
-          isPlus: data.isPlus
-        }
-        var writerData = await WriterModel.create(writerData);
-        writerData.user = UserNew
-        return writerData;
-    }else{
-      return ({ status: "The e-mail already has a writer account" })
+    if (!lookUserWriter) {
+      const writerData = {
+        ...data,
+        user: UserNew._id
+      }
+      const newWriter = await WriterModel.create(writerData);
+      newWriter.user = UserNew;
+      return newWriter;
+    } else {
+      throw { error: "The e-mail already has a writer account" };
     }
   });
 };

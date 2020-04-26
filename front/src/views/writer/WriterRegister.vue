@@ -1,27 +1,29 @@
 <template>
   <v-container>
-    <div class="display-3 font-weight-medium" align="center">Registro de Lector Beta</div>
+    <div class="display-3 font-weight-medium" align="center">Registro de Escritor</div>
     <br>
     <v-form ref="form">
       <h2 class="primary--text">Datos personales</h2>
       <v-layout row wrap>
-          <v-col cols="12" sm="6" md="3">
+          <v-col cols="12" sm="6">
             <v-text-field
               outlined
               label="Nombre completo"
               :rules="[requiredRule]"
-              v-model="reader.name"
+              v-model="writer.name"
             ></v-text-field>
           </v-col>
-          <v-col cols="12" sm="6" md="3">
+          <v-col cols="12" sm="6">
             <v-text-field
               outlined
               :rules="[requiredRule, emailRule]"
               label="E-mail"
-              v-model="reader.email"
+              v-model="writer.email"
             ></v-text-field>
           </v-col>
-          <v-col cols="12" sm="6" md="3">
+      </v-layout>
+      <v-layout row wrap>
+          <v-col cols="12" sm="6">
             <v-text-field
               outlined
               label="Contraseña"
@@ -30,101 +32,53 @@
               @click:append="showPassword = !showPassword"
               :type="showPassword ? 'text' : 'password'"
               name="input-10-1"
-              v-model="reader.password"
+              v-model="writer.password"
             ></v-text-field>
           </v-col>
-          <v-col cols="12" sm="6" md="3">
-            <TimestampDateField
-              label="Fecha de Nacimiento"
-              icon="event"
-              :rules="[requiredRule]"
-              v-model="reader.birthdate"
-          />
-        </v-col>
-      </v-layout>
-      <v-layout row wrap>
           <v-col cols="12" sm="6">
             <v-text-field
               outlined
               label="Teléfono celular"
               :rules="[requiredRule, numericRule, phoneRule]"
-              v-model="reader.phone"
+              v-model="writer.phone"
             ></v-text-field>
+          </v-col>
+      </v-layout>
+      <v-layout row wrap>
+          <v-col cols="12" sm="6">
+            <TimestampDateField
+              label="Fecha de Nacimiento"
+              icon="event"
+              :rules="[requiredRule]"
+              v-model="writer.birthdate"
+            />
           </v-col>
           <v-col cols="12" sm="6">
             <v-text-field
               outlined
-              label="Link a perfil de facebook"
-              :rules="[requiredRule, facebookRule]"
-              v-model="reader.facebookLink"
+              label="Pseudónimo"
+              :rules="[requiredRule]"
+              v-model="writer.pseudonym"
             ></v-text-field>
           </v-col>
       </v-layout>
-      <h2 class="primary--text">Datos para Silma</h2>
       <v-layout row wrap>
-        <v-col cols="12" sm="6" md="3">
-          <v-select
-            outlined
-            label='¿Quién te recomendo Silma?'
-            :items="administrators"
-            dense
-            :rules="[requiredRule]"
-          ></v-select>
-        </v-col>
-        <v-col cols="12" sm="8">
-          <v-radio-group :rules="[requiredRule]" label='¿Cuánto te tardas en leer 200 páginas?' v-model="reader.readingProficiency" row>
-            <v-radio 
-              label="3 días o menos" 
-              value="3 or less"
-              color="success"
-            ></v-radio>
-            <v-radio 
-              label="5 días" 
-              value="4 to 6"
-              color="success"
-            ></v-radio>
-            <v-radio 
-              label="7 días o más" 
-              value="7 or more"
-              color="success"
-            ></v-radio>
-          </v-radio-group>
-        </v-col>
-      </v-layout>
-      <h2 class="primary--text">¿Entre que fechas puedes leer textos?</h2>
-      <v-layout row wrap>
-        <v-col cols="12" sm="6">
-            <TimestampDateField
-              label="Desde"
-              icon="event"
-              :rules="[requiredRule]"
-          />
-        </v-col>
-        <v-col cols="12" sm="6">
-            <TimestampDateField
-              label="Hasta"
-              icon="event"
-              :rules="[requiredRule]"
-          />
-        </v-col>
-      </v-layout>
-      <v-layout row wrap>
-        <v-col cols="12" sm="12">
-        <h2 class="primary--text">Preferencias de textos</h2>
-        </v-col>
-        <v-col cols="12" sm="3" v-for="genres in genres" :key="genres">
-            <v-switch
-              :label="genres"
-              color="success"
-              value="success"
-            ></v-switch>
-        </v-col>
+          <v-col cols="12" sm="4">
+            <v-select
+                outlined
+                label="Nacionalidad"
+                :items="countries"
+                dense
+                :rules="[requiredRule]"
+                v-model="writer.nationality"
+            ></v-select>
+            </v-col>
       </v-layout>
     </v-form>
     <v-layout row wrap>
       <v-dialog v-model="dialogSuccess" persistent max-width="290">
         <v-card>
-          <v-card-title class="headline">Lector Registrado!</v-card-title>
+          <v-card-title class="headline">Escritor Registrado!</v-card-title>
           <v-card-text>Serás reenviado a tu dashboard</v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -155,8 +109,8 @@
 <script>
 import axios from 'axios';
 import TimestampDateField from '@/components/timestampDate.vue';
-import {genres, administrators} from '@/utils/constants.js';
-import {requiredRule, emailRule, numericRule, facebookRule, passwordMinRule, phoneRule} from '@/utils/rules';
+import {requiredRule, emailRule, numericRule, passwordMinRule, phoneRule} from '@/utils/rules';
+import {countries} from "@/utils/constants"
 
 export default{
   components: {
@@ -164,30 +118,25 @@ export default{
   },
   data(){
     return {
-      reader: {
+      writer: {
         name:'',
         email:'',
         phone:'',
         password:'',
-        facebookLink:'',
         birthdate:'',
-        //preferences:'',
-        //recommended:'',
-        readingProficiency:'',
-        nationality:'mexicano',
-        //from:'',
-        //till:''
+        pseudonym:'',
+        nationality:'',
+        phase:1,
+        isPlus:false
       },
       dialogSuccess: false,
       dialogError: false,
-      genres,
-      administrators,
       emailRule,
       requiredRule,
       numericRule,
-      facebookRule,
       passwordMinRule,
       phoneRule,
+      countries,
       showPassword: false
     };
   },
@@ -197,18 +146,19 @@ export default{
         return;
       }
       try {
-        const responseCreate = await axios.post("http://localhost:3000/api/register/readers", this.reader);
+        console.log(this.writer)
+        const responseCreate = await axios.post("http://localhost:3000/api/register/writers", this.writer);
         console.log(responseCreate)
         const authUser = {
-          email: this.reader.email,
-          password: this.reader.password
+          email: this.writer.email,
+          password: this.writer.password
         }
         const responseAuth = await axios.post("http://localhost:3000/api/user/authentication", authUser)
         console.log(responseAuth)
         //const token = responseAuth.data.token
-        this.dialogSuccess = true
+        this.dialogSuccess = true;
       } catch (error) {
-        this.dialogError = true
+        this.dialogError = true;
       }
     }
   }
