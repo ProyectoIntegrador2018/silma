@@ -4,14 +4,11 @@ import RegisterReader from "@/views/reader/ReaderRegister.vue";
 import RegisterWriter from "@/views/writer/WriterRegister.vue";
 import LogIn from "@/views/login/LogIn.vue";
 import Dashboard from "@/views/dashboards/DashboardWriter.vue";
+import PageNotFound from "@/views/PageNotFound.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
-  {
-    path: "/",
-    redirect: "/Iniciar_Sesion"
-  },
   {
     path: '/Registro_Lector',
     name: 'RegisterReader',
@@ -28,9 +25,18 @@ const routes = [
     component: LogIn
   },
   {
-    path: "/dashboard",
+    path: "/",
     name: 'Dashboard',
-    component: Dashboard
+    component: Dashboard,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin", "reader", "writer"]
+      // NOTE: Use 'withAccess' for pages that can only be accessed by certain users.
+    }
+  },
+  {
+    path: "*",
+    component: PageNotFound
   }
 ];
 
@@ -38,6 +44,28 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes
+});
+
+router.beforeEach((to, from, next) => {
+  // Redirect when authentication is required and token is not provided.
+  // TODO: Add validation with API.
+  const token = Vue.$cookies.get('token');
+  const userType = Vue.$cookies.get('user_type');
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  if (requiresAuth && (!token || !userType)) {
+    next('Iniciar_Sesion');
+    return;
+  }
+  // Redirect users with no access to the provided routes.
+  const withAccess = to.matched.map((record) => record.meta.withAccess || ["admin", "writer", "reader"]);
+  const hasAccess = withAccess.some((accessTypes) =>
+    accessTypes.some(accessType => accessType === userType)
+  );
+  if (requiresAuth && !hasAccess) {
+    next('Iniciar_Sesion');
+    return;
+  }
+  next();
 });
 
 export default router;

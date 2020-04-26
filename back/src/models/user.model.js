@@ -9,7 +9,7 @@ export const UserSchema = new Schema({
   },
   password: {
     type: String,
-    select: false ,
+    select: false,
     required: "Password is required",
   },
   email: {
@@ -32,6 +32,11 @@ export const UserSchema = new Schema({
     type: String,
     required: "Nationality is required",
   },
+  roles: [{
+    type: String,
+    enums: ["admin", "writer", "reader"],
+    default: []
+  }]
 });
 UserSchema.plugin(beautifyUnique);
 

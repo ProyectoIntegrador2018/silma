@@ -82,7 +82,7 @@
           <v-card-text>Serás reenviado a tu dashboard</v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="green darken-1" text @click="dialogSuccess = false" href="/dashboard">Entendido</v-btn>
+            <v-btn color="green darken-1" text @click="dialogSuccess = false" href="/">Entendido</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
