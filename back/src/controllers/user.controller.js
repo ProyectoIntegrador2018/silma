@@ -1,9 +1,9 @@
 import { UserModel } from "@/models/user.model";
+import { GenreModel } from "@/models/genre.model";
 import { send } from "@/utils/errors";
 import config from "@/config.json";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
 
 export const authUser = (request, response) => {
   send(response, async () => {
@@ -40,4 +40,11 @@ export const createUser = async (request, response, role) => {
   }
   const foundUser = await UserModel.findOne({ _id: user._id });
   return foundUser;
-}
+};
+
+export const getAllGenres = (request, response) => {
+  send(response, async () => {
+    const genres = await GenreModel.find();
+    return genres;
+  });
+};
