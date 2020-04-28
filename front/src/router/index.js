@@ -5,6 +5,7 @@ import RegisterWriter from "@/views/writer/WriterRegister.vue";
 import LogIn from "@/views/login/LogIn.vue";
 import Dashboard from "@/views/dashboards/DashboardWriter.vue";
 import PageNotFound from "@/views/PageNotFound.vue";
+import Genres from "@/views/admins/Genres.vue";
 
 Vue.use(VueRouter);
 
@@ -23,6 +24,15 @@ const routes = [
     path: "/Iniciar_Sesion",
     name: 'LogIn',
     component: LogIn
+  },
+  {
+    path: "/Generos",
+    name: 'Genres',
+    component: Genres,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"]
+    }
   },
   {
     path: "/",

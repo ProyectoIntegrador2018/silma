@@ -14,3 +14,5 @@ export const facebookRule = entry => /(https:\/\/www\.facebook\.com\/){1}(.)+/.t
 export const passwordMinRule = entry => /.{8,}/.test(entry) || "Mínimo 8 caracteres"
 
 export const phoneRule = entry => /\d{10}/.test(entry) || "Los 10 dígito de tu celular"
+
+export const letterRule = entry => /^[A-Za-z\s]+$/.test(entry) || "Solo se aceptan letras"
