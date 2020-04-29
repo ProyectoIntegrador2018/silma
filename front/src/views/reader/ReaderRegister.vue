@@ -60,6 +60,18 @@
             ></v-text-field>
           </v-col>
       </v-layout>
+      <v-layout row wrap>
+          <v-col cols="12" sm="4">
+            <v-select
+                outlined
+                label="Nacionalidad"
+                :items="countries"
+                dense
+                :rules="[requiredRule]"
+                v-model="reader.nationality"
+            ></v-select>
+            </v-col>
+      </v-layout>
       <h2 class="primary--text">Datos para Silma</h2>
       <v-layout row wrap>
         <v-col cols="12" sm="6" md="3">
@@ -155,7 +167,7 @@
 <script>
 import axios from 'axios';
 import TimestampDateField from '@/components/timestampDate.vue';
-import {genres, administrators} from '@/utils/constants.js';
+import {genres, administrators, countries} from '@/utils/constants.js';
 import {requiredRule, emailRule, numericRule, facebookRule, passwordMinRule, phoneRule} from '@/utils/rules';
 
 export default{
@@ -174,13 +186,14 @@ export default{
         //preferences:'',
         //recommended:'',
         readingProficiency:'',
-        nationality:'mexicano',
+        nationality:'',
         //from:'',
         //till:''
       },
       dialogSuccess: false,
       dialogError: false,
       genres,
+      countries,
       administrators,
       emailRule,
       requiredRule,

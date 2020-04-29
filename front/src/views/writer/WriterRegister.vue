@@ -56,7 +56,7 @@
           <v-col cols="12" sm="6">
             <v-text-field
               outlined
-              label="Pseudónimo"
+              label="Seudónimo"
               :rules="[requiredRule]"
               v-model="writer.pseudonym"
             ></v-text-field>
