@@ -76,6 +76,7 @@
       <v-layout row wrap>
         <v-col cols="12" sm="6" md="3">
           <v-select
+            v-model="reader.recommended"
             outlined
             label='¿Quién te recomendo Silma?'
             :items="administrators"
@@ -110,6 +111,7 @@
               label="Desde"
               icon="event"
               :rules="[requiredRule]"
+              v-model="reader.readFrom"
           />
         </v-col>
         <v-col cols="12" sm="6">
@@ -117,6 +119,7 @@
               label="Hasta"
               icon="event"
               :rules="[requiredRule]"
+              v-model="reader.readTill"
           />
         </v-col>
       </v-layout>
@@ -126,9 +129,10 @@
         </v-col>
         <v-col cols="12" sm="3" v-for="genres in genres" :key="genres">
             <v-switch
-              :label="genres"
+              v-model="reader.preferences"
+              :label="genres.name"
               color="success"
-              value="success"
+              :value="genres.name"
             ></v-switch>
         </v-col>
       </v-layout>
@@ -167,10 +171,10 @@
 <script>
 import axios from 'axios';
 import TimestampDateField from '@/components/timestampDate.vue';
-import {genres, administrators, countries} from '@/utils/constants.js';
+import {administrators, countries} from '@/utils/constants.js';
 import {requiredRule, emailRule, numericRule, facebookRule, passwordMinRule, phoneRule} from '@/utils/rules';
 
-export default{
+export default {
   components: {
     TimestampDateField
   },
@@ -183,16 +187,16 @@ export default{
         password:'',
         facebookLink:'',
         birthdate:'',
-        //preferences:'',
-        //recommended:'',
+        preferences:[],
+        recommended:'',
         readingProficiency:'',
         nationality:'',
-        //from:'',
-        //till:''
+        readFrom:'',
+        readTill:''
       },
       dialogSuccess: false,
       dialogError: false,
-      genres,
+      genres: [],
       countries,
       administrators,
       emailRule,
@@ -202,7 +206,13 @@ export default{
       passwordMinRule,
       phoneRule,
       showPassword: false
-    };
+    }
+  },
+  asyncComputed: {
+      async getGenres(){
+        const responseDuplicate = await axios.get("http://localhost:3000/api/user/genres");
+        return this.genres = responseDuplicate.data
+      }
   },
   methods: {
     async create() {
@@ -210,17 +220,15 @@ export default{
         return;
       }
       try {
-        const responseCreate = await axios.post("http://localhost:3000/api/register/readers", this.reader);
-        console.log(responseCreate)
+        await axios.post("http://localhost:3000/api/register/readers", this.reader);
         const authUser = {
           email: this.reader.email,
           password: this.reader.password
         }
-        const responseAuth = await axios.post("http://localhost:3000/api/user/authentication", authUser)
-        console.log(responseAuth)
-        //const token = responseAuth.data.token
+        await axios.post("http://localhost:3000/api/user/authentication", authUser)
         this.dialogSuccess = true
       } catch (error) {
+        console.log(error.response.data)
         this.dialogError = true
       }
     }

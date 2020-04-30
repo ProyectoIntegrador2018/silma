@@ -16,6 +16,22 @@ export const ReaderSchema = new Schema({
     enum: ["3 or less", "4 to 6", "7 or more"],
     default: "4 to 6",
   },
+  preferences: {
+    type: [String]
+  },
+  recommended: {
+    type: String,
+    required: "How do you know Silma",
+    default: "Nadie / Otra persona"
+  },
+  readFrom: {
+    type: Date,
+    required: "Availability to read from",
+  },
+  readTill: {
+    type: Date,
+    required: "Availability to read till",
+  }
 });
 ReaderSchema.plugin(beautifyUnique);
 
