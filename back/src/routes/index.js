@@ -6,12 +6,13 @@ import { addTextRoutes } from "./text.route";
 
 import {
   authUser,
+  getAllGenres
 } from "@/controllers/user.controller";
 
 export const createRoutes = () => {
   const router = new Router();
   router.post("/user/authentication", authUser);
-
+  router.get("/user/genres", getAllGenres);
   addWriterRoutes(router);
   addAdminRoutes(router);
   addReaderRoutes(router);

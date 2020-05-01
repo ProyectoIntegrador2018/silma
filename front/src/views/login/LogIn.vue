@@ -102,12 +102,17 @@ export default {
                     email: this.user.email,
                     password: this.user.password
                 }
-                const responseAuth = await axios.post("http://localhost:3000/api/user/authentication", authUser)
-                console.log(responseAuth)
-                if (responseAuth.data.token != null){
-                    //this.dialogSuccess = true
-                    document.cookie = "token=" + responseAuth.data.token;
-                    location.href = '/dashboard';
+                const responseAuth = await axios.post("http://localhost:3000/api/user/authentication", authUser);
+                const { token, roles } = responseAuth.data;
+                if (token) {
+                    this.$cookies.set('token', token);
+                    if (!this.$cookies.isKey('user_type')) {
+                      const role = roles.includes('admin')
+                        ? 'admin' : roles.includes('writer')
+                        ? 'writer' : 'reader';
+                      this.$cookies.set('user_type', role);
+                    }
+                    this.$router.push('/');
                 } else {
                     this.dialogIncorrectInfo = true
                 }

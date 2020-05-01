@@ -45,3 +45,13 @@ export const countries = [
 "Tunisia", "Turkey", "Turkmenistan", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States",
 "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
 ];
+
+export const errorServerRegister = {
+    title: "Error al ergistrarse",
+    message: "Por favor intentelo nuevamente más tarde"
+}
+
+export const errorPreferencesMinimun = {
+    title: "Al menos 3 preferencias",
+    message: "Por favor seleccione al menos 3 géneros de lectura de su preferencia"
+}
