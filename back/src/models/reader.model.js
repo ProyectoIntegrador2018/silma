@@ -31,7 +31,13 @@ export const ReaderSchema = new Schema({
   readTill: {
     type: Date,
     required: "Availability to read till",
+  },
+  //Futuro sprint 3
+  /*
+  lastReview: {
+    type: Date
   }
+  */
 });
 ReaderSchema.plugin(beautifyUnique);
 

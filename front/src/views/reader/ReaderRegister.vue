@@ -148,10 +148,10 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <v-dialog v-model="dialogError" persistent max-width="290">
+      <v-dialog v-model="dialogError" persistent max-width="500">
         <v-card>
-          <v-card-title class="headline">Error en el registro</v-card-title>
-          <v-card-text>Por favor inténtelo más tarde</v-card-text>
+          <v-card-title class="headline">{{errorMessage.title}}</v-card-title>
+          <v-card-text>{{errorMessage.message}}</v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="red darken-1" text @click="dialogError = false">Entendido</v-btn>
@@ -171,7 +171,7 @@
 <script>
 import axios from 'axios';
 import TimestampDateField from '@/components/timestampDate.vue';
-import {administrators, countries} from '@/utils/constants.js';
+import {administrators, countries, errorServerRegister, errorPreferencesMinimun} from '@/utils/constants.js';
 import {requiredRule, emailRule, numericRule, facebookRule, passwordMinRule, phoneRule} from '@/utils/rules';
 
 export default {
@@ -192,7 +192,12 @@ export default {
         readingProficiency:'',
         nationality:'',
         readFrom:'',
-        readTill:''
+        readTill:'',
+        //lastReview:''
+      },
+      errorMessage: {
+        title:'',
+        message:''
       },
       dialogSuccess: false,
       dialogError: false,
@@ -220,6 +225,11 @@ export default {
         return;
       }
       try {
+        if(this.reader.preferences.length < 3){
+          this.errorMessage = errorPreferencesMinimun
+          this.dialogError = true
+          return
+        }
         await axios.post("http://localhost:3000/api/register/readers", this.reader);
         const authUser = {
           email: this.reader.email,
@@ -229,6 +239,7 @@ export default {
         this.dialogSuccess = true
       } catch (error) {
         console.log(error.response.data)
+        this.errorMessage = errorServerRegister
         this.dialogError = true
       }
     }
