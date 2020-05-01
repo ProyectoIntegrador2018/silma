@@ -4,7 +4,6 @@ import { addAdminRoutes } from "./admin.route";
 import { addReaderRoutes } from "./reader.route";
 import { addTextRoutes } from "./text.route";
 
-
 import {
   authUser,
   getAllGenres
