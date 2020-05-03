@@ -1,6 +1,6 @@
 import { send } from "@/utils/errors";
 import { TextModel } from "@/models/text.model";
-
+import { assignReaders } from "@/controllers/suggestion.controller"
 export const getAllTexts = (request, response) => {
   send(response, async () => {
     const readers = await TextModel.find().populate("genre");
@@ -28,6 +28,9 @@ export const createText = (request, response) => {
   send(response, async () => {
     const data = request.body;
     const text = await TextModel.create(data);
+    if(text._id){
+      await assignReaders(text)
+    }
     return text;
   });
 };
