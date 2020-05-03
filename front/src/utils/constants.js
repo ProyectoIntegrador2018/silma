@@ -47,11 +47,16 @@ export const countries = [
 ];
 
 export const errorServerRegister = {
-    title: "Error al ergistrarse",
-    message: "Por favor intentelo nuevamente más tarde"
+    title: "Error en el registro",
+    message: "Por favor inténtelo nuevamente más tarde."
 }
 
 export const errorPreferencesMinimun = {
     title: "Al menos 3 preferencias",
-    message: "Por favor seleccione al menos 3 géneros de lectura de su preferencia"
+    message: "Por favor seleccione al menos 3 géneros de lectura de su preferencia."
+}
+
+export const errorGenresRange = {
+    title: "Número incorrecto de géneros marcados",
+    message: "Por favor, seleccione de 1 a 3 géneros correspondientes a su texto."
 }

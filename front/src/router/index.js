@@ -32,7 +32,7 @@ const routes = [
     component: TextRegister,
     meta: {
       requiresAuth: true,
-      withAccess: ["admin","writer"]
+      withAccess: ["writer"]
       // NOTE: Use 'withAccess' for pages that can only be accessed by certain users.
     }
   },

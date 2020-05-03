@@ -5,7 +5,7 @@
     <v-form ref="form">
       <h2 class="primary--text">Datos del Escrito</h2>
       <v-layout row wrap>
-          <v-col cols="12" sm="5">
+          <v-col cols="12" sm="6">
             <v-text-field
               outlined
               label="Título"
@@ -14,15 +14,6 @@
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="3">
-            <v-select
-                outlined
-                label="Género"
-                :items="genres"
-                :rules="[requiredRule]"
-                v-model="text.genre"
-            ></v-select>
-           </v-col>
-          <v-col cols="12" sm="2">
             <v-text-field
                 outlined
                 label="ID de Registro"
@@ -30,7 +21,7 @@
                 v-model="text.registerNumber"
             ></v-text-field>
            </v-col>
-          <v-col cols="12" sm="2">
+          <v-col cols="12" sm="3">
             <v-text-field
               outlined
               label="# de páginas"
@@ -38,6 +29,17 @@
               v-model="text.numberOfPages"
             ></v-text-field>
           </v-col>
+      </v-layout>
+      <p>Seleccionar géneros (Máximo 3)</p>
+      <v-layout row wrap>
+      <v-col cols="12" sm="3" v-for="genres in genres" :key="genres.name">
+            <v-switch
+              v-model="text.genres"
+              :label="genres.name"
+              :value="genres.name"
+              color="success"
+            ></v-switch>
+        </v-col>
       </v-layout>
       <v-layout row wrap class="justify-center">
           <v-col cols="12" sm="12">
@@ -92,8 +94,8 @@
       </v-dialog>
       <v-dialog v-model="dialogError" persistent max-width="290">
         <v-card>
-          <v-card-title class="headline">Error en el registro de escrito</v-card-title>
-          <v-card-text>Por favor inténtelo más tarde</v-card-text>
+          <v-card-title class="headline">{{errorMessage.title}}</v-card-title>
+          <v-card-text>{{errorMessage.text}}</v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="red darken-1" text @click="dialogError = false">Entendido</v-btn>
@@ -114,7 +116,7 @@
 import axios from 'axios';
 import commonmark from 'commonmark';
 import {requiredRule, numericRule} from '@/utils/rules';
-import { genres } from "@/utils/constants"
+import {errorGenresRange, errorServerRegister} from '@/utils/constants';
 
 export default{
   components: {
@@ -127,23 +129,39 @@ export default{
         title:'',
         registerNumber:'',
         description:'',
-        genre:'',
+        genres:[],
         numberOfPages:'',
         phase:1,
         documentPath: null
       },
+      errorMessage: {
+        title:'',
+        text:''
+      },
       dialogSuccess: false,
       dialogError: false,
       requiredRule,
+      genres: [],
       numericRule,
-      genres,
       data: null,
       dialog: false
     };
   },
+  asyncComputed: {
+      async getGenres(){
+        const responseGenres = await axios.get("http://localhost:3000/api/user/genres");
+        console.log(responseGenres.data)
+        return this.genres = responseGenres.data
+      }
+  },
   methods: {
     async create() {
       if (!this.$refs.form.validate()) {
+        return;
+      }
+      if (this.text.genres.length < 1 || this.text.genres.length > 3 ){
+        this.errorMessage = errorGenresRange
+        this.dialogError = true
         return;
       }
       try {
@@ -152,6 +170,7 @@ export default{
         console.log(responseCreate)
         this.dialogSuccess = true;
       } catch (error) {
+        this.errorMessage = errorServerRegister
         this.dialogError = true;
       }
     },
