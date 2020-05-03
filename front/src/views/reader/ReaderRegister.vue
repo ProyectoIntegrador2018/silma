@@ -129,7 +129,7 @@
         </v-col>
         <v-col cols="12" sm="3" v-for="genres in genres" :key="genres">
             <v-switch
-              v-model="reader.preferences"
+              v-model="preferencesNames"
               :label="genres.name"
               color="success"
               :value="genres.name"
@@ -199,6 +199,7 @@ export default {
         title:'',
         message:''
       },
+      preferencesNames: [],
       dialogSuccess: false,
       dialogError: false,
       genres: [],
@@ -220,16 +221,27 @@ export default {
       }
   },
   methods: {
+    preferenceId(preference){
+        for(const genre of this.genres){
+          if(preference == genre.name){
+            return genre._id
+          }
+        }
+    },
     async create() {
       if (!this.$refs.form.validate()) {
         return;
       }
       try {
-        if(this.reader.preferences.length < 3){
+        if(this.preferencesNames < 3){
           this.errorMessage = errorPreferencesMinimun
           this.dialogError = true
           return
         }
+        for (const preference of this.preferencesNames){
+            this.reader.preferences.push(this.preferenceId(preference))
+        }
+        console.log(this.reader.preferences)
         await axios.post("http://localhost:3000/api/register/readers", this.reader);
         const authUser = {
           email: this.reader.email,
