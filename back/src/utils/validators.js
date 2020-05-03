@@ -15,3 +15,15 @@ export const validateURL = (url) => {
   }
   return true;
 };
+
+export const rangeRule = (min, max) => {
+  return (entry) => (entry.length >= min && entry.length <= max);
+};
+
+export const minLengthRule = min => {
+  return (entry) => entry.length >= min;
+};
+
+export const maxLengthRule = max => {
+  return (entry) => entry.length <= max;
+};
