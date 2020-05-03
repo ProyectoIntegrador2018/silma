@@ -5,7 +5,7 @@
     <v-form ref="form">
       <h2 class="primary--text">Datos del Escrito</h2>
       <v-layout row wrap>
-          <v-col cols="12" sm="6">
+          <v-col cols="12" sm="5">
             <v-text-field
               outlined
               label="Título"
@@ -13,7 +13,7 @@
               v-model="text.title"
             ></v-text-field>
           </v-col>
-          <v-col cols="12" sm="3">
+          <v-col cols="12" sm="2">
             <v-text-field
                 outlined
                 label="ID de Registro"
@@ -21,7 +21,7 @@
                 v-model="text.registerNumber"
             ></v-text-field>
            </v-col>
-          <v-col cols="12" sm="3">
+          <v-col cols="12" sm="2">
             <v-text-field
               outlined
               label="# de páginas"
@@ -29,6 +29,15 @@
               v-model="text.numberOfPages"
             ></v-text-field>
           </v-col>
+          <v-col cols="12" sm="3">
+            <v-select
+                outlined
+                label="Rango edad"
+                :items="ageRanges"
+                :rules="[requiredRule]"
+                v-model="text.ageRange"
+            ></v-select>
+           </v-col>
       </v-layout>
       <p>Seleccionar géneros (Máximo 3)</p>
       <v-layout row wrap>
@@ -36,7 +45,7 @@
             <v-switch
               v-model="text.genres"
               :label="genres.name"
-              :value="genres.name"
+              :value="genres._id"
               color="success"
             ></v-switch>
         </v-col>
@@ -55,10 +64,10 @@
       <a href="https://commonmark.org/help/">Presiona aquí para más información</a>
       <v-layout row wrap>
           <v-col cols="12" sm="4">
-            <v-file-input 
+            <v-file-input accept=".md" 
                 label="Subir Archivo"
                 :rules="[requiredRule]"
-                v-model="text.documentPath"
+                v-model="document"
             ></v-file-input>
           </v-col>
           <v-col cols="12" sm="4">
@@ -88,7 +97,7 @@
           <v-card-text>Tu escrito ya se encuentra registrado</v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="green darken-1" text @click="dialogSuccess = false" href="/dashboard">Entendido</v-btn>
+            <v-btn color="green darken-1" text @click="dialogSuccess = false" href="/">Entendido</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -116,7 +125,7 @@
 import axios from 'axios';
 import commonmark from 'commonmark';
 import {requiredRule, numericRule} from '@/utils/rules';
-import {errorGenresRange, errorServerRegister} from '@/utils/constants';
+import {errorGenresRange, errorServerRegister, errorDescriptionRange, ageRanges} from '@/utils/constants';
 
 export default{
   components: {
@@ -125,14 +134,15 @@ export default{
   data(){
     return {
       text: {
-        writer:'',
+        writer:this.$cookies.get('user_id'),
         title:'',
         registerNumber:'',
         description:'',
         genres:[],
         numberOfPages:'',
+        ageRange: '',
         phase:1,
-        documentPath: null
+        documentPath: ''
       },
       errorMessage: {
         title:'',
@@ -141,7 +151,9 @@ export default{
       dialogSuccess: false,
       dialogError: false,
       requiredRule,
+      document: null,
       genres: [],
+      ageRanges,
       numericRule,
       data: null,
       dialog: false
@@ -149,7 +161,8 @@ export default{
   },
   asyncComputed: {
       async getGenres(){
-        const responseGenres = await axios.get("http://localhost:3000/api/user/genres");
+        const token = this.$cookies.get('token');
+        const responseGenres = await axios.get("http://localhost:3000/api/user/genres", { headers: {"Authorization" : 'Bearer ' + token} });
         console.log(responseGenres.data)
         return this.genres = responseGenres.data
       }
@@ -164,23 +177,50 @@ export default{
         this.dialogError = true
         return;
       }
+      if (this.text.description.length < 20  || this.text.description.length > 200 ){
+        this.errorMessage = errorDescriptionRange
+        this.dialogError = true
+        return;
+      }
       try {
-        console.log(this.text)
-        const responseCreate = await axios.post("http://localhost:3000/api/texts", this.text);
-        console.log(responseCreate)
+        const token = this.$cookies.get('token');
+
+        const responseCreate = await axios.post('http://localhost:3000/api/texts', this.text, {
+            headers: {
+                  'content-type': 'application/json',
+                  "Authorization" : 'Bearer ' + token, 
+            },
+        });
+        const id = responseCreate.data._id;
+        console.log(id)
+        
+        let formData = new FormData();
+        formData.append('document', this.document);
+
+        console.log('>> formData >> ', formData);
+        console.log(formData.get('text'))
+
+        const responseUpload = await axios.post(`http://localhost:3000/api/texts/${id}/uploads`, formData, {
+            headers: {
+                  "Authorization" : 'Bearer ' + token, 
+                  'Content-Type': 'multipart/form-data'
+            },
+        });
+        console.log(responseUpload)
+
         this.dialogSuccess = true;
       } catch (error) {
+        console.log(error.response.data)
         this.errorMessage = errorServerRegister
         this.dialogError = true;
       }
     },
     previewData() {
-      
-      if (!this.text.documentPath) {
+      if (!this.document) {
           this.data = "No se ha seleccionado ningún archivo"
         } else {
             var reader = new FileReader();
-            reader.readAsText(this.text.documentPath);
+            reader.readAsText(this.document);
             reader.onload = () => {
                 var readerCM = new commonmark.Parser();
                 var writerCM = new commonmark.HtmlRenderer();

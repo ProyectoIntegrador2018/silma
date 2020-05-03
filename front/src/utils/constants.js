@@ -22,6 +22,10 @@ export const administrators = [
     "Nadie / Otra persona",
 ];
 
+export const ageRanges = [
+    "10-12", "13-15", "16-18", "18+"
+];
+
 export const countries = [
     "Mexico", "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antarctica", "Antigua and Barbuda",
 "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados",
@@ -59,4 +63,9 @@ export const errorPreferencesMinimun = {
 export const errorGenresRange = {
     title: "Número incorrecto de géneros marcados",
     message: "Por favor, seleccione de 1 a 3 géneros correspondientes a su texto."
+}
+
+export const errorDescriptionRange = {
+    title: "Tamaño de la descripción no válido",
+    message: "Por favor, ingrese una descripción que tenga entre 20 y 200 carácteres."
 }
