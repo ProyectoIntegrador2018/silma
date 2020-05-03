@@ -6,6 +6,7 @@ import LogIn from "@/views/login/LogIn.vue";
 import Dashboard from "@/views/dashboards/DashboardWriter.vue";
 import PageNotFound from "@/views/PageNotFound.vue";
 import Genres from "@/views/admins/Genres.vue";
+import TextRegister from "@/views/writer/TextRegister.vue";
 
 Vue.use(VueRouter);
 
@@ -24,6 +25,16 @@ const routes = [
     path: "/Iniciar_Sesion",
     name: 'LogIn',
     component: LogIn
+  },
+  {
+    path: "/Agregar_Escrito",
+    name: 'TextRegister',
+    component: TextRegister,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin","writer"]
+      // NOTE: Use 'withAccess' for pages that can only be accessed by certain users.
+    }
   },
   {
     path: "/Generos",
