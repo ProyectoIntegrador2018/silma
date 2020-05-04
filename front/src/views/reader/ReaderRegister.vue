@@ -211,6 +211,8 @@ export default {
       facebookRule,
       passwordMinRule,
       phoneRule,
+      errorServerRegister, 
+      errorPreferencesMinimun,
       showPassword: false
     }
   },
@@ -233,8 +235,8 @@ export default {
         return;
       }
       try {
-        if(this.preferencesNames < 3){
-          this.errorMessage = errorPreferencesMinimun
+        if(this.preferencesNames.length < 3){
+          this.errorMessage = this.errorPreferencesMinimun
           this.dialogError = true
           return
         }
@@ -258,10 +260,9 @@ export default {
             this.$cookies.set('user_id', _id);
         }
         this.dialogSuccess = true
-        this.$router.push('/');
       } catch (error) {
         console.log(error.response.data)
-        this.errorMessage = errorServerRegister
+        this.errorMessage = this.errorServerRegister
         this.dialogError = true
       }
     }
