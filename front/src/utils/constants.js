@@ -22,6 +22,10 @@ export const administrators = [
     "Nadie / Otra persona",
 ];
 
+export const ageRanges = [
+    "10-12", "13-15", "16-18", "18+"
+];
+
 export const countries = [
     "Mexico", "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antarctica", "Antigua and Barbuda",
 "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados",
@@ -47,11 +51,21 @@ export const countries = [
 ];
 
 export const errorServerRegister = {
-    title: "Error al ergistrarse",
-    message: "Por favor intentelo nuevamente más tarde"
+    title: "Error en el registro",
+    message: "Por favor inténtelo nuevamente más tarde."
 }
 
 export const errorPreferencesMinimun = {
     title: "Al menos 3 preferencias",
-    message: "Por favor seleccione al menos 3 géneros de lectura de su preferencia"
+    message: "Por favor seleccione al menos 3 géneros de lectura de su preferencia."
+}
+
+export const errorGenresRange = {
+    title: "Número incorrecto de géneros marcados",
+    message: "Por favor, seleccione de 1 a 3 géneros correspondientes a su texto."
+}
+
+export const errorDescriptionRange = {
+    title: "Tamaño de la descripción no válido",
+    message: "Por favor, ingrese una descripción que tenga entre 20 y 200 carácteres."
 }

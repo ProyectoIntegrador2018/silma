@@ -151,8 +151,18 @@ export default{
           email: this.writer.email,
           password: this.writer.password
         }
-        await axios.post("http://localhost:3000/api/user/authentication", authUser)
-        this.dialogSuccess = true;
+        const responseAuth = await axios.post("http://localhost:3000/api/user/authentication", authUser);
+        const { token, roles, _id } = responseAuth.data;
+        this.$cookies.set('token', token);
+        if (!this.$cookies.isKey('user_type')) {
+            const role = roles.includes('admin')
+              ? 'admin' : roles.includes('writer')
+              ? 'writer' : 'reader';
+            this.$cookies.set('user_type', role);
+            this.$cookies.set('user_id', _id);
+        }
+        this.dialogSuccess = true
+        this.$router.push('/');
       } catch (error) {
         this.dialogError = true;
       }

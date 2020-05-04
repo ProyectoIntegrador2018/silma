@@ -27,6 +27,7 @@
             <br>
             <br>
             <h1>¡Bienvenido a Silma!</h1>
+            <v-btn color="primary" dark class="mb-2"  href="/Agregar_Escrito">Agregar Escrito</v-btn>
             <myBooksSection/>
         </div>  
     </v-content>
