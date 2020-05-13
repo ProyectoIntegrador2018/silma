@@ -127,7 +127,7 @@
         <v-col cols="12" sm="12">
         <h2 class="primary--text">Preferencias de textos</h2>
         </v-col>
-        <v-col cols="12" sm="3" v-for="genres in genres" :key="genres">
+        <v-col cols="12" sm="3" v-for="genres in genres" :key="genres.name">
             <v-switch
               v-model="preferencesNames"
               :label="genres.name"
@@ -211,6 +211,8 @@ export default {
       facebookRule,
       passwordMinRule,
       phoneRule,
+      errorServerRegister, 
+      errorPreferencesMinimun,
       showPassword: false
     }
   },
@@ -233,8 +235,8 @@ export default {
         return;
       }
       try {
-        if(this.preferencesNames < 3){
-          this.errorMessage = errorPreferencesMinimun
+        if(this.preferencesNames.length < 3){
+          this.errorMessage = this.errorPreferencesMinimun
           this.dialogError = true
           return
         }
@@ -247,11 +249,20 @@ export default {
           email: this.reader.email,
           password: this.reader.password
         }
-        await axios.post("http://localhost:3000/api/user/authentication", authUser)
+        const responseAuth = await axios.post("http://localhost:3000/api/user/authentication", authUser);
+        const { token, roles, _id } = responseAuth.data;
+        this.$cookies.set('token', token);
+        if (!this.$cookies.isKey('user_type')) {
+            const role = roles.includes('admin')
+              ? 'admin' : roles.includes('writer')
+              ? 'writer' : 'reader';
+            this.$cookies.set('user_type', role);
+            this.$cookies.set('user_id', _id);
+        }
         this.dialogSuccess = true
       } catch (error) {
         console.log(error.response.data)
-        this.errorMessage = errorServerRegister
+        this.errorMessage = this.errorServerRegister
         this.dialogError = true
       }
     }
