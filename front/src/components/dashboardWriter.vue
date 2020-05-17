@@ -1,12 +1,16 @@
+
 <template>
+  
   <v-data-table
     :headers="headers"
     :items="data"
     sort-by="status"
     class="elevation-1"
   >
-     
     <template v-slot:top>
+      <v-btn color="primary" dark class="mb-2" href="/Agregar_Escrito"
+          >Agregar Escrito</v-btn
+        >
         
       <v-toolbar flat color="white">
         <v-toolbar-title>Tus Escritos</v-toolbar-title>
@@ -15,7 +19,7 @@
         
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
-            
+        
           <v-card>
             <v-card-title>
               <span class="headline">{{ formTitle }}</span>
