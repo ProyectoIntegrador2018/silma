@@ -28,8 +28,8 @@ export const createText = (request, response) => {
   send(response, async () => {
     const data = request.body;
     const text = await TextModel.create(data);
-    if(text._id){
-      await assignReaders(text)
+    if (text._id) {
+      await assignReaders(text, 3);
     }
     return text;
   });
