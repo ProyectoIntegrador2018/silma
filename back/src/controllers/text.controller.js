@@ -29,7 +29,7 @@ export const createText = (request, response) => {
     const data = request.body;
     const text = await TextModel.create(data);
     if(text._id){
-      await assignReaders(text)
+      await assignReaders(text,3)
     }
     return text;
   });
