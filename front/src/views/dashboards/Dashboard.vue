@@ -10,12 +10,11 @@
         <v-icon>mdi-account</v-icon>
       </v-btn>
       <v-toolbar-title style="width: 300px" class="ml-0 pl-4">
-        <span class="hidden-sm-and-down">Luisa Pineda</span>
+        <span class="hidden-sm-and-down">{{this.name}}</span>
       </v-toolbar-title>
 
       <v-spacer />
       <typeOfUserSelection />
-      <notificationCenter />
     </v-app-bar>
     <v-content>
       <div align="center">
@@ -31,17 +30,16 @@
 <script>
 import typeOfUserSelection from "@/components/typeOfUserSelection.vue";
 import writerDashboard from "@/components/dashboardWriter.vue";
-import notificationCenter from "@/components/notificationCenter.vue";
 export default {
   components: {
     typeOfUserSelection,
     writerDashboard,
-    notificationCenter,
   },
   data() {
     return {
       writer: this.$cookies.get("user_id"),
       role: this.$cookies.get("user_type"),
+      name: this.$cookies.get("user_name"),
       number: 2,
     }
   },
