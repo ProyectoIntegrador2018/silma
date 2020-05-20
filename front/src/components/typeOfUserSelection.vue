@@ -24,11 +24,6 @@ export default {
         { title: "Lector" },
         { title: "Administrador" },
       ],
-      rolesTraduction: [
-        { writer: "Escritor" },
-        { admin: "Administrador" },
-        { reader: "Lector" },
-      ],
       role: this.$cookies.get("user_type")=="writer"? 'Escritor': 
       this.$cookies.get("user_type")=="reader"? 'Lector': 'Administrador'
     };
