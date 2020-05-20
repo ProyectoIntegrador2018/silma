@@ -3,10 +3,10 @@ import { SuggestionModel } from "@/models/suggestion.model";
 import { TextModel } from "@/models/text.model";
 import { sendEmail } from "@/utils/mailSender";
 
-export const assignReaders = async (text) => {
+export const assignReaders = async (text,number) => {
     var resultsAlgorithm = await runAlgorithm(text);
     resultsAlgorithm = resultsAlgorithm.sort((a, b) => (a.points < b.points) ? 1 : -1);
-    var selectedReaders = resultsAlgorithm.slice(0, 3);
+    var selectedReaders = resultsAlgorithm.slice(0, number);
     await addSuggestionSendEmail(selectedReaders, text)
 };
 
@@ -88,7 +88,9 @@ export const runAlgorithm = async (text) => {
         var participationPoints = await calculateParticiaptionPoints(reader.lastReview);
         var betweenDatesPoints = await calculateBetweenDatesPoints(reader.readFrom, reader.readTill);
         var finalPoints = genrePoints + agePoints + readingPoints + participationPoints + betweenDatesPoints;
-        if (agePoints != 0) {
+        var acceptedRequest = await SuggestionModel.find({reader: reader._id, suggestionStatus: "Accepted"})
+        var pendingRequest = await SuggestionModel.find({reader: reader._id, suggestionStatus: "Pending"})
+        if (agePoints != 0 && acceptedRequest.length === 0 && pendingRequest.length === 0) {
             var resultReader = {
                 "id": reader._id,
                 "points": finalPoints
