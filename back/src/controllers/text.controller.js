@@ -28,7 +28,7 @@ export const createText = (request, response) => {
   send(response, async () => {
     const data = request.body;
     const text = await TextModel.create(data);
-    if(text._id){
+    if (text._id) {
       await assignReaders(text)
     }
     return text;
@@ -51,4 +51,12 @@ export const retrieveTextDocument = (request, response) => {
   } catch (err) {
     response.status(404).send({ message: 'File does not exist' });
   }
+};
+
+export const rejectText = (request, response) => {
+  send(response, async () => {
+    const { id } = request.params;
+    const text = await TextModel.findById(id);
+    console.log(text);
+  });
 };
