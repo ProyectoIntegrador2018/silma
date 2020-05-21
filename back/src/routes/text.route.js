@@ -1,4 +1,4 @@
-import { getAllTexts, getText, getTextsInPhase, createText, uploadTextDocument, retrieveTextDocument } from "@/controllers/text.controller";
+import { getAllTexts, getText, getTextsInPhase, createText, uploadTextDocument, retrieveTextDocument, getTextsOfWriter } from "@/controllers/text.controller";
 import multer from "multer";
 
 const storage = multer.diskStorage({
@@ -19,4 +19,5 @@ export const addTextRoutes = (router) => {
   router.post("/texts", createText);
   router.post("/texts/:id/uploads", upload.single('document'), uploadTextDocument);
   router.get("/texts/:id/uploads", retrieveTextDocument);
+  router.get("/texts/writer/:writer", getTextsOfWriter);
 };

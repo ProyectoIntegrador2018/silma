@@ -89,7 +89,9 @@ export const runAlgorithm = async (text) => {
     var participationPoints = await calculateParticiaptionPoints(reader.lastReview);
     var betweenDatesPoints = await calculateBetweenDatesPoints(reader.readFrom, reader.readTill);
     var finalPoints = genrePoints + agePoints + readingPoints + participationPoints + betweenDatesPoints;
-    if (agePoints != 0) {
+    var acceptedRequest = await SuggestionModel.find({ reader: reader._id, suggestionStatus: "Accepted" })
+    var pendingRequest = await SuggestionModel.find({ reader: reader._id, suggestionStatus: "Pending" })
+    if (agePoints != 0 && acceptedRequest.length === 0 && pendingRequest.length === 0) {
       var resultReader = {
         "id": reader._id,
         "points": finalPoints
