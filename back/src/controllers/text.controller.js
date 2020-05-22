@@ -1,6 +1,8 @@
 import { send } from "@/utils/errors";
 import { TextModel } from "@/models/text.model";
-import { assignReaders } from "@/controllers/suggestion.controller"
+import { assignReaders } from "@/controllers/suggestion.controller";
+import { sendEmail } from "@/utils/mailSender";
+
 export const getAllTexts = (request, response) => {
   send(response, async () => {
     const readers = await TextModel.find().populate("genre");
@@ -57,6 +59,20 @@ export const rejectText = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
     const text = await TextModel.findById(id);
+    const document = request.files.document;
+    await sendEmail({
+      "email": "usurquidi.96@gmail.com",
+      "subject": "New Silma Reading Suggestion!",
+      "text": "",
+      "html": "Ya no te queremos bai",
+      attachments: [
+        {
+          filename: document.name,
+          content: document.data
+        }
+      ]
+    });
+    console.log(document);
     console.log(text);
   });
 };
