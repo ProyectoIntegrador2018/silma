@@ -4,7 +4,6 @@
   "description": "Silma Web es una plataforma que facilita el proceso para la aceptación de escritos dentro de la empresa Silma Editorial, dando seguimiento por medio de retroalimentación de lectores y administradores que guían al escritor durante el proceso.",
   "scripts": {
     "backend": "cd back && npm run build && node dist/server.js",
-    "frontend": "",
     "postinstall": "cd back && npm install"
   },
   "engines": {
@@ -22,26 +21,5 @@
   "dependencies": {
     "@babel/preset-env": "^7.9.6"
   },
-  "homepage": "https://github.com/ProyectoIntegrador2018/silma#readme",
-  "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.6",
-    "@babel/node": "^7.8.7",
-    "@babel/preset-es2015": "^7.0.0-beta.53",
-    "babel-plugin-root-import": "^6.5.0",
-    "babel-preset-env": "^1.7.0",
-    "nodemon": "^2.0.2",
-    "@vue/cli-plugin-babel": "~4.2.0",
-    "@vue/cli-plugin-eslint": "~4.2.0",
-    "@vue/cli-plugin-router": "~4.2.0",
-    "@vue/cli-service": "~4.2.0",
-    "@vue/eslint-config-prettier": "^6.0.0",
-    "babel-eslint": "^10.0.3",
-    "eslint": "^6.7.2",
-    "eslint-plugin-prettier": "^3.1.1",
-    "eslint-plugin-vue": "^6.1.2",
-    "prettier": "^1.19.1",
-    "vue-cli-plugin-vuetify": "~2.0.5",
-    "vue-template-compiler": "^2.6.11"
-  }
+  "homepage": "https://github.com/ProyectoIntegrador2018/silma#readme"
 }

@@ -23,7 +23,12 @@ app.use(
 );
 app.use(bodyParser.json());
 app.use(jwt());
-app.use(express.static('public'));
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(__dirname + '/public'));
+  app.get(/.*/, (req, res) => res.sendFile(__dirname + '/public/index.html'));
+} else {
+  app.use(express.static('public'));
+}
 
 // Connect to Mongoose and set connection variable
 mongoose.connect(mongoUrl, {
