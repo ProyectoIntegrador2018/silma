@@ -1,0 +1,18 @@
+{
+  "name": "silma",
+  "version": "1.0.0",
+  "description": "Silma Web es una plataforma que facilita el proceso para la aceptación de escritos dentro de la empresa Silma Editorial, dando seguimiento por medio de retroalimentación de lectores y administradores que guían al escritor durante el proceso.",
+  "scripts": {
+    "backend": "cd back && npm i && npm run serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ProyectoIntegrador2018/silma.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ProyectoIntegrador2018/silma/issues"
+  },
+  "homepage": "https://github.com/ProyectoIntegrador2018/silma#readme"
+}
