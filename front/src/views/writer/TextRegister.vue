@@ -126,6 +126,7 @@ import axios from 'axios';
 import commonmark from 'commonmark';
 import {requiredRule, numericRule} from '@/utils/rules';
 import {errorGenresRange, errorServerRegister, errorDescriptionRange, ageRanges} from '@/utils/constants';
+const host = "https://silma.herokuapp.com";
 
 export default{
   components: {
@@ -162,7 +163,7 @@ export default{
   asyncComputed: {
       async getGenres(){
         const token = this.$cookies.get('token');
-        const responseGenres = await axios.get("http://localhost:3000/api/user/genres", { headers: {"Authorization" : 'Bearer ' + token} });
+        const responseGenres = await axios.get(`${host}/api/user/genres`, { headers: {"Authorization" : 'Bearer ' + token} });
         console.log(responseGenres.data)
         return this.genres = responseGenres.data
       }
@@ -185,7 +186,7 @@ export default{
       try {
         const token = this.$cookies.get('token');
 
-        const responseCreate = await axios.post('http://localhost:3000/api/texts', this.text, {
+        const responseCreate = await axios.post(`${host}/api/texts`, this.text, {
             headers: {
                   'content-type': 'application/json',
                   "Authorization" : 'Bearer ' + token, 
@@ -200,7 +201,7 @@ export default{
         console.log('>> formData >> ', formData);
         console.log(formData.get('text'))
 
-        const responseUpload = await axios.post(`http://localhost:3000/api/texts/${id}/uploads`, formData, {
+        const responseUpload = await axios.post(`${host}/api/texts/${id}/uploads`, formData, {
             headers: {
                   "Authorization" : 'Bearer ' + token, 
                   'Content-Type': 'multipart/form-data'
