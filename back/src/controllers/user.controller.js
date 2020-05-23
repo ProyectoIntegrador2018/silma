@@ -1,7 +1,6 @@
 import { UserModel } from "@/models/user.model";
 import { GenreModel } from "@/models/genre.model";
 import { send } from "@/utils/errors";
-import config from "@/config.json";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -11,7 +10,7 @@ export const authUser = (request, response) => {
     const user = await UserModel.findOne({ email }).select(['+password']);
     if (user && bcrypt.compareSync(password, user.password)) {
       const userWithoutHash = await UserModel.findOne({ _id: user._id });
-      const token = jwt.sign({ sub: user.id }, config.secret);
+      const token = jwt.sign({ sub: user.id }, process.env.SECRET_JWT);
       return {
         ...userWithoutHash._doc,
         token
