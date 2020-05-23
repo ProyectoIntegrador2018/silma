@@ -5,7 +5,7 @@
   "scripts": {
     "backend": "cd back && npm run build && node dist/server.js",
     "frontend": "cd front && npm run build",
-    "postinstall": "cd back && npm install && ../front && npm install"
+    "postinstall": "cd back && npm install && cd ../front && npm install"
   },
   "engines": {
     "node": "13.14.0"
