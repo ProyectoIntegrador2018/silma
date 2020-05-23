@@ -89,7 +89,7 @@ var retrieveTextDocument = (request, response) => {
     var {
       id
     } = request.params;
-    response.sendFile("".concat(__dirname, "/uploads/texts/").concat(id, ".md"), {
+    response.sendFile("/uploads/texts/".concat(id, ".md"), {
       root: '.'
     });
   } catch (err) {
