@@ -1,5 +1,7 @@
 {
-  "presets": ["@babel/preset-env"],
+  "presets": [
+    "es2015"
+  ],
   "plugins": [
     [
       "babel-plugin-root-import",
