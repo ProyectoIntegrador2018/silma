@@ -1,5 +1,5 @@
 export const apiHost = process.env.NODE_ENV === 'production' ?
-  `${process.env.BASE_URL}/api` :
+  'api' :
   process.env.VUE_APP_API_HOST;
 import axios from 'axios';
 
