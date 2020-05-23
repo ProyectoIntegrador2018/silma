@@ -1,2 +1,2 @@
-web: npm run frontend
+web: bin/boot
 api: npm run backend
