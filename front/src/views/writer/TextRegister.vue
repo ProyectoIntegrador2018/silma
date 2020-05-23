@@ -41,11 +41,11 @@
       </v-layout>
       <p>Seleccionar géneros (Máximo 3)</p>
       <v-layout row wrap>
-      <v-col cols="12" sm="3" v-for="genres in genres" :key="genres.name">
+      <v-col cols="12" sm="3" v-for="genre in genres" :key="genre.name">
             <v-switch
               v-model="text.genres"
-              :label="genres.name"
-              :value="genres._id"
+              :label="genre.name"
+              :value="genre._id"
               color="success"
             ></v-switch>
         </v-col>
