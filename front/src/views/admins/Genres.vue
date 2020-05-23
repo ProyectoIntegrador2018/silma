@@ -66,8 +66,9 @@
 </template>
 
 <script>
-import axios from 'axios';
 import {requiredRule, letterRule} from '@/utils/rules';
+import { getRequest, postRequest } from "@/utils/requests";
+
 export default {
     data(){
         return {
@@ -83,8 +84,8 @@ export default {
     asyncComputed: {
       async getGenres(){
         const token = this.$cookies.get('token');
-        const responseDuplicate = await axios.get("http://localhost:3000/api/user/genres", { headers: {"Authorization" : 'Bearer ' + token} });
-        return this.genres = responseDuplicate.data
+        this.genres = await getRequest('user/genres', token);
+        return this.genres;
       }
     },
     methods: {
@@ -98,21 +99,19 @@ export default {
           return
         }
         const token = this.$cookies.get('token');
-        await axios.post("http://localhost:3000/api/admins/register/genres", {name: this.name}, { headers: {"Authorization" : 'Bearer ' + token} });
+        await postRequest('admins/register/genres', { name: this.name }, token);
         this.dialogSuccess = true
         location.reload();
       } catch (error) {
-            console.log(error.response.data)
-            this.dialogError = true
+        this.dialogError = true;
       }
     },
     async fill(){
       try{
         const token = this.$cookies.get('token');
-        await axios.post("http://localhost:3000/api/admins/fillGenres", {name: this.name}, { headers: {"Authorization" : 'Bearer ' + token} });
+        await postRequest('admins/fillGenres', { name: this.name }, token);
       } catch (error) {
-            console.log(error.response.data)
-            this.dialogError = true
+        this.dialogError = true;
       }
       location.reload();
     }

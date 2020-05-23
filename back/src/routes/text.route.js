@@ -1,9 +1,10 @@
 import { getAllTexts, getText, getTextsInPhase, createText, uploadTextDocument, retrieveTextDocument, getTextsOfWriter } from "@/controllers/text.controller";
 import multer from "multer";
+import path from "path";
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, './public/uploads/texts');
+    cb(null, path.resolve(__dirname, '../uploads/texts'));
   },
   filename: function (req, file, cb) {
     const { id } = req.params;

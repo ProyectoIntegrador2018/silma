@@ -11,7 +11,7 @@
 
 <script>
 import Table from "@/components/table.vue";
-import axios from 'axios';
+import { postRequest } from '@/utils/requests';
 
 export default {
   components: {
@@ -41,9 +41,7 @@ export default {
   asyncComputed: {
       async getTexts(){
         const token = this.$cookies.get('token');
-        const response = await axios.get(`http://localhost:3000/api/texts/writer/${this.writer}`, { headers: {"Authorization" : 'Bearer ' + token} });
-        console.log(response.data)
-        this.data = response.data
+        this.data = await postRequest(`texts/writer/${this.writer}`, token);
       }
   },
   methods: {

@@ -5,9 +5,13 @@ import mongoose from "mongoose";
 import { createRoutes } from "./routes";
 import jwt from "./utils/jwt";
 
-const mongoUrl = "mongodb://localhost/silma";
-const enabledCorsOrigins = "http://localhost:8080";
-const defaultPort = 3000;
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config({ path: '.env' });
+}
+
+const mongoUrl = process.env.MONGODB_URI;
+const enabledCorsOrigins = process.env.CROSS_ORIGIN;
+const port = process.env.PORT || 3000;
 
 // Api app configuration
 const app = express();
@@ -23,7 +27,12 @@ app.use(
 );
 app.use(bodyParser.json());
 app.use(jwt());
-app.use(express.static('public'));
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(__dirname + '/public'));
+  app.get(/^(?!.*(\/api\/)).*$/, (req, res) => res.sendFile(__dirname + '/public/index.html'));
+} else {
+  app.use(express.static('public'));
+}
 
 // Connect to Mongoose and set connection variable
 mongoose.connect(mongoUrl, {
@@ -41,7 +50,6 @@ const router = createRoutes();
 app.use("/api", router);
 
 // Launch app to listen to specified port
-const port = process.env.PORT || defaultPort;
 app.listen(port, () => {
   console.log(`Running Silma backend on port ${port}`);
 });
