@@ -23,10 +23,9 @@ var SuggestionSchema = new _mongoose.Schema({
   sentDate: {
     type: Date
   },
-
-  /* Status can be set to Pending, Rejected, Accepted, Completed etc */
   suggestionStatus: {
-    type: String
+    type: String,
+    enum: ["Pending", "Rejected", "Accepted", "Completed"]
   },
   score: {
     type: Number
