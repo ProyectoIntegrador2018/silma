@@ -111,7 +111,7 @@ import axios from 'axios';
 import TimestampDateField from '@/components/timestampDate.vue';
 import {requiredRule, emailRule, numericRule, passwordMinRule, phoneRule} from '@/utils/rules';
 import {countries} from "@/utils/constants"
-const host = "https://www.silma.herokuapp.com";
+const host = "https://silma.herokuapp.com";
 
 export default{
   components: {
