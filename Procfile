@@ -1,1 +1,1 @@
-web: npm run backend
+api: npm run backend
