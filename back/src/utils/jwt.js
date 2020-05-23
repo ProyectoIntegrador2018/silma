@@ -1,12 +1,11 @@
 import expressJwt from "express-jwt";
-import config from "@/config.json";
 import { UserModel } from "@/models/user.model";
 
 
 module.exports = jwt;
 
 function jwt() {
-  const secret = config.secret;
+  const secret = process.env.SECRET_JWT;
   return expressJwt({ secret, isRevoked }).unless({
     path: [
       // public routes that don't require authentication

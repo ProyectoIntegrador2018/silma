@@ -5,9 +5,9 @@ import mongoose from "mongoose";
 import { createRoutes } from "./routes";
 import jwt from "./utils/jwt";
 
-const mongoUrl = "mongodb://localhost/silma";
-const enabledCorsOrigins = "http://localhost:8080";
-const defaultPort = 3000;
+const mongoUrl = process.env.MONGODB_URI;
+const enabledCorsOrigins = process.env.CROSS_ORIGIN;
+const port = process.env.PORT || 3000;
 
 // Api app configuration
 const app = express();
@@ -41,7 +41,6 @@ const router = createRoutes();
 app.use("/api", router);
 
 // Launch app to listen to specified port
-const port = process.env.PORT || defaultPort;
 app.listen(port, () => {
   console.log(`Running Silma backend on port ${port}`);
 });
