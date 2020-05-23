@@ -9,7 +9,7 @@ var _mongoose = require("mongoose");
 
 var _mongooseBeautifulUniqueValidation = _interopRequireDefault(require("mongoose-beautiful-unique-validation"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var AdminSchema = new _mongoose.Schema({
   user: {
@@ -18,10 +18,10 @@ var AdminSchema = new _mongoose.Schema({
   },
   isSuperAdmin: {
     type: Boolean,
-    "default": false
+    default: false
   }
 });
 exports.AdminSchema = AdminSchema;
-AdminSchema.plugin(_mongooseBeautifulUniqueValidation["default"]);
+AdminSchema.plugin(_mongooseBeautifulUniqueValidation.default);
 var AdminModel = (0, _mongoose.model)("Admin", AdminSchema);
 exports.AdminModel = AdminModel;

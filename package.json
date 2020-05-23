@@ -4,7 +4,8 @@
   "description": "Silma Web es una plataforma que facilita el proceso para la aceptación de escritos dentro de la empresa Silma Editorial, dando seguimiento por medio de retroalimentación de lectores y administradores que guían al escritor durante el proceso.",
   "scripts": {
     "start": "node back/dist/server.js",
-    "postinstall": "cd back && npm install"
+    "postinstall": "cd back && npm install",
+    "build": "cd back && npm run build && cd ../front && npm run build"
   },
   "engines": {
     "node": "13.14.0"

@@ -9,23 +9,25 @@ var _text = require("../controllers/text.controller");
 
 var _multer = _interopRequireDefault(require("multer"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var storage = _multer["default"].diskStorage({
+var storage = _multer.default.diskStorage({
   destination: function destination(req, file, cb) {
     cb(null, './public/uploads/texts');
   },
   filename: function filename(req, file, cb) {
-    var id = req.params.id;
+    var {
+      id
+    } = req.params;
     cb(null, "".concat(id, ".md"));
   }
 });
 
-var upload = (0, _multer["default"])({
+var upload = (0, _multer.default)({
   storage: storage
 });
 
-var addTextRoutes = function addTextRoutes(router) {
+var addTextRoutes = router => {
   router.get("/texts", _text.getAllTexts);
   router.get("/texts/:id", _text.getText);
   router.get("/texts/phase/:id", _text.getTextsInPhase);

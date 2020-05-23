@@ -9,7 +9,7 @@ var _mongoose = require("mongoose");
 
 var _mongooseBeautifulUniqueValidation = _interopRequireDefault(require("mongoose-beautiful-unique-validation"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var WriterSchema = new _mongoose.Schema({
   user: {
@@ -22,10 +22,10 @@ var WriterSchema = new _mongoose.Schema({
   },
   isPlus: {
     type: Boolean,
-    "default": false
+    default: false
   }
 });
 exports.WriterSchema = WriterSchema;
-WriterSchema.plugin(_mongooseBeautifulUniqueValidation["default"]);
+WriterSchema.plugin(_mongooseBeautifulUniqueValidation.default);
 var WriterModel = (0, _mongoose.model)("Writer", WriterSchema);
 exports.WriterModel = WriterModel;

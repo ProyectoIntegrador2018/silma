@@ -11,7 +11,7 @@ var _validators = require("../utils/validators");
 
 var _mongooseBeautifulUniqueValidation = _interopRequireDefault(require("mongoose-beautiful-unique-validation"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var ReaderSchema = new _mongoose.Schema({
   user: {
@@ -24,8 +24,8 @@ var ReaderSchema = new _mongoose.Schema({
   },
   readingProficiency: {
     type: String,
-    "enum": ["3 or less", "4 to 6", "7 or more"],
-    "default": "4 to 6"
+    enum: ["3 or less", "4 to 6", "7 or more"],
+    default: "4 to 6"
   },
   preferences: {
     type: [{
@@ -37,7 +37,7 @@ var ReaderSchema = new _mongoose.Schema({
   recommended: {
     type: String,
     required: "How do you know Silma",
-    "default": "Nadie / Otra persona"
+    default: "Nadie / Otra persona"
   },
   readFrom: {
     type: Date,
@@ -50,10 +50,10 @@ var ReaderSchema = new _mongoose.Schema({
   //Futuro sprint 3
   lastReview: {
     type: Date,
-    "default": Date.now
+    default: Date.now
   }
 });
 exports.ReaderSchema = ReaderSchema;
-ReaderSchema.plugin(_mongooseBeautifulUniqueValidation["default"]);
+ReaderSchema.plugin(_mongooseBeautifulUniqueValidation.default);
 var ReaderModel = (0, _mongoose.model)("Reader", ReaderSchema);
 exports.ReaderModel = ReaderModel;

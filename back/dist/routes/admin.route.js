@@ -7,7 +7,7 @@ exports.addAdminRoutes = void 0;
 
 var _admin = require("../controllers/admin.controller");
 
-var addAdminRoutes = function addAdminRoutes(router) {
+var addAdminRoutes = router => {
   router.get("/admins", _admin.getAdmins);
   router.get("/admins/:id", _admin.getAdmin);
   router.post("/admins/register", _admin.createAdmin);

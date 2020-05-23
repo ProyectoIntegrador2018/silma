@@ -11,7 +11,7 @@ var _mongooseBeautifulUniqueValidation = _interopRequireDefault(require("mongoos
 
 var _validators = require("../utils/validators");
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var TextSchema = new _mongoose.Schema({
   writer: {
@@ -41,7 +41,7 @@ var TextSchema = new _mongoose.Schema({
   },
   ageRange: {
     type: String,
-    "enum": ["10-12", "13-15", "16-18", "18+"],
+    enum: ["10-12", "13-15", "16-18", "18+"],
     required: true
   },
   numberOfPages: {
@@ -50,16 +50,16 @@ var TextSchema = new _mongoose.Schema({
   },
   phase: {
     type: Number,
-    "default": 1,
+    default: 1,
     min: 1,
     max: 4
   },
   documentPath: {
     type: String,
-    "default": ''
+    default: ''
   }
 });
 exports.TextSchema = TextSchema;
-TextSchema.plugin(_mongooseBeautifulUniqueValidation["default"]);
+TextSchema.plugin(_mongooseBeautifulUniqueValidation.default);
 var TextModel = (0, _mongoose.model)("Text", TextSchema);
 exports.TextModel = TextModel;

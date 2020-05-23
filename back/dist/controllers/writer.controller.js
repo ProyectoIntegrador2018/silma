@@ -21,106 +21,49 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-var getWriters = function getWriters(request, response) {
-  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-    var writers;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return _writer.WriterModel.find().populate("user");
-
-          case 2:
-            writers = _context.sent;
-            return _context.abrupt("return", writers);
-
-          case 4:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee);
-  })));
+var getWriters = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    var writers = yield _writer.WriterModel.find().populate("user");
+    return writers;
+  }));
 };
 
 exports.getWriters = getWriters;
 
-var getWriter = function getWriter(request, response) {
-  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-    var id, writer;
-    return regeneratorRuntime.wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            id = request.params.id;
-            _context2.next = 3;
-            return _writer.WriterModel.findById(id).populate("user");
-
-          case 3:
-            writer = _context2.sent;
-            return _context2.abrupt("return", writer);
-
-          case 5:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2);
-  })));
+var getWriter = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    var {
+      id
+    } = request.params;
+    var writer = yield _writer.WriterModel.findById(id).populate("user");
+    return writer;
+  }));
 };
 
 exports.getWriter = getWriter;
 
-var createWriter = function createWriter(request, response) {
-  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-    var UserNew, data, lookUserWriter, writerData, newWriter;
-    return regeneratorRuntime.wrap(function _callee3$(_context3) {
-      while (1) {
-        switch (_context3.prev = _context3.next) {
-          case 0:
-            _context3.next = 2;
-            return (0, _user.createUser)(request, response, "writer");
+var createWriter = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    var UserNew = yield (0, _user.createUser)(request, response, "writer");
+    var data = request.body;
+    var lookUserWriter = yield _writer.WriterModel.findOne({
+      user: UserNew._id
+    });
 
-          case 2:
-            UserNew = _context3.sent;
-            data = request.body;
-            _context3.next = 6;
-            return _writer.WriterModel.findOne({
-              user: UserNew._id
-            });
+    if (!lookUserWriter) {
+      var writerData = _objectSpread({}, data, {
+        user: UserNew._id
+      });
 
-          case 6:
-            lookUserWriter = _context3.sent;
-
-            if (lookUserWriter) {
-              _context3.next = 16;
-              break;
-            }
-
-            writerData = _objectSpread({}, data, {
-              user: UserNew._id
-            });
-            _context3.next = 11;
-            return _writer.WriterModel.create(writerData);
-
-          case 11:
-            newWriter = _context3.sent;
-            newWriter.user = UserNew;
-            return _context3.abrupt("return", newWriter);
-
-          case 16:
-            throw {
-              error: "The e-mail already has a writer account"
-            };
-
-          case 17:
-          case "end":
-            return _context3.stop();
-        }
-      }
-    }, _callee3);
-  })));
+      var newWriter = yield _writer.WriterModel.create(writerData);
+      newWriter.user = UserNew;
+      return newWriter;
+    } else {
+      throw {
+        error: "The e-mail already has a writer account"
+      };
+    }
+  }));
 };
 
 exports.createWriter = createWriter;

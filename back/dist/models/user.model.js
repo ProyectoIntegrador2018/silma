@@ -11,7 +11,7 @@ var _validators = require("../utils/validators");
 
 var _mongooseBeautifulUniqueValidation = _interopRequireDefault(require("mongoose-beautiful-unique-validation"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var UserSchema = new _mongoose.Schema({
   name: {
@@ -46,10 +46,10 @@ var UserSchema = new _mongoose.Schema({
   roles: [{
     type: String,
     enums: ["admin", "writer", "reader"],
-    "default": []
+    default: []
   }]
 });
 exports.UserSchema = UserSchema;
-UserSchema.plugin(_mongooseBeautifulUniqueValidation["default"]);
+UserSchema.plugin(_mongooseBeautifulUniqueValidation.default);
 var UserModel = (0, _mongoose.model)("User", UserSchema);
 exports.UserModel = UserModel;

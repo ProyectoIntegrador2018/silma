@@ -21,106 +21,49 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-var getReaders = function getReaders(request, response) {
-  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-    var readers;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return _reader.ReaderModel.find().populate("user");
-
-          case 2:
-            readers = _context.sent;
-            return _context.abrupt("return", readers);
-
-          case 4:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee);
-  })));
+var getReaders = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    var readers = yield _reader.ReaderModel.find().populate("user");
+    return readers;
+  }));
 };
 
 exports.getReaders = getReaders;
 
-var getReader = function getReader(request, response) {
-  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-    var id, reader;
-    return regeneratorRuntime.wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            id = request.params.id;
-            _context2.next = 3;
-            return _reader.ReaderModel.findById(id).populate("user");
-
-          case 3:
-            reader = _context2.sent;
-            return _context2.abrupt("return", reader);
-
-          case 5:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2);
-  })));
+var getReader = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    var {
+      id
+    } = request.params;
+    var reader = yield _reader.ReaderModel.findById(id).populate("user");
+    return reader;
+  }));
 };
 
 exports.getReader = getReader;
 
-var createReader = function createReader(request, response) {
-  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-    var UserNew, data, lookUserReader, readerData, newReader;
-    return regeneratorRuntime.wrap(function _callee3$(_context3) {
-      while (1) {
-        switch (_context3.prev = _context3.next) {
-          case 0:
-            _context3.next = 2;
-            return (0, _user.createUser)(request, response, "reader");
+var createReader = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    var UserNew = yield (0, _user.createUser)(request, response, "reader");
+    var data = request.body;
+    var lookUserReader = yield _reader.ReaderModel.findOne({
+      user: UserNew._id
+    });
 
-          case 2:
-            UserNew = _context3.sent;
-            data = request.body;
-            _context3.next = 6;
-            return _reader.ReaderModel.findOne({
-              user: UserNew._id
-            });
+    if (!lookUserReader) {
+      var readerData = _objectSpread({}, data, {
+        user: UserNew._id
+      });
 
-          case 6:
-            lookUserReader = _context3.sent;
-
-            if (lookUserReader) {
-              _context3.next = 16;
-              break;
-            }
-
-            readerData = _objectSpread({}, data, {
-              user: UserNew._id
-            });
-            _context3.next = 11;
-            return _reader.ReaderModel.create(readerData);
-
-          case 11:
-            newReader = _context3.sent;
-            newReader.user = UserNew;
-            return _context3.abrupt("return", newReader);
-
-          case 16:
-            throw {
-              error: "The e-mail already has a reader account"
-            };
-
-          case 17:
-          case "end":
-            return _context3.stop();
-        }
-      }
-    }, _callee3);
-  })));
+      var newReader = yield _reader.ReaderModel.create(readerData);
+      newReader.user = UserNew;
+      return newReader;
+    } else {
+      throw {
+        error: "The e-mail already has a reader account"
+      };
+    }
+  }));
 };
 
 exports.createReader = createReader;

@@ -9,7 +9,7 @@ var _mongoose = require("mongoose");
 
 var _mongooseBeautifulUniqueValidation = _interopRequireDefault(require("mongoose-beautiful-unique-validation"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var SuggestionSchema = new _mongoose.Schema({
   reader: {
@@ -33,6 +33,6 @@ var SuggestionSchema = new _mongoose.Schema({
   }
 });
 exports.SuggestionSchema = SuggestionSchema;
-SuggestionSchema.plugin(_mongooseBeautifulUniqueValidation["default"]);
+SuggestionSchema.plugin(_mongooseBeautifulUniqueValidation.default);
 var SuggestionModel = (0, _mongoose.model)("Suggestion", SuggestionSchema);
 exports.SuggestionModel = SuggestionModel;

@@ -17,36 +17,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 // Sends a successful or failed response to an http request.
 var send = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(response, callback) {
-    var data;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.prev = 0;
-            _context.next = 3;
-            return callback();
-
-          case 3:
-            data = _context.sent;
-            response.send(data);
-            _context.next = 10;
-            break;
-
-          case 7:
-            _context.prev = 7;
-            _context.t0 = _context["catch"](0);
-            response.status(404).send(_objectSpread({
-              status: "fail"
-            }, _context.t0));
-
-          case 10:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee, null, [[0, 7]]);
-  }));
+  var _ref = _asyncToGenerator(function* (response, callback) {
+    try {
+      var data = yield callback();
+      response.send(data);
+    } catch (error) {
+      response.status(404).send(_objectSpread({
+        status: "fail"
+      }, error));
+    }
+  });
 
   return function send(_x, _x2) {
     return _ref.apply(this, arguments);
