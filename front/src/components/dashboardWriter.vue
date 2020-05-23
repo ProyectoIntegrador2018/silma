@@ -41,7 +41,7 @@ export default {
   asyncComputed: {
       async getTexts(){
         const token = this.$cookies.get('token');
-        this.data = await postRequest(`texts/writer/${this.writer}`, token);
+        this.data = await postRequest(`texts/writer/${this.writer}`, {}, token);
       }
   },
   methods: {
