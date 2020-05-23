@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.calculateBetweenDatesPoints = exports.calculateParticiaptionPoints = exports.calculateReadingPoints = exports.calculateAgePoints = exports.calculateGenrePoints = exports.runAlgorithm = exports.addSuggestionSendEmail = exports.assignReaders = void 0;
+exports.completeSuggestion = exports.acceptSuggestion = exports.rejectSuggestion = exports.changeSuggestionStatus = exports.calculateBetweenDatesPoints = exports.calculateParticiaptionPoints = exports.calculateReadingPoints = exports.calculateAgePoints = exports.calculateGenrePoints = exports.runAlgorithm = exports.addSuggestionSendEmail = exports.assignReaders = void 0;
 
 var _reader = require("../models/reader.model");
 
@@ -13,15 +13,23 @@ var _text = require("../models/text.model");
 
 var _mailSender = require("../utils/mailSender");
 
+var _errors = require("../utils/errors");
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 var assignReaders = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator(function* (text, number) {
+  var _ref = _asyncToGenerator(function* (text, amount) {
     var resultsAlgorithm = yield runAlgorithm(text);
     resultsAlgorithm = resultsAlgorithm.sort((a, b) => a.points < b.points ? 1 : -1);
-    var selectedReaders = resultsAlgorithm.slice(0, number);
+    var selectedReaders = resultsAlgorithm.slice(0, amount);
     yield addSuggestionSendEmail(selectedReaders, text);
   });
 
@@ -243,3 +251,69 @@ var calculateBetweenDatesPoints = /*#__PURE__*/function () {
 }();
 
 exports.calculateBetweenDatesPoints = calculateBetweenDatesPoints;
+
+var changeSuggestionStatus = /*#__PURE__*/function () {
+  var _ref9 = _asyncToGenerator(function* (id, newStatus, previousStatus) {
+    var suggestion = yield _suggestion.SuggestionModel.findById(id).populate("text");
+    if (!suggestion) throw {
+      error: "Suggestion with id: ".concat(id, " not found")
+    };
+
+    if (suggestion.suggestionStatus === previousStatus) {
+      suggestion.suggestionStatus = newStatus;
+      yield _suggestion.SuggestionModel.updateOne({
+        _id: suggestion._id
+      }, _objectSpread({
+        suggestionStatus: newStatus
+      }, suggestion._doc));
+      return suggestion;
+    } else {
+      throw {
+        error: "Suggestion status can't be updated to ".concat(newStatus, " when in ").concat(suggestion.suggestionStatus, " status")
+      };
+    }
+  });
+
+  return function changeSuggestionStatus(_x14, _x15, _x16) {
+    return _ref9.apply(this, arguments);
+  };
+}();
+
+exports.changeSuggestionStatus = changeSuggestionStatus;
+
+var rejectSuggestion = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    var {
+      id
+    } = request.params;
+    var suggestion = yield changeSuggestionStatus(id, "Rejected", "Pending");
+    yield assignReaders(suggestion.text, 1);
+    return suggestion;
+  }));
+};
+
+exports.rejectSuggestion = rejectSuggestion;
+
+var acceptSuggestion = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    var {
+      id
+    } = request.params;
+    var suggestion = yield changeSuggestionStatus(id, "Accepted", "Pending");
+    return suggestion;
+  }));
+};
+
+exports.acceptSuggestion = acceptSuggestion;
+
+var completeSuggestion = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    var {
+      id
+    } = request.params;
+    var suggestion = yield changeSuggestionStatus(id, "Completed", "Accepted");
+    return suggestion;
+  }));
+};
+
+exports.completeSuggestion = completeSuggestion;

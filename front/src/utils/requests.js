@@ -1,4 +1,6 @@
-export const apiHost = process.env.VUE_APP_API_HOST;
+export const apiHost = process.env.NODE_ENV === 'production' ?
+  'api' :
+  process.env.VUE_APP_API_HOST;
 import axios from 'axios';
 
 export const getRequest = async (endpoint, token = undefined, withFiles = false) => {

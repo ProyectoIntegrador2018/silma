@@ -15,7 +15,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var storage = _multer.default.diskStorage({
   destination: function destination(req, file, cb) {
-    cb(null, _path.default.resolve(__dirname, '../uploads/texts'));
+    cb(null, './public/uploads/texts');
   },
   filename: function filename(req, file, cb) {
     var {
