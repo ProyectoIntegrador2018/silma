@@ -17,8 +17,6 @@ export const postRequest = async (endpoint, data, token = undefined, withFiles =
   try {
     const headerFile = withFiles ? { 'Content-Type': 'multipart/form-data' } : {};
     const headerToken = token ? { Authorization: `Bearer ${token}` } : {};
-    console.log(`${apiHost}/${endpoint}`);
-    console.log({ headers: { ...headerFile, ...headerToken }});
     const response = await axios.post(`${apiHost}/${endpoint}`, data, { headers: { ...headerFile, ...headerToken }});
     return response.data;
   } catch(error) {
