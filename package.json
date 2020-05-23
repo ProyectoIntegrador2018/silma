@@ -3,8 +3,15 @@
   "version": "1.0.0",
   "description": "Silma Web es una plataforma que facilita el proceso para la aceptación de escritos dentro de la empresa Silma Editorial, dando seguimiento por medio de retroalimentación de lectores y administradores que guían al escritor durante el proceso.",
   "scripts": {
-    "backend": "cd back && npm start",
+    "backend": "cd back && nodemon --exec babel-node src/server",
     "postinstall": "cd back && npm install"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.9.0",
+    "babel-plugin-root-import": "^6.5.0",
+    "nodemon": "^2.0.2"
   },
   "engines": {
     "node": "13.14.0"
