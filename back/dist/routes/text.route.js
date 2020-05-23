@@ -9,11 +9,13 @@ var _text = require("../controllers/text.controller");
 
 var _multer = _interopRequireDefault(require("multer"));
 
+var _path = _interopRequireDefault(require("path"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var storage = _multer.default.diskStorage({
   destination: function destination(req, file, cb) {
-    cb(null, '/uploads/texts');
+    cb(null, _path.default.resolve(__dirname, '../uploads/texts'));
   },
   filename: function filename(req, file, cb) {
     var {
