@@ -111,6 +111,7 @@ import axios from 'axios';
 import TimestampDateField from '@/components/timestampDate.vue';
 import {requiredRule, emailRule, numericRule, passwordMinRule, phoneRule} from '@/utils/rules';
 import {countries} from "@/utils/constants"
+const host = "https://www.silma.herokuapp.com";
 
 export default{
   components: {
@@ -146,12 +147,12 @@ export default{
         return;
       }
       try {
-        await axios.post("http://localhost:3000/api/register/writers", this.writer)
+        await axios.post(`${host}/api/register/writers`, this.writer)
         const authUser = {
           email: this.writer.email,
           password: this.writer.password
         }
-        const responseAuth = await axios.post("http://localhost:3000/api/user/authentication", authUser);
+        const responseAuth = await axios.post(`${host}/api/user/authentication`, authUser);
         const { token, roles, _id } = responseAuth.data;
         this.$cookies.set('token', token);
         if (!this.$cookies.isKey('user_type')) {
