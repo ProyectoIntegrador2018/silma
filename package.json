@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Silma Web es una plataforma que facilita el proceso para la aceptación de escritos dentro de la empresa Silma Editorial, dando seguimiento por medio de retroalimentación de lectores y administradores que guían al escritor durante el proceso.",
   "scripts": {
-    "backend": "cd back && npm i && npm run serve"
+    "backend": "cd back && npm install && npm run serve"
   },
   "repository": {
     "type": "git",
