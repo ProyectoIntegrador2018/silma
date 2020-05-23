@@ -47,7 +47,7 @@ export const uploadTextDocument = (request, response) => {
 export const retrieveTextDocument = (request, response) => {
   try {
     const { id } = request.params;
-    response.sendFile(`public/uploads/texts/${id}.md`, { root: '.' });
+    response.sendFile(`${__dirname}/uploads/texts/${id}.md`, { root: '.' });
   } catch (err) {
     response.status(404).send({ message: 'File does not exist' });
   }

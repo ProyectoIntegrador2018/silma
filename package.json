@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node back/dist/server.js",
     "postinstall": "cd back && npm install",
-    "build-prod": "cd back && npm run build && cd ../front && npm run build"
+    "build-prod": "cd back && npm run build && cd ../front && npm run build && cd ../back/dist && mkdir uploads && mkdir uploads/texts"
   },
   "engines": {
     "node": "13.14.0"
