@@ -30,7 +30,7 @@ app.use((0, _jwt.default)());
 
 if (process.env.NODE_ENV === 'production') {
   app.use(_express.default.static(__dirname + '/public'));
-  app.get(/.*/, (req, res) => res.sendFile(__dirname + '/public/index.html'));
+  app.get(/^(?!.*(\/api\/)).*$/, (req, res) => res.sendFile(__dirname + '/public/index.html'));
 } else {
   app.use(_express.default.static('public'));
 } // Connect to Mongoose and set connection variable
