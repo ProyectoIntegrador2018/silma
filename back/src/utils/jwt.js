@@ -9,7 +9,7 @@ function jwt() {
   return expressJwt({ secret, isRevoked }).unless({
     path: [
       '/',
-      '/Inicar_Sesion',
+      '/public/index.html',
       // public routes that don't require authentication
       '/api/register/readers',
       '/api/register/writers',
