@@ -18,7 +18,7 @@ function jwt() {
     secret,
     isRevoked
   }).unless({
-    path: [// public routes that don't require authentication
+    path: ['/', '/Inicar_Sesion', // public routes that don't require authentication
     '/api/register/readers', '/api/register/writers', '/api/admins/register', '/api/user/authentication', '/api/user/genres', '/api/admins/fillGenres']
   });
 }
