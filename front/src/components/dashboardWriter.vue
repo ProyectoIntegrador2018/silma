@@ -11,7 +11,7 @@
 
 <script>
 import Table from "@/components/table.vue";
-import { postRequest } from '@/utils/requests';
+import { getRequest } from '@/utils/requests';
 
 export default {
   components: {
@@ -41,7 +41,7 @@ export default {
   asyncComputed: {
       async getTexts(){
         const token = this.$cookies.get('token');
-        this.data = await postRequest(`texts/writer/${this.writer}`, {}, token);
+        this.data = await getRequest(`texts/writer/${this.writer}`, token);
       }
   },
   methods: {
