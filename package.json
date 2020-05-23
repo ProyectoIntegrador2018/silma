@@ -5,6 +5,9 @@
   "scripts": {
     "backend": "cd back && npm install && npm run serve"
   },
+  "engines": {
+    "node": "13.14.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ProyectoIntegrador2018/silma.git"
