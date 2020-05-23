@@ -78,8 +78,10 @@
 </template>
 
 <script>
-import axios from 'axios';
 import {emailRule} from '@/utils/rules';
+import { postRequest } from '@/utils/requests';
+import { setAuthCookies } from '@/utils/cookies';
+
 export default {
 
     data(){
@@ -102,21 +104,12 @@ export default {
                     email: this.user.email,
                     password: this.user.password
                 }
-                const responseAuth = await axios.post("http://localhost:3000/api/user/authentication", authUser);
-                const { token, roles, _id, name } = responseAuth.data;
-                if (token) {
-                    this.$cookies.set('token', token);
-                    if (!this.$cookies.isKey('user_type')) {
-                      const role = roles.includes('admin')
-                        ? 'admin' : roles.includes('writer')
-                        ? 'writer' : 'reader';
-                      this.$cookies.set('user_type', role);
-                      this.$cookies.set('user_id', _id);
-                      this.$cookies.set('user_name', name);
-                    }
-                    this.$router.push('/');
+                const user = await postRequest('user/authentication', authUser);
+                const isSet = setAuthCookies(user);
+                if (isSet) {
+                  this.$router.push('/');
                 } else {
-                    this.dialogIncorrectInfo = true
+                  this.dialogIncorrectInfo = true;
                 }
             } catch (error) {
                 this.dialogError = true

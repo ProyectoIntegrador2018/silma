@@ -14,6 +14,12 @@ var _jwt = _interopRequireDefault(require("./utils/jwt"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config({
+    path: '.env'
+  });
+}
+
 var mongoUrl = process.env.MONGODB_URI;
 var enabledCorsOrigins = process.env.CROSS_ORIGIN;
 var port = process.env.PORT || 3000; // Api app configuration

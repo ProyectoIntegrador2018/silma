@@ -5,6 +5,10 @@ import mongoose from "mongoose";
 import { createRoutes } from "./routes";
 import jwt from "./utils/jwt";
 
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config({ path: '.env' });
+}
+
 const mongoUrl = process.env.MONGODB_URI;
 const enabledCorsOrigins = process.env.CROSS_ORIGIN;
 const port = process.env.PORT || 3000;
