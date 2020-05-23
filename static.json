@@ -2,6 +2,11 @@
   "root": "front/dist",
   "clean_urls": true,
   "routes": {
-    "/web/**": "index.html"
+    "web/**": "index.html"
+  },
+  "proxies": {
+    "/api": {
+      "origin": "https://silma.herokuapp.com:3000/api"
+    }
   }
 }
