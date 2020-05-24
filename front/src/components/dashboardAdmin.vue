@@ -23,6 +23,7 @@
 import Table from "@/components/table.vue";
 import { getRequest } from "@/utils/requests";
 
+
 export default {
   components: {
     Table
