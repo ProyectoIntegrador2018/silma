@@ -96,7 +96,8 @@ const runAll = async () => {
     title: "Text A",
     registerNumber: "123asd",
     description: "asd zxc qwe asd zxc asd zxc qwe asd zxc",
-    numberOfPages: 120
+    numberOfPages: 120,
+    numberOfChapters: 10
   }, { headers: { "Authorization": 'Bearer ' + token } });
   const text2 = await axios.post("http://localhost:3000/api/texts", {
     writer: writer1.data._id,
@@ -105,7 +106,8 @@ const runAll = async () => {
     title: "Text B",
     registerNumber: "123asd",
     description: "asd zxc qwe asd zxc asd zxc qwe asd zxc",
-    numberOfPages: 120
+    numberOfPages: 120,
+    numberOfChapters: 10
   }, { headers: { "Authorization": 'Bearer ' + token } });
 };
 

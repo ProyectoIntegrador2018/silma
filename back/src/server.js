@@ -30,7 +30,6 @@ app.use(
 );
 app.use(bodyParser.json());
 app.use(jwt());
-app.use(fileupload());
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(__dirname + '/public'));
   app.get(/^(?!.*(\/api\/)).*$/, (req, res) => res.sendFile(__dirname + '/public/index.html'));

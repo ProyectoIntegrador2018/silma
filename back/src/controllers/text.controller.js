@@ -3,6 +3,7 @@ import { TextModel } from "@/models/text.model";
 import { assignReaders } from "@/controllers/suggestion.controller";
 import { sendEmail } from "@/utils/mailSender";
 import { uploadDocument, getDocument } from "@/controllers/aws.controller";
+import { UserModel } from '@/models/user.model';
 
 export const getAllTexts = (request, response) => {
   send(response, async () => {
@@ -66,16 +67,20 @@ export const getTextsOfWriter = (request, response) => {
   });
 };
 
+const rejectedHTML = "Texto Rechazado";
+
 export const rejectText = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
-    const text = await TextModel.findById(id);
+    const text = await TextModel.findById(id)
+      .populate("writer");
+    const user = await UserModel.findById(text.writer.user);
     const document = request.files.document;
     await sendEmail({
-      "email": "usurquidi.96@gmail.com",
-      "subject": "New Silma Reading Suggestion!",
+      "email": user.email,
+      "subject": "Tu libro ha sido rechazado",
       "text": "",
-      "html": "Ya no te queremos bai",
+      "html": rejectedHTML,
       attachments: [
         {
           filename: document.name,
