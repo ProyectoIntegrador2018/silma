@@ -169,10 +169,11 @@
 
 
 <script>
-import axios from 'axios';
 import TimestampDateField from '@/components/timestampDate.vue';
 import {administrators, countries, errorServerRegister, errorPreferencesMinimun} from '@/utils/constants.js';
 import {requiredRule, emailRule, numericRule, facebookRule, passwordMinRule, phoneRule} from '@/utils/rules';
+import { getRequest, postRequest } from '@/utils/requests';
+import { setAuthCookies } from '@/utils/cookies';
 
 export default {
   components: {
@@ -218,8 +219,8 @@ export default {
   },
   asyncComputed: {
       async getGenres(){
-        const responseDuplicate = await axios.get("http://localhost:3000/api/user/genres");
-        return this.genres = responseDuplicate.data
+        this.genres = await getRequest('user/genres');
+        return this.genres;
       }
   },
   methods: {
@@ -244,24 +245,15 @@ export default {
             this.reader.preferences.push(this.preferenceId(preference))
         }
         console.log(this.reader.preferences)
-        await axios.post("http://localhost:3000/api/register/readers", this.reader);
+        await postRequest('register/readers', this.reader);
         const authUser = {
           email: this.reader.email,
           password: this.reader.password
         }
-        const responseAuth = await axios.post("http://localhost:3000/api/user/authentication", authUser);
-        const { token, roles, _id } = responseAuth.data;
-        this.$cookies.set('token', token);
-        if (!this.$cookies.isKey('user_type')) {
-            const role = roles.includes('admin')
-              ? 'admin' : roles.includes('writer')
-              ? 'writer' : 'reader';
-            this.$cookies.set('user_type', role);
-            this.$cookies.set('user_id', _id);
-        }
+        const user = await postRequest('user/authentication', authUser);
+        setAuthCookies(user);
         this.dialogSuccess = true
       } catch (error) {
-        console.log(error.response.data)
         this.errorMessage = this.errorServerRegister
         this.dialogError = true
       }

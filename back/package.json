@@ -4,14 +4,19 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "serve": "nodemon --exec babel-node src/server"
+    "serve": "nodemon --exec babel-node src/server",
+    "build": "babel src -d dist",
+    "generate": "babel-node src/scripts/generate"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.683.0",
+    "axios": "^0.19.2",
     "bcrypt": "^4.0.1",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-fileupload": "^1.1.7-alpha.3",
     "express-jwt": "^5.3.3",
@@ -19,12 +24,15 @@
     "mongoose": "^5.9.6",
     "mongoose-beautiful-unique-validation": "^7.1.1",
     "multer": "^1.4.2",
-    "nodemailer": "^6.4.6"
+    "nodemailer": "^6.4.6",
+    "pretty-error": "^2.1.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0",
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.6",
     "@babel/node": "^7.8.7",
     "@babel/preset-env": "^7.9.0",
+    "@babel/preset-es2015": "^7.0.0-beta.53",
     "babel-plugin-root-import": "^6.5.0",
     "nodemon": "^2.0.2"
   }

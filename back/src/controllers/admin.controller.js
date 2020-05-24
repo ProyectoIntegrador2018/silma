@@ -1,6 +1,6 @@
 import { AdminModel } from "@/models/admin.model";
 import { GenreModel } from "@/models/genre.model";
-import { createUser } from "@/controllers/user.controller"; 
+import { createUser } from "@/controllers/user.controller";
 import { send } from "@/utils/errors";
 
 export const genres = [
@@ -62,12 +62,12 @@ export const createGenre = (request, response) => {
 };
 
 export const fillGenres = (request, response) => {
-  send(response, async() => {
+  send(response, async () => {
     await GenreModel.deleteMany({});
     for (const genre of genres) {
-      const obj = {name: genre}
+      const obj = { name: genre }
       await GenreModel.create(obj);
     }
-    return
+    return await GenreModel.find({});
   })
 }

@@ -107,10 +107,11 @@
 
 
 <script>
-import axios from 'axios';
 import TimestampDateField from '@/components/timestampDate.vue';
 import {requiredRule, emailRule, numericRule, passwordMinRule, phoneRule} from '@/utils/rules';
 import {countries} from "@/utils/constants"
+import { postRequest } from '@/utils/requests';
+import { setAuthCookies } from '@/utils/cookies';
 
 export default{
   components: {
@@ -146,21 +147,15 @@ export default{
         return;
       }
       try {
-        await axios.post("http://localhost:3000/api/register/writers", this.writer)
+
+        await postRequest('register/writers', this.writer);
         const authUser = {
           email: this.writer.email,
           password: this.writer.password
         }
-        const responseAuth = await axios.post("http://localhost:3000/api/user/authentication", authUser);
-        const { token, roles, _id } = responseAuth.data;
-        this.$cookies.set('token', token);
-        if (!this.$cookies.isKey('user_type')) {
-            const role = roles.includes('admin')
-              ? 'admin' : roles.includes('writer')
-              ? 'writer' : 'reader';
-            this.$cookies.set('user_type', role);
-            this.$cookies.set('user_id', _id);
-        }
+        const user = await postRequest('user/authentication', authUser);
+        console.log(user);
+        setAuthCookies(user);
         this.dialogSuccess = true
         this.$router.push('/');
       } catch (error) {

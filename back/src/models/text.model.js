@@ -46,6 +46,10 @@ export const TextSchema = new Schema({
   documentPath: {
     type: String,
     default: ''
+  },
+  numberOfChapters: {
+    type: Number,
+    required: true
   }
 });
 TextSchema.plugin(beautifyUnique);
