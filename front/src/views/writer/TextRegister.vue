@@ -245,7 +245,7 @@ export default {
       try {
         const token = this.$cookies.get("token");
 
-        const text = await postRequest("texts", this.text);
+        const text = await postRequest('texts', this.text, token);
         const id = text._id;
         console.log(id);
 

@@ -11,6 +11,8 @@ var _text = require("../models/text.model");
 
 var _suggestion = require("./suggestion.controller");
 
+var _aws = require("./aws.controller");
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -70,33 +72,29 @@ var uploadTextDocument = (request, response) => {
     var {
       id
     } = request.params;
-    var documentPath = "texts/".concat(id, "/uploads");
-    var text = yield _text.TextModel.updateOne({
-      _id: id
-    }, {
-      $set: {
-        documentPath
-      }
-    });
-    return text;
+    var document = request.files.document;
+    (0, _aws.uploadDocument)(id + ".md", document.data);
   }));
 };
 
 exports.uploadTextDocument = uploadTextDocument;
 
 var retrieveTextDocument = (request, response) => {
-  try {
-    var {
-      id
-    } = request.params;
-    response.sendFile("/uploads/texts/".concat(id, ".md"), {
-      root: '.'
-    });
-  } catch (err) {
-    response.status(404).send({
-      message: 'File does not exist'
-    });
-  }
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    try {
+      var {
+        id
+      } = request.params;
+      var book = yield (0, _aws.getDocument)(id);
+      return {
+        "message": book.Body.toString()
+      };
+    } catch (err) {
+      response.status(404).send({
+        message: 'File does not exist'
+      });
+    }
+  }));
 };
 
 exports.retrieveTextDocument = retrieveTextDocument;

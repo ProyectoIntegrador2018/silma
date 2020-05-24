@@ -94,7 +94,7 @@ var fillGenres = (request, response) => {
       yield _genre.GenreModel.create(obj);
     }
 
-    return;
+    return yield _genre.GenreModel.find({});
   }));
 };
 

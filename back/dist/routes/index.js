@@ -15,6 +15,8 @@ var _reader = require("./reader.route");
 
 var _text = require("./text.route");
 
+var _suggestion = require("./suggestion.route");
+
 var _user = require("../controllers/user.controller");
 
 var createRoutes = () => {
@@ -25,6 +27,7 @@ var createRoutes = () => {
   (0, _admin.addAdminRoutes)(router);
   (0, _reader.addReaderRoutes)(router);
   (0, _text.addTextRoutes)(router);
+  (0, _suggestion.addSuggestionRoutes)(router);
   return router;
 };
 
