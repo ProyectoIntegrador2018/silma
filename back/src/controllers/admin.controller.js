@@ -67,13 +67,13 @@ export const createGenre = (request, response) => {
 };
 
 export const fillGenres = (request, response) => {
-  send(response, async() => {
+  send(response, async () => {
     await GenreModel.deleteMany({});
     for (const genre of genres) {
-      const obj = {name: genre}
+      const obj = { name: genre }
       await GenreModel.create(obj);
     }
-    return
+    return await GenreModel.find({});
   })
 }
 

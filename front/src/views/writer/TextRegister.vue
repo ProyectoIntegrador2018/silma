@@ -41,11 +41,11 @@
       </v-layout>
       <p>Seleccionar géneros (Máximo 3)</p>
       <v-layout row wrap>
-      <v-col cols="12" sm="3" v-for="genres in genres" :key="genres.name">
+      <v-col cols="12" sm="3" v-for="genre in genres" :key="genre.name">
             <v-switch
               v-model="text.genres"
-              :label="genres.name"
-              :value="genres._id"
+              :label="genre.name"
+              :value="genre._id"
               color="success"
             ></v-switch>
         </v-col>
@@ -122,10 +122,10 @@
 
 
 <script>
-import axios from 'axios';
 import commonmark from 'commonmark';
 import {requiredRule, numericRule} from '@/utils/rules';
 import {errorGenresRange, errorServerRegister, errorDescriptionRange, ageRanges} from '@/utils/constants';
+import { getRequest, postRequest } from '@/utils/requests';
 
 export default{
   components: {
@@ -162,9 +162,8 @@ export default{
   asyncComputed: {
       async getGenres(){
         const token = this.$cookies.get('token');
-        const responseGenres = await axios.get("http://localhost:3000/api/user/genres", { headers: {"Authorization" : 'Bearer ' + token} });
-        console.log(responseGenres.data)
-        return this.genres = responseGenres.data
+        this.genres = await getRequest(`user/genres`, token);
+        return this.genres;
       }
   },
   methods: {
@@ -185,13 +184,8 @@ export default{
       try {
         const token = this.$cookies.get('token');
 
-        const responseCreate = await axios.post('http://localhost:3000/api/texts', this.text, {
-            headers: {
-                  'content-type': 'application/json',
-                  "Authorization" : 'Bearer ' + token, 
-            },
-        });
-        const id = responseCreate.data._id;
+        const text = await postRequest('texts', this.text, token);
+        const id = text._id;
         console.log(id)
         
         let formData = new FormData();
@@ -200,17 +194,9 @@ export default{
         console.log('>> formData >> ', formData);
         console.log(formData.get('text'))
 
-        const responseUpload = await axios.post(`http://localhost:3000/api/texts/${id}/uploads`, formData, {
-            headers: {
-                  "Authorization" : 'Bearer ' + token, 
-                  'Content-Type': 'multipart/form-data'
-            },
-        });
-        console.log(responseUpload)
-
+        await postRequest(`texts/${id}/uploads`, formData, token, true);
         this.dialogSuccess = true;
       } catch (error) {
-        console.log(error.response.data)
         this.errorMessage = errorServerRegister
         this.dialogError = true;
       }

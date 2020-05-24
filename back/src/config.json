@@ -1,4 +1,0 @@
-{
-    "connectionString": "mongodb://localhost/silma",
-    "secret": "SILMA_EDITORIAL"
-}

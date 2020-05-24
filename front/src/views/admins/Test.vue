@@ -9,21 +9,35 @@
         ></v-text-field>
     </v-form>
     <v-btn @click="create" class="btn btn-indigo">Agregar</v-btn>
+    <v-content>
+      <div align="center">
+        <br />
+        <br />
+        <h1>¡Bienvenido a Silma! </h1>
+        <readerDashboard v-if="this.role == 'admin'" />
+      </div>
+    </v-content>
     </v-container> 
 </template>
 
 <script>
 import axios from 'axios';
 import {requiredRule, numericRule, phasesRule} from '@/utils/rules';
-
+import readerDashboard from "@/components/dashboardReader.vue";
 export default {
+  components: {
+    readerDashboard,
+  },
     data(){
         return {
           newPhase: '',
           textid:'5ebce5e413a35c2c08bdb109',
           requiredRule,
           numericRule,
-          phasesRule
+          phasesRule,
+          writer: this.$cookies.get("user_id"),
+          role: this.$cookies.get("user_type"),
+          name: this.$cookies.get("user_name"),
         }
     },
     methods: {

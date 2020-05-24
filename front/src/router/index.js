@@ -3,12 +3,13 @@ import VueRouter from "vue-router";
 import RegisterReader from "@/views/reader/ReaderRegister.vue";
 import RegisterWriter from "@/views/writer/WriterRegister.vue";
 import LogIn from "@/views/login/LogIn.vue";
-import Dashboard from "@/views/dashboards/DashboardWriter.vue";
+import Dashboard from "@/views/dashboards/Dashboard.vue";
 import PageNotFound from "@/views/PageNotFound.vue";
 import Genres from "@/views/admins/Genres.vue";
 import TextRegister from "@/views/writer/TextRegister.vue";
 import Questionnarie from "@/views/reader/Questionnarie.vue";
 import Test from "@/views/admins/Test.vue";
+
 
 Vue.use(VueRouter);
 
