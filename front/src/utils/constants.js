@@ -69,3 +69,8 @@ export const errorDescriptionRange = {
     title: "Tamaño de la descripción no válido",
     message: "Por favor, ingrese una descripción que tenga entre 20 y 200 carácteres."
 }
+
+export const errorNumberOfChapters = {
+    title: "Número de capítulos incorrecto",
+    message: "El número de capítulos ingresado no corresponde al número de capítulos con los que el archivo cuenta."
+}
