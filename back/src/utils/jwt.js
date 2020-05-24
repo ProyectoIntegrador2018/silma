@@ -15,7 +15,8 @@ function jwt() {
       '/api/admins/register',
       '/api/user/authentication',
       '/api/user/genres',
-      '/api/admins/fillGenres'
+      '/api/admins/fillGenres',
+      '/api/texts/5ec9dea666995a542096139c/uploads'
     ]
   });
 }
