@@ -103,7 +103,7 @@ const runAll = async () => {
     registerNumber: "123asd",
     description: "asd zxc qwe asd zxc asd zxc qwe asd zxc",
     numberOfPages: 120,
-    numberOfChapters: 10
+    numberOfChapters: 50
   }, { headers: { "Authorization": 'Bearer ' + token } });
   console.log('Text 1: ', text1.data._id);
   const text2 = await axios.post("http://localhost:3000/api/texts", {
@@ -114,7 +114,7 @@ const runAll = async () => {
     registerNumber: "123asd",
     description: "asd zxc qwe asd zxc asd zxc qwe asd zxc",
     numberOfPages: 120,
-    numberOfChapters: 10
+    numberOfChapters: 30
   }, { headers: { "Authorization": 'Bearer ' + token } });
   console.log('Text 2: ', text2.data._id);
 };

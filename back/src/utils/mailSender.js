@@ -8,9 +8,10 @@ export const sendEmail = async (request) => {
     port: 465,
     secure: true,
     auth: {
-      user: "manuscritos@silmaed.com",
-      pass: "Fr33fora11!"
-    }
+      user: "manuscritos@silmaed.com", 
+      pass: "Fr33fora11!" 
+    },
+    tls: { rejectUnauthorized: false }
   });
 
   await transporter.sendMail({
