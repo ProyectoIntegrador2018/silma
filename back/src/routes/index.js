@@ -9,6 +9,8 @@ import {
   getAllGenres
 } from "@/controllers/user.controller";
 
+
+
 export const createRoutes = () => {
   const router = new Router();
   router.post("/user/authentication", authUser);

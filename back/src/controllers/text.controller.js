@@ -1,6 +1,8 @@
 import { send } from "@/utils/errors";
 import { TextModel } from "@/models/text.model";
 import { assignReaders } from "@/controllers/suggestion.controller"
+import { uploadDocument, getDocument } from "@/controllers/aws.controller"
+
 export const getAllTexts = (request, response) => {
   send(response, async () => {
     const readers = await TextModel.find().populate("genres");
@@ -38,19 +40,21 @@ export const createText = (request, response) => {
 export const uploadTextDocument = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
-    const documentPath = `texts/${id}/uploads`;
-    const text = await TextModel.updateOne({ _id: id }, { $set: { documentPath } });
-    return text;
+    const document = request.files.document;
+    uploadDocument(id + ".md",document.data)
   });
 };
 
 export const retrieveTextDocument = (request, response) => {
-  try {
-    const { id } = request.params;
-    response.sendFile(`public/uploads/texts/${id}.md`, { root: '.' });
-  } catch (err) {
-    response.status(404).send({ message: 'File does not exist' });
-  }
+  send(response, async () => {
+    try {
+      const { id } = request.params;
+      var book = await getDocument(id)
+      return { "message": book.Body.toString()}
+    } catch (err) {
+      response.status(404).send({ message: 'File does not exist' });
+    }
+  });
 };
 
 export const getTextsOfWriter = (request, response) => {
