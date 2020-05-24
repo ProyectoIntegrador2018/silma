@@ -225,10 +225,8 @@ export default {
         return;
       }
       var getFile = await this.getFile();
-      console.log(getFile)
 
       var numChaptersFile = readChaptersNumber(getFile).length
-      console.log(numChaptersFile);
       if (numChaptersFile != parseInt(this.text.numberOfChapters)) {
         this.errorMessage = errorNumberOfChapters;
         this.dialogError = true;
@@ -247,13 +245,9 @@ export default {
 
         const text = await postRequest('texts', this.text, token);
         const id = text._id;
-        console.log(id);
 
         let formData = new FormData();
         formData.append("document", this.document);
-
-        console.log(">> formData >> ", formData);
-        console.log(formData.get("text"));
 
         await postRequest(`texts/${id}/uploads`, formData, token, true);
         this.dialogSuccess = true;
