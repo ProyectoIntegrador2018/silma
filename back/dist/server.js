@@ -12,6 +12,8 @@ var _routes = require("./routes");
 
 var _jwt = _interopRequireDefault(require("./utils/jwt"));
 
+var _expressFileupload = _interopRequireDefault(require("express-fileupload"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 if (process.env.NODE_ENV !== 'production') {
@@ -25,6 +27,7 @@ var enabledCorsOrigins = process.env.CROSS_ORIGIN;
 var port = process.env.PORT || 3000; // Api app configuration
 
 var app = (0, _express.default)();
+app.use((0, _expressFileupload.default)());
 app.use((0, _cors.default)({
   origin: enabledCorsOrigins
 }));
