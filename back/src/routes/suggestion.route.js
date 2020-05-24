@@ -3,7 +3,8 @@ import {
   acceptSuggestion,
   completeSuggestion,
   getSuggestionFromReader,
-  getAllSuggestionsFromReader
+  getAllSuggestionsFromReader,
+  getTextSuggestions
 } from "@/controllers/suggestion.controller";
 
 
@@ -13,4 +14,5 @@ export const addSuggestionRoutes = (router) => {
   router.post("/suggestions/:id/complete", completeSuggestion);
   router.get("/suggestions/getSuggestion/:id", getSuggestionFromReader);
   router.get("/suggestions/getAllSuggestions/:id", getAllSuggestionsFromReader);
+  router.get("/suggestions/getTextSuggestions/:id", getTextSuggestions);
 };
