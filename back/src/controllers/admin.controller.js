@@ -89,21 +89,19 @@ export const movePhase = (request, response) => {
   send(response, async() =>{
       const { id } = request.params;
       const text = await TextModel.findById(id);
-      const newPhase = text.phase + 1;
+      const newPhase = request.body;
       const phase = await TextModel.updateOne(
           {_id: id},
-          {$set: {phase: newPhase}},
+          {$set: {phase: newPhase.newPhase}},
           function(err, res) {
             if (err) throw err;
             console.log("Phase advanced");
           }
-
       )
       const writer = await UserModel.findById(text.writer);
-      var email = movePhaseEmail[newPhase - 2];
+      var email = movePhaseEmail[newPhase.newPhase - 2];
       email.email = writer.email
       email.subject = "Tu texto avanzo a Fase " + newPhase
       await sendEmail(email);
-      return phase
   });
 };

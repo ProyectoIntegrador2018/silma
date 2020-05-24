@@ -130,13 +130,14 @@
 <script>
 import axios from 'axios';
 import {errorServerRegister, errorPreferencesMinimun} from '@/utils/constants.js';
-import {requiredRule} from '@/utils/rules';
+import {requiredRule, numericRule} from '@/utils/rules';
 
 export default {
   data(){
     return {
       feedback: {
         reader: this.$cookies.get("user_id"),
+        suggestion: this.$route.params,
         selectedGenres:[],
         publish:'',
         page:'',
@@ -155,6 +156,7 @@ export default {
       dialogError: false,
       genres: [],
       requiredRule,
+      numericRule,
       errorServerRegister, 
       errorPreferencesMinimun
     }
@@ -163,6 +165,10 @@ export default {
       async getGenres(){
         const responseDuplicate = await axios.get("http://localhost:3000/api/user/genres");
         return this.genres = responseDuplicate.data
+      },
+      async getSuggestion(){
+        const reference = this.$route.params
+        this.suggestion = reference.id
       }
   },
   methods: {

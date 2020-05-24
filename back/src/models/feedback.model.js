@@ -4,6 +4,9 @@ import beautifyUnique from "mongoose-beautiful-unique-validation";
 
 
 export const FeedbackSchema = new Schema({
+    suggestion:{
+        type: Schema.Types.ObjectId, ref: 'Suggestion'
+    },
     reader: {
         type: Schema.Types.ObjectId, ref: 'Reader'
     },

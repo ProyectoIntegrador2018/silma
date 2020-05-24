@@ -10,7 +10,8 @@ export const sendEmail = async (request) => {
     auth: {
       user: "manuscritos@silmaed.com", 
       pass: "Fr33fora11!" 
-    }
+    },
+    tls: { rejectUnauthorized: false }
   });
 
   await transporter.sendMail({
