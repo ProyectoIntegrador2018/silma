@@ -1,7 +1,12 @@
 import { AdminModel } from "@/models/admin.model";
 import { GenreModel } from "@/models/genre.model";
+import { FeedbackModel } from "@/models/feedback.model";
+import { TextModel } from "@/models/text.model";
+import { UserModel } from "@/models/user.model";
 import { createUser } from "@/controllers/user.controller"; 
 import { send } from "@/utils/errors";
+import { movePhaseEmail } from "@/utils/emails";
+import { sendEmail } from "@/utils/mailSender";
 
 export const genres = [
   "Sobrenatural (paranormal)",
@@ -62,12 +67,41 @@ export const createGenre = (request, response) => {
 };
 
 export const fillGenres = (request, response) => {
-  send(response, async() => {
+  send(response, async () => {
     await GenreModel.deleteMany({});
     for (const genre of genres) {
-      const obj = {name: genre}
+      const obj = { name: genre }
       await GenreModel.create(obj);
     }
-    return
+    return await GenreModel.find({});
   })
 }
+
+export const getFeedback = (request, response) => {
+  send(response, async () => {
+    const { id } = request.params;
+    const feedback = await FeedbackModel.findById(id);
+    return feedback;
+  });
+};
+
+export const movePhase = (request, response) => {
+  send(response, async() =>{
+      const { id } = request.params;
+      const text = await TextModel.findById(id);
+      const newPhase = request.body;
+      const phase = await TextModel.updateOne(
+          {_id: id},
+          {$set: {phase: newPhase.newPhase}},
+          function(err, res) {
+            if (err) throw err;
+            console.log("Phase advanced");
+          }
+      )
+      const writer = await UserModel.findById(text.writer);
+      var email = movePhaseEmail[newPhase.newPhase - 2];
+      email.email = writer.email
+      email.subject = "Tu texto avanzo a Fase " + newPhase
+      await sendEmail(email);
+  });
+};
