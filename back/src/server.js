@@ -4,6 +4,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import { createRoutes } from "./routes";
 import jwt from "./utils/jwt";
+import fileupload from "express-fileupload";
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config({ path: '.env' });
@@ -15,6 +16,8 @@ const port = process.env.PORT || 3000;
 
 // Api app configuration
 const app = express();
+app.use(fileupload());
+
 app.use(
   cors({
     origin: enabledCorsOrigins
