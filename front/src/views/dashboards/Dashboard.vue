@@ -22,6 +22,7 @@
         <br />
         <h1>¡Bienvenido a Silma! </h1>
         <writerDashboard v-if="this.role == 'writer'" />
+        <readerDashboard v-if="this.role == 'reader'" />
       </div>
     </v-content>
   </v-app>
@@ -29,11 +30,13 @@
 
 <script>
 import typeOfUserSelection from "@/components/typeOfUserSelection.vue";
+import readerDashboard from "@/components/dashboardReader.vue";
 import writerDashboard from "@/components/dashboardWriter.vue";
 export default {
   components: {
     typeOfUserSelection,
     writerDashboard,
+    readerDashboard
   },
   data() {
     return {

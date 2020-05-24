@@ -168,7 +168,7 @@ export default {
       },
       async getSuggestion(){
         const reference = this.$route.params
-        this.suggestion = reference.id
+        this.feedback.suggestion = reference.id
       }
   },
   methods: {
@@ -183,6 +183,7 @@ export default {
       if (!this.$refs.form.validate()) {
         return;
       }
+      console.log(this.suggestion)
       try {
         if(this.genresNames.length < 3){
           this.errorMessage = this.errorPreferencesMinimun

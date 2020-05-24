@@ -30,7 +30,6 @@
 
 <script>
 import Table from "@/components/table.vue";
-import { getRequest } from '@/utils/requests';
 
 export default {
   components: {
@@ -53,10 +52,6 @@ export default {
   created() {
   },
   asyncComputed: {
-      async getSuggestion(){
-        const token = this.$cookies.get('token');
-        this.data = await getRequest(`texts/writer/${this.writer}`, token);
-      }
   },
   methods: {
     
