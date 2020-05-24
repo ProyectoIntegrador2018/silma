@@ -50,6 +50,10 @@ export const TextSchema = new Schema({
   numberOfChapters: {
     type: Number,
     required: true
+  },
+  isRejected: {
+    type: Boolean,
+    default: false
   }
 });
 TextSchema.plugin(beautifyUnique);

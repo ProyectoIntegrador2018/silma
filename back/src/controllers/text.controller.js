@@ -4,6 +4,7 @@ import { assignReaders } from "@/controllers/suggestion.controller";
 import { sendEmail } from "@/utils/mailSender";
 import { uploadDocument, getDocument } from "@/controllers/aws.controller";
 import { UserModel } from '@/models/user.model';
+import { rejectTextEmail } from '@/utils/emails'; 
 
 export const getAllTexts = (request, response) => {
   send(response, async () => {
@@ -67,20 +68,17 @@ export const getTextsOfWriter = (request, response) => {
   });
 };
 
-const rejectedHTML = "Texto Rechazado";
-
 export const rejectText = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
-    const text = await TextModel.findById(id)
-      .populate("writer");
+    await TextModel.updateOne({ _id: id }, { isRejected: true });
+    const text = await TextModel.findById(id).populate("writer");
     const user = await UserModel.findById(text.writer.user);
     const document = request.files.document;
+    const emailData = rejectTextEmail(user, text);
     await sendEmail({
-      "email": user.email,
-      "subject": "Tu libro ha sido rechazado",
-      "text": "",
-      "html": rejectedHTML,
+      ...emailData,
+      email: user.email,
       attachments: [
         {
           filename: document.name,
@@ -88,7 +86,6 @@ export const rejectText = (request, response) => {
         }
       ]
     });
-    console.log(document);
-    console.log(text);
+    return text;
   });
 };
