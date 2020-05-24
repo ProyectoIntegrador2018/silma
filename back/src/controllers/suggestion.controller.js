@@ -242,3 +242,11 @@ export const getAllSuggestionsFromReader = (request, response) => {
     return suggestion;
   });
 };
+
+export const getTextSuggestions = (request, response) => {
+  send(response, async() => {
+    const { id } = request.params;
+    const suggestion = await SuggestionModel.find({"text": id})
+    return suggestion;
+  });
+};
