@@ -1,6 +1,5 @@
 import { getAllTexts, getText, getTextsInPhase, createText, uploadTextDocument, retrieveTextDocument, getTextsOfWriter } from "@/controllers/text.controller";
 
-
 export const addTextRoutes = (router) => {
   router.get("/texts", getAllTexts);
   router.get("/texts/:id", getText);
