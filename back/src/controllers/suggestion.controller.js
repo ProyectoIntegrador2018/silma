@@ -221,3 +221,24 @@ export const completeSuggestion = (request, response) => {
     return suggestion;
   });
 };
+
+export const getSuggestionFromReader = (request, response) => {
+  send(response, async() => {
+    const { id } = request.params;
+    const suggestion = await SuggestionModel.find(
+      {
+        "reader": id, 
+        "suggestionStatus":"Pending"
+      }
+    )
+    return suggestion;
+  });
+};
+
+export const getAllSuggestionsFromReader = (request, response) => {
+  send(response, async() => {
+    const { id } = request.params;
+    const suggestion = await SuggestionModel.find({"reader": id})
+    return suggestion;
+  });
+};

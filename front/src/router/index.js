@@ -7,6 +7,8 @@ import Dashboard from "@/views/dashboards/Dashboard.vue";
 import PageNotFound from "@/views/PageNotFound.vue";
 import Genres from "@/views/admins/Genres.vue";
 import TextRegister from "@/views/writer/TextRegister.vue";
+import Questionnarie from "@/views/reader/Questionnarie.vue";
+import Test from "@/views/admins/Test.vue";
 
 
 Vue.use(VueRouter);
@@ -55,6 +57,20 @@ const routes = [
       withAccess: ["admin", "reader", "writer"]
       // NOTE: Use 'withAccess' for pages that can only be accessed by certain users.
     }
+  },
+  {
+    path: "/Cuestionario_de_lectura/:id",
+    name: "Questionnarie",
+    component: Questionnarie,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["reader"]
+    }
+  },
+  {
+     path:"/test/:id",
+     name:"test",
+     component: Test
   },
   {
     path: "*",
