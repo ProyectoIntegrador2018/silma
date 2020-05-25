@@ -1,10 +1,11 @@
 import { send } from "@/utils/errors";
+import { WriterModel } from "@/models/writer.model";
 import { TextModel } from "@/models/text.model";
 import { assignReaders } from "@/controllers/suggestion.controller";
 import { sendEmail } from "@/utils/mailSender";
 import { uploadDocument, getDocument } from "@/controllers/aws.controller";
 import { UserModel } from '@/models/user.model';
-import { rejectTextEmail } from '@/utils/emails'; 
+import { rejectTextEmail, bookReceivedEmail } from '@/utils/emails'; 
 
 export const getAllTexts = (request, response) => {
   send(response, async () => {
@@ -33,8 +34,15 @@ export const createText = (request, response) => {
   send(response, async () => {
     const data = request.body;
     const text = await TextModel.create(data);
+    const user = await WriterModel.findById(text.writer).populate("user");
+    var email = user.user.email
     if (text._id) {
       await assignReaders(text, 3);
+      const emailData = bookReceivedEmail(text);
+      await sendEmail({
+        ...emailData,
+        email: email
+      });
     }
     return text;
   });
