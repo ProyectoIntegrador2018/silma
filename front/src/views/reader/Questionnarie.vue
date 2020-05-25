@@ -97,7 +97,7 @@
       </v-layout>
     </v-form>
     <v-layout row wrap>
-      <v-dialog v-model="dialogSuccess" persistent max-width="290">
+      <v-dialog v-model="dialogSuccess" persistent max-width="500">
         <v-card>
           <v-card-title class="headline">Se recibio tu retroalimentación!</v-card-title>
           <v-card-text>Serás reenviado a tu dashboard</v-card-text>
@@ -128,16 +128,16 @@
 
 
 <script>
-import axios from 'axios';
 import {errorServerRegister, errorPreferencesMinimun} from '@/utils/constants.js';
 import {requiredRule, numericRule} from '@/utils/rules';
+import { getRequest, postRequest } from "@/utils/requests";
 
 export default {
   data(){
     return {
       feedback: {
         reader: this.$cookies.get("user_id"),
-        suggestion: this.$route.params,
+        suggestion: this.$route.params.id,
         selectedGenres:[],
         publish:'',
         page:'',
@@ -163,8 +163,9 @@ export default {
   },
   asyncComputed: {
       async getGenres(){
-        const responseDuplicate = await axios.get("http://localhost:3000/api/user/genres");
-        return this.genres = responseDuplicate.data
+        const token = this.$cookies.get('token');
+        const responseDuplicate = await getRequest('/user/genres', token);
+        return this.genres = responseDuplicate
       },
       async getSuggestion(){
         const reference = this.$route.params
@@ -183,7 +184,6 @@ export default {
       if (!this.$refs.form.validate()) {
         return;
       }
-      console.log(this.suggestion)
       try {
         if(this.genresNames.length < 3){
           this.errorMessage = this.errorPreferencesMinimun
@@ -194,7 +194,8 @@ export default {
             this.feedback.selectedGenres.push(this.preferenceId(genre))
         }
         const token = this.$cookies.get('token');
-        await axios.post("http://localhost:3000/api/register/feedback", this.feedback, { headers: {"Authorization" : 'Bearer ' + token} });
+        await postRequest("/register/feedback", this.feedback, token);
+        await postRequest("/suggestions/"+this.feedback.suggestion+"/complete", {} ,token);
         this.dialogSuccess = true
       } catch (error) {
         console.log(error.response.data)

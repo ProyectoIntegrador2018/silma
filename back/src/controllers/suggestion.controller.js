@@ -6,7 +6,9 @@ import { send } from "@/utils/errors";
 
 export const assignReaders = async (text, amount) => {
   var resultsAlgorithm = await runAlgorithm(text);
-  resultsAlgorithm = resultsAlgorithm.sort((a, b) => (a.points < b.points) ? 1 : -1);
+  resultsAlgorithm = resultsAlgorithm.sort((a, b) =>
+    a.points < b.points ? 1 : -1
+  );
   var selectedReaders = resultsAlgorithm.slice(0, amount);
   await addSuggestionSendEmail(selectedReaders, text);
 };
@@ -14,12 +16,12 @@ export const assignReaders = async (text, amount) => {
 export const addSuggestionSendEmail = async (selectedReaders, text) => {
   for (const reader of selectedReaders) {
     var suggetionObj = {
-      "reader": reader.id,
-      "text": text._id,
-      "sentDate": new Date(),
-      "suggestionStatus": "Pending",
-      "score": reader.points
-    }
+      reader: reader.id,
+      text: text._id,
+      sentDate: new Date(),
+      suggestionStatus: "Pending",
+      score: reader.points,
+    };
     await SuggestionModel.create(suggetionObj);
     var readerInfo = await ReaderModel.findById(reader.id).populate("user");
     var plazoLectura;
@@ -29,18 +31,19 @@ export const addSuggestionSendEmail = async (selectedReaders, text) => {
       plazoLectura = "tres semanas";
     }
     var textEmails = await TextModel.findById(text._id).populate("genres");
-    var listGenre = textEmails.genres.map(genre => genre.name);
+    var listGenre = textEmails.genres.map((genre) => genre.name);
 
     var email = {
-      "email": readerInfo.user.email,
-      "subject": "New Silma Reading Suggestion!",
-      "text": "",
-      "html":
-        `
+      email: readerInfo.user.email,
+      subject: "New Silma Reading Suggestion!",
+      text: "",
+      html: `
                 <div>
                     <div>¡Hola!</div>
                     <div>
-                    Te agradecemos por haber rellenado nuestro formulario para ser un lector beta. Actualmente tenemos un libro que es de uno de los géneros que te agrada y quisiéramos saber si tienes la oportunidad de leerlo. Tiene ${text.numberOfPages} páginas y es de ${listGenre.join(" ,")}.
+                    Te agradecemos por haber rellenado nuestro formulario para ser un lector beta. Actualmente tenemos un libro que es de uno de los géneros que te agrada y quisiéramos saber si tienes la oportunidad de leerlo. Tiene ${
+                      text.numberOfPages
+                    } páginas y es de ${listGenre.join(" ,")}.
                     </div>
                     <div>
                     No es obligatorio leerlo todo pero, si crees que no vas a tener tiempo para leer este libro, ¡no te preocupes! Seguirás en nuestra lista para cuando lo tengas para otra obra.
@@ -74,28 +77,54 @@ export const addSuggestionSendEmail = async (selectedReaders, text) => {
                     </span>
                 </div>
             `,
-    }
+    };
     await sendEmail(email);
   }
-}
+};
 
 export const runAlgorithm = async (text) => {
   const readers = await ReaderModel.find().populate("user");
-  var resultantReaders = []
+  var resultantReaders = [];
   for (const reader of readers) {
-    var genrePoints = await calculateGenrePoints(reader.preferences, text.genres);
-    var agePoints = await calculateAgePoints(reader.user.birthdate, text.ageRange);
+    var genrePoints = await calculateGenrePoints(
+      reader.preferences,
+      text.genres
+    );
+    var agePoints = await calculateAgePoints(
+      reader.user.birthdate,
+      text.ageRange
+    );
     var readingPoints = await calculateReadingPoints(reader.readingProficiency);
-    var participationPoints = await calculateParticiaptionPoints(reader.lastReview);
-    var betweenDatesPoints = await calculateBetweenDatesPoints(reader.readFrom, reader.readTill);
-    var finalPoints = genrePoints + agePoints + readingPoints + participationPoints + betweenDatesPoints;
-    var acceptedRequest = await SuggestionModel.find({ reader: reader._id, suggestionStatus: "Accepted" })
-    var pendingRequest = await SuggestionModel.find({ reader: reader._id, suggestionStatus: "Pending" })
-    if (agePoints != 0 && acceptedRequest.length === 0 && pendingRequest.length === 0) {
+    var participationPoints = await calculateParticiaptionPoints(
+      reader.lastReview
+    );
+    var betweenDatesPoints = await calculateBetweenDatesPoints(
+      reader.readFrom,
+      reader.readTill
+    );
+    var finalPoints =
+      genrePoints +
+      agePoints +
+      readingPoints +
+      participationPoints +
+      betweenDatesPoints;
+    var acceptedRequest = await SuggestionModel.find({
+      reader: reader._id,
+      suggestionStatus: "Accepted",
+    });
+    var pendingRequest = await SuggestionModel.find({
+      reader: reader._id,
+      suggestionStatus: "Pending",
+    });
+    if (
+      agePoints != 0 &&
+      acceptedRequest.length === 0 &&
+      pendingRequest.length === 0
+    ) {
       var resultReader = {
-        "id": reader._id,
-        "points": finalPoints
-      }
+        id: reader._id,
+        points: finalPoints,
+      };
       resultantReaders.push(resultReader);
     }
   }
@@ -139,7 +168,7 @@ export const calculateAgePoints = async (userBirthDate, textYears) => {
   if (UsersAge < bookMinAge) {
     return 0;
   }
-  var earnedPoints = 7
+  var earnedPoints = 7;
   if (UsersAge >= bookMinAge && UsersAge <= bookMaxAge) {
     return earnedPoints;
   }
@@ -164,7 +193,10 @@ export const calculateReadingPoints = async (readingProficiency) => {
 
 export const calculateParticiaptionPoints = async (participationDate) => {
   var todaysDate = new Date();
-  var months = todaysDate.getMonth() - participationDate.getMonth() + (12 * (todaysDate.getFullYear() - participationDate.getFullYear()))
+  var months =
+    todaysDate.getMonth() -
+    participationDate.getMonth() +
+    12 * (todaysDate.getFullYear() - participationDate.getFullYear());
   if (months > 18) {
     return 2;
   } else if (months >= 6 && months <= 18) {
@@ -174,8 +206,8 @@ export const calculateParticiaptionPoints = async (participationDate) => {
 };
 
 export const calculateBetweenDatesPoints = async (initialDate, finalDate) => {
-  var todaysDate = new Date()
-  if ((todaysDate <= finalDate && todaysDate >= initialDate)) {
+  var todaysDate = new Date();
+  if (todaysDate <= finalDate && todaysDate >= initialDate) {
     return 1;
   } else {
     return 0;
@@ -193,16 +225,20 @@ export const changeSuggestionStatus = async (id, newStatus, previousStatus) => {
     );
     return suggestion;
   } else {
-    throw { error: `Suggestion status can't be updated to ${newStatus} when in ${suggestion.suggestionStatus} status` };
+    throw {
+      error: `Suggestion status can't be updated to ${newStatus} when in ${suggestion.suggestionStatus} status`,
+    };
   }
 };
 
 export const rejectSuggestion = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
-    const suggestion = await changeSuggestionStatus(id, "Rejected", "Pending");
-    await assignReaders(suggestion.text, 1);
-    return suggestion;
+    var suggestion = await SuggestionModel.findById(id);
+    var text = await TextModel.findById(suggestion.text);
+    await assignReaders(text, 1);
+    const newSuggestion= await changeSuggestionStatus(id, "Rejected", "Pending");
+    return newSuggestion;
   });
 };
 
@@ -217,36 +253,115 @@ export const acceptSuggestion = (request, response) => {
 export const completeSuggestion = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
-    const suggestion = await changeSuggestionStatus(id, "Completed", "Accepted");
+    const suggestion = await changeSuggestionStatus(
+      id,
+      "Completed",
+      "Accepted"
+    );
+    return suggestion;
+  });
+};
+
+export const getSuggestion = (request, response) => {
+  send(response, async () => {
+    const { id } = request.params;
+    const suggestion = await SuggestionModel.findById(id).populate("text");
     return suggestion;
   });
 };
 
 export const getSuggestionFromReader = (request, response) => {
-  send(response, async() => {
+  send(response, async () => {
     const { id } = request.params;
-    const suggestion = await SuggestionModel.find(
-      {
-        "reader": id, 
-        "suggestionStatus":"Pending"
-      }
-    )
+    const suggestion = await SuggestionModel.find({
+      reader: id,
+      suggestionStatus: "Pending",
+    });
     return suggestion;
   });
 };
 
 export const getAllSuggestionsFromReader = (request, response) => {
-  send(response, async() => {
+  send(response, async () => {
     const { id } = request.params;
-    const suggestion = await SuggestionModel.find({"reader": id})
+    const suggestion = await SuggestionModel.find({ reader: id });
     return suggestion;
+  });
+};
+
+export const getSuggestionFromReaderDashboard = (request, response) => {
+  send(response, async() => {
+    const { id }  = request.params;
+    const reader = await ReaderModel.find({user: id})
+    const suggestion = await SuggestionModel.find( {$or: [
+      {
+        reader: reader,
+        suggestionStatus: ("Accepted")
+      },
+      {
+        reader: reader,
+        suggestionStatus: ("Pending")
+      }
+    ]});
+    if (suggestion === undefined)
+      return false
+    else
+      return suggestion[0];
+  });
+};
+
+export const getAllSuggestionsFromReaderDashboard = (request, response) => {
+  send(response, async() => {
+    const { id }  = request.params;
+    const reader = await ReaderModel.find({user: id})
+    const suggestions = await SuggestionModel.find({reader: reader})
+    return suggestions;
   });
 };
 
 export const getTextSuggestions = (request, response) => {
   send(response, async() => {
     const { id } = request.params;
-    const suggestion = await SuggestionModel.find({"text": id})
+    const suggestion = await SuggestionModel.find({"text": id}).populate('text')
     return suggestion;
   });
 };
+
+export const createSuggestionAdmin = (request, response) => {
+  send(response, async() => {
+    try{
+    var reader = [{ id: request.body.reader_id, points: 25}]
+    var text = {_id: request.body.book_id, numberOfPages: request.body.numberOfPages}
+    await addSuggestionSendEmail(reader,text)
+    return {"status" : "success"}
+    }catch(err){
+      return err
+    }
+  });
+}
+
+export const getReadersWithoutSuggestion = (request,response) => {
+  send(response, async() => {
+    var acceptedRequest = await SuggestionModel.find({suggestionStatus: "Accepted" })
+    var pendingRequest = await SuggestionModel.find({suggestionStatus: "Pending" })
+    var readers = await ReaderModel.find().populate("user").populate("preferences");
+    var occupiedReaders = [...acceptedRequest, ... pendingRequest]
+    var idOccupied = []
+    occupiedReaders.forEach(element => {
+      idOccupied.push(element.reader.toString())
+    });
+    var finalArr = readers.filter(function(item){
+      return idOccupied.indexOf(item._id.toString()) === -1;
+    });
+    return finalArr
+  });
+}
+
+
+export const deleteSuggestionAdmin = (request, response) => {
+  send(response, async() => {
+    const { id } = request.params;
+    SuggestionModel.findOne({_id: id}).deleteOne().exec();
+  });
+}
+

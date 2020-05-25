@@ -9,7 +9,7 @@
             <v-text-field
               outlined
               label="Nombre completo"
-              :rules="[requiredRule]"
+              :rules="[requiredRule, letterRule]"
               v-model="reader.name"
             ></v-text-field>
           </v-col>
@@ -171,7 +171,7 @@
 <script>
 import TimestampDateField from '@/components/timestampDate.vue';
 import {administrators, countries, errorServerRegister, errorPreferencesMinimun} from '@/utils/constants.js';
-import {requiredRule, emailRule, numericRule, facebookRule, passwordMinRule, phoneRule} from '@/utils/rules';
+import {requiredRule, emailRule, numericRule, facebookRule, passwordMinRule, phoneRule, letterRule} from '@/utils/rules';
 import { getRequest, postRequest } from '@/utils/requests';
 import { setAuthCookies } from '@/utils/cookies';
 
@@ -212,6 +212,7 @@ export default {
       facebookRule,
       passwordMinRule,
       phoneRule,
+      letterRule,
       errorServerRegister, 
       errorPreferencesMinimun,
       showPassword: false
