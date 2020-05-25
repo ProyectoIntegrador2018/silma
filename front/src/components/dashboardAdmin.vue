@@ -72,8 +72,8 @@ export default {
     async getTexts() {
       const token = this.$cookies.get("token");
       var data = await getRequest("texts/", token);
-      var genreNames = "";
       data.forEach(book => {
+        var genreNames = "";
         book.genres.forEach(element => {
           if (genreNames == "") {
             genreNames = element.name;

@@ -67,7 +67,7 @@ export default {
         { text: "Name", align: "start", sortable: false, value: "name" },
         { text: "E-mail", align: "start", sortable: false, value: "email" },
         {
-          text: "Fecha de Envio",
+          text: "Fecha de Envío",
           align: "start",
           sortable: false,
           value: "sentDate"
