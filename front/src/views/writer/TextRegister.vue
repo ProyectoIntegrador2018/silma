@@ -146,14 +146,15 @@
     </v-layout>
     <v-layout row wrap>
       <v-col align="end">
-        <v-btn @click="create" color="success">Registrar</v-btn>
+        <v-btn @click="create" color="success" :disabled="this.isDisabled"
+          >Registrar</v-btn
+        >
       </v-col>
     </v-layout>
   </v-container>
 </template>
 
 <script>
-import commonmark from "commonmark";
 import { requiredRule, numericRule } from "@/utils/rules";
 import {
   errorGenresRange,
@@ -163,7 +164,7 @@ import {
   errorNumberOfChapters,
 } from "@/utils/constants";
 import { getRequest, postRequest } from "@/utils/requests";
-import { readChaptersNumber } from "@/utils/functions";
+import { markdownToHTML, readChapters } from "@/utils/functions";
 
 export default {
   components: {},
@@ -185,6 +186,7 @@ export default {
         title: "",
         text: "",
       },
+      isDisabled: false,
       dialogSuccess: false,
       dialogError: false,
       requiredRule,
@@ -209,11 +211,10 @@ export default {
         var fr = new FileReader();
         fr.onerror = reject;
         fr.onload = () => {
-          resolve(fr.result)
+          resolve(fr.result);
         };
         fr.readAsText(this.document);
       });
-
     },
     async create() {
       if (!this.$refs.form.validate()) {
@@ -226,7 +227,7 @@ export default {
       }
       var getFile = await this.getFile();
 
-      var numChaptersFile = readChaptersNumber(getFile).length
+      var numChaptersFile = readChapters(getFile).length;
       if (numChaptersFile != parseInt(this.text.numberOfChapters)) {
         this.errorMessage = errorNumberOfChapters;
         this.dialogError = true;
@@ -240,10 +241,11 @@ export default {
         this.dialogError = true;
         return;
       }
+      this.isDisabled = true;
       try {
         const token = this.$cookies.get("token");
 
-        const text = await postRequest('texts', this.text, token);
+        const text = await postRequest("texts", this.text, token);
         const id = text._id;
 
         let formData = new FormData();
@@ -254,6 +256,7 @@ export default {
       } catch (error) {
         this.errorMessage = errorServerRegister;
         this.dialogError = true;
+        this.isDisabled = false;
       }
     },
     previewData() {
@@ -263,10 +266,7 @@ export default {
         var reader = new FileReader();
         reader.readAsText(this.document);
         reader.onload = () => {
-          var readerCM = new commonmark.Parser();
-          var writerCM = new commonmark.HtmlRenderer();
-          var parsed = readerCM.parse(reader.result);
-          this.data = writerCM.render(parsed); // result is a String
+          this.data = markdownToHTML(reader.result);
         };
       }
     },

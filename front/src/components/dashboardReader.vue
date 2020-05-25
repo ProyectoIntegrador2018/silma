@@ -67,7 +67,7 @@ export default {
   asyncComputed: {
     async getInfo(){
         this.token = this.$cookies.get('token');
-        this.suggestion = await getRequest('/suggestions/getSuggestion/' + this.reader, this.token);
+        this.suggestion = await getRequest('/suggestions/getSuggestionDashboard/' + this.reader, this.token);
         if(!(this.suggestion == false)){
             //Has a suggestion or ongoing text
             this.suggestionExists = true
@@ -78,7 +78,7 @@ export default {
     },
     async getHistory(){
         this.token = this.$cookies.get('token');
-        this.history = await getRequest('/suggestions/getAllSuggestions/' + this.reader, this.token);
+        this.history = await getRequest('/suggestions/getAllSuggestionsDashboard/' + this.reader, this.token);
     },
     async composeHistory(){
           var i;
