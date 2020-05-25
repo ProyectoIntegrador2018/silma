@@ -30,6 +30,7 @@
     <h2>Tus Historial de lecturas</h2>
      <br>
     <Table :headers="headers" :items="data"> </Table>
+    <DialogComponent ref="confirm"></DialogComponent>
   </div>
 </template>
 
@@ -37,10 +38,12 @@
 import Table from "@/components/table.vue";
 import {errorServerRegister} from '@/utils/constants.js';
 import { getRequest, postRequest } from "@/utils/requests";
+import DialogComponent from "@/components/dialogComponent.vue"
 
 export default {
   components: {
     Table,
+    DialogComponent
   },
   data() {
     return {
@@ -71,15 +74,19 @@ export default {
   },
   methods: {
       async accept(){
+        if (await this.$refs.confirm.open('Aceptar', '¿Seguro que quieres comprometerte a leer el texto?', { color: 'primary' })) {
           await postRequest('/suggestions/'+this.suggestion._id+'/accept', {} ,this.token)
           await this.getInfo()
           await this.getHistory()
+        }
       },
       async reject(){
+        if (await this.$refs.confirm.open('Rechazar', '¿Seguro que quieres rechazar la sugerencia?', { color: 'primary' })) {
           await postRequest('/suggestions/'+this.suggestion._id+'/reject', {} ,this.token)
           this.suggestionExists = false
           await this.getInfo()
           await this.getHistory()
+        }
       },
       async getInfo(){
           this.token = this.$cookies.get('token');
