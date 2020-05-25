@@ -279,14 +279,6 @@ export const getAllSuggestionsFromReader = (request, response) => {
   });
 };
 
-export const getTextSuggestions = (request, response) => {
-  send(response, async () => {
-    const { id } = request.params;
-    const suggestion = await SuggestionModel.find({ text: id });
-    return suggestion;
-  });
-};
-
 export const getSuggestion = (request, response) => {
   send(response, async () => {
     const { id } = request.params;

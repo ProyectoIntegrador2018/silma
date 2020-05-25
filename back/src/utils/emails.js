@@ -13,6 +13,18 @@ export const rejectTextEmail = (user, text) => {
   };
 };
 
+export const bookReceivedEmail = (text) => {
+    return {
+        subject: "New Silma Reading Suggestion!",
+        html: `
+                    <div>
+                        <div>¡Hola!</div>
+                        <div> Muchas gracias por el envío de tu libro, te haremos saber el proceso de tu libro conforme ocurre </div>
+                    </div>           
+             `,
+    };
+};
+
 export const movePhaseEmail = [
     {
         "email": "",
