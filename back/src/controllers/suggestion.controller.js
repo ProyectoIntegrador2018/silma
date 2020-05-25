@@ -246,7 +246,45 @@ export const getAllSuggestionsFromReader = (request, response) => {
 export const getTextSuggestions = (request, response) => {
   send(response, async() => {
     const { id } = request.params;
-    const suggestion = await SuggestionModel.find({"text": id})
+    const suggestion = await SuggestionModel.find({"text": id}).populate('text')
     return suggestion;
   });
 };
+
+export const createSuggestionAdmin = (request, response) => {
+  send(response, async() => {
+    try{
+    var reader = [{ id: request.body.reader_id, points: 25}]
+    var text = {_id: request.body.book_id, numberOfPages: request.body.numberOfPages}
+    await addSuggestionSendEmail(reader,text)
+    return {"status" : "success"}
+    }catch(err){
+      return err
+    }
+  });
+}
+
+export const getReadersWithoutSuggestion = (request,response) => {
+  send(response, async() => {
+    var acceptedRequest = await SuggestionModel.find({suggestionStatus: "Accepted" })
+    var pendingRequest = await SuggestionModel.find({suggestionStatus: "Pending" })
+    var readers = await ReaderModel.find().populate("user").populate("preferences");
+    var occupiedReaders = [...acceptedRequest, ... pendingRequest]
+    var idOccupied = []
+    occupiedReaders.forEach(element => {
+      idOccupied.push(element.reader.toString())
+    });
+    var finalArr = readers.filter(function(item){
+      return idOccupied.indexOf(item._id.toString()) === -1;
+    });
+    return finalArr
+  });
+}
+
+
+export const deleteSuggestionAdmin = (request, response) => {
+  send(response, async() => {
+    const { id } = request.params;
+    SuggestionModel.findOne({_id: id}).deleteOne().exec();
+  });
+}
