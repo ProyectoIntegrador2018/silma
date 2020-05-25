@@ -51,6 +51,7 @@
 
 
 <script>
+
 import Table from "@/components/table.vue";
 import { getRequest, postRequest, deleteRequest } from "@/utils/requests";
 import moment from "moment";
@@ -201,6 +202,7 @@ export default {
       this.getReadersWithoutSuggestion();
       this.dialog = false
     }
+
   }
 };
 </script>
