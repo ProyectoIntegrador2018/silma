@@ -21,6 +21,13 @@ export const authUser = (request, response) => {
   });
 };
 
+export const getUser = (request, response) => {
+  send(response, async () => {
+    const { id } = request.params;
+    return await UserModel.findById(id);
+  });
+};
+
 export const createUser = async (request, response, role) => {
   let data = request.body;
   let user = await UserModel.findOne({ email: data.email }).select(['+password']);

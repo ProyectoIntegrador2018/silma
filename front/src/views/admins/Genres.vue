@@ -81,12 +81,8 @@ export default {
             genres: []
         }
     },
-    asyncComputed: {
-      async getGenres(){
-        const token = this.$cookies.get('token');
-        this.genres = await getRequest('user/genres', token);
-        return this.genres;
-      }
+    async created(){
+        await this.getGenres()
     },
     methods: {
     async create() {
@@ -113,7 +109,12 @@ export default {
       } catch (error) {
         this.dialogError = true;
       }
-      location.reload();
+      this.getGenres()
+    },
+    async getGenres(){
+        const token = this.$cookies.get('token');
+        this.genres = await getRequest('user/genres', token);
+        return this.genres;
     }
   }
 }

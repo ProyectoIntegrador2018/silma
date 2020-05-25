@@ -2,6 +2,7 @@ import { AdminModel } from "@/models/admin.model";
 import { GenreModel } from "@/models/genre.model";
 import { FeedbackModel } from "@/models/feedback.model";
 import { TextModel } from "@/models/text.model";
+import { WriterModel } from "@/models/writer.model";
 import { UserModel } from "@/models/user.model";
 import { createUser } from "@/controllers/user.controller"; 
 import { send } from "@/utils/errors";
@@ -89,18 +90,18 @@ export const movePhase = (request, response) => {
   send(response, async() =>{
       const { id } = request.params;
       const text = await TextModel.findById(id);
-      const newPhase = request.body;
+      const newPhase = text.phase + 1
       const phase = await TextModel.updateOne(
           {_id: id},
-          {$set: {phase: newPhase.newPhase}},
+          {$set: {phase: newPhase}},
           function(err, res) {
             if (err) throw err;
-            console.log("Phase advanced");
           }
       )
-      const writer = await UserModel.findById(text.writer);
-      var email = movePhaseEmail[newPhase.newPhase - 2];
-      email.email = writer.email
+      const writer = await WriterModel.findById(text.writer);
+      const user = await UserModel.findById(writer.user)
+      var email = movePhaseEmail[newPhase - 2];
+      email.email = user.email
       email.subject = "Tu texto avanzo a Fase " + newPhase
       await sendEmail(email);
   });

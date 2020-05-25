@@ -5,10 +5,10 @@
       <!-- Actions -->
       <template #actions="{ props }">
         <div style="padding-top: 5px">
-          <v-btn small color="primary" depressed @click="seeSuggestions(props)">Sugerencias</v-btn>
+          <v-btn small color="success" :disabled="props.isRejected || props.phase == 4" depressed @click="advancePhase(props)">Avanzar Fase</v-btn>
         </div>
         <div style="padding-top: 5px">
-          <v-btn small color="success" :disabled="props.isRejected" depressed @click="advancePhase(props)">Avanzar Fase</v-btn>
+          <v-btn small color="primary" depressed @click="seeSuggestions(props)">Sugerencias</v-btn>
         </div>
         <div style="padding-top: 5px">
           <v-btn small color="error" :disabled="props.isRejected" depressed @click="openRejectDialog(props)">Rechazar</v-btn>
@@ -55,6 +55,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <DialogComponent ref="confirm"></DialogComponent>
     </v-layout>
   </div>
 </template>
@@ -63,11 +64,13 @@
 <script>
 import Table from "@/components/table.vue";
 import { postRequest, getRequest } from "@/utils/requests";
-import { requiredRule } from "@/utils/rules";
+import DialogComponent from "@/components/dialogComponent.vue"
+import { requiredRule, numericRule, phasesRule } from "@/utils/rules";
 
 export default {
   components: {
-    Table
+    Table,
+    DialogComponent
   },
   data() {
     return {
@@ -137,8 +140,16 @@ export default {
       var id = item._id
       this.$router.push('/Sugerencias_Texto/' +id);
     },
-    advancePhase(item){
-      console.log(item)
+    async advancePhase(item){
+      if (await this.$refs.confirm.open('Avanzar', '¿Seguro que quieres avanzar el texto de fase?', { color: 'primary' })) {
+        try {
+          const token = this.$cookies.get('token');
+          await postRequest("/admins/texts/movePhase/"+ item._id, {}, token);
+          this.getTexts()
+        } catch (error) {
+            console.log(error.response.data)
+        }   
+      }
     },
     openRejectDialog(text) {
       this.dialogReject = true;

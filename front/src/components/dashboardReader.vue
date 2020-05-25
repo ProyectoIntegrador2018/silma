@@ -15,8 +15,8 @@
         {{text.description}}
       </v-card-subtitle>
       <v-card-actions v-if="status">
-        <v-btn @click="accept" color="green" text>Aceptar</v-btn>
-        <v-btn @click="reject" color="red" text>Rechazar</v-btn>
+        <v-btn @click="accept()" color="green" text>Aceptar</v-btn>
+        <v-btn @click="reject()" color="red" text>Rechazar</v-btn>
       </v-card-actions>
       <v-card-actions v-else>
         <v-btn color="purple" text :href="'/Mis_Lecturas/'+this.suggestion._id">Continuar lectura</v-btn>
@@ -62,58 +62,55 @@ export default {
       token: ''
     };
   },
-  created() {
+  async created() {
+    await this.getInfo();
+    await this.getHistory();
   },
   asyncComputed: {
-    async getInfo(){
-        this.token = this.$cookies.get('token');
-        this.suggestion = await getRequest('/suggestions/getSuggestionDashboard/' + this.reader, this.token);
-        if(!(this.suggestion == false)){
-            //Has a suggestion or ongoing text
-            this.suggestionExists = true
-            this.text = await getRequest('/texts/' + this.suggestion.text, this.token);
-            if(this.suggestion.suggestionStatus == "Accepted")
-              this.status = false
-        }
-    },
-    async getHistory(){
-        this.token = this.$cookies.get('token');
-        this.history = await getRequest('/suggestions/getAllSuggestionsDashboard/' + this.reader, this.token);
-    },
-    async composeHistory(){
-          var i;
-          var text;
-          var data = [];
-          for(i = 0; i < this.history.length; i++) {
-              text = await getRequest('/texts/' + this.history[i].text, this.token);
-              data.push({
-                title: text.title,
-                sentDate: this.history[i].sentDate,
-                suggestionStatus: this.history[i].suggestionStatus
-              })
-          }
-          this.data = data
-    }
+    
   },
   methods: {
       async accept(){
-        try {
           await postRequest('/suggestions/'+this.suggestion._id+'/accept', {} ,this.token)
-          location.reload();
-        } catch (error) {
-          this.errorMessage = this.errorServerRegister
-          this.dialogError = true
-        }
+          await this.getInfo()
+          await this.getHistory()
       },
       async reject(){
-        try {
           await postRequest('/suggestions/'+this.suggestion._id+'/reject', {} ,this.token)
-          location.reload();
-        } catch (error) {
-          this.errorMessage = this.errorServerRegister
-          this.dialogError = true
-        }
-      }
+          this.suggestionExists = false
+          await this.getInfo()
+          await this.getHistory()
+      },
+      async getInfo(){
+          this.token = this.$cookies.get('token');
+          this.suggestion = await getRequest('/suggestions/getSuggestionDashboard/' + this.reader, this.token);
+          if(!(this.suggestion == false)){
+              //Has a suggestion or ongoing text
+              this.suggestionExists = true
+              this.text = await getRequest('/texts/' + this.suggestion.text, this.token);
+              if(this.suggestion.suggestionStatus == "Accepted")
+                this.status = false
+          }
+      },
+      async composeHistory(){
+            var i;
+            var text;
+            var data = [];
+            for(i = 0; i < this.history.length; i++) {
+                text = await getRequest('/texts/' + this.history[i].text, this.token);
+                data.push({
+                  title: text.title,
+                  sentDate: this.history[i].sentDate,
+                  suggestionStatus: this.history[i].suggestionStatus
+                })
+            }
+            this.data = data
+      },
+      async getHistory(){
+        this.token = this.$cookies.get('token');
+        this.history = await getRequest('/suggestions/getAllSuggestionsDashboard/' + this.reader, this.token);
+        await this.composeHistory()
+      },
   }
 };
 </script>
