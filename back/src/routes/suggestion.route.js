@@ -4,6 +4,8 @@ import {
   completeSuggestion,
   getSuggestionFromReader,
   getAllSuggestionsFromReader,
+  getSuggestionFromReaderDashboard,
+  getAllSuggestionsFromReaderDashboard,
   getReadersWithoutSuggestion,
   getTextSuggestions,
   getSuggestion
@@ -16,6 +18,8 @@ export const addSuggestionRoutes = (router) => {
   router.get("/suggestions/getSuggestion/:id", getSuggestionFromReader);
   router.get("/suggestions/getReadersWithoutSuggestion/", getReadersWithoutSuggestion);
   router.get("/suggestions/getAllSuggestions/:id", getAllSuggestionsFromReader);
+  router.get("/suggestions/getSuggestionDashboard/:id", getSuggestionFromReaderDashboard);
+  router.get("/suggestions/getAllSuggestionsDashboard/:id", getAllSuggestionsFromReaderDashboard);
   router.get("/suggestions/getTextSuggestions/:id", getTextSuggestions);
   router.get("/suggestions/:id", getSuggestion);
 };

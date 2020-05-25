@@ -234,9 +234,11 @@ export const changeSuggestionStatus = async (id, newStatus, previousStatus) => {
 export const rejectSuggestion = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
-    const suggestion = await changeSuggestionStatus(id, "Rejected", "Pending");
-    await assignReaders(suggestion.text, 1);
-    return suggestion;
+    var suggestion = await SuggestionModel.findById(id);
+    var text = await TextModel.findById(suggestion.text);
+    await assignReaders(text, 1);
+    const newSuggestion= await changeSuggestionStatus(id, "Rejected", "Pending");
+    return newSuggestion;
   });
 };
 
@@ -260,6 +262,14 @@ export const completeSuggestion = (request, response) => {
   });
 };
 
+export const getSuggestion = (request, response) => {
+  send(response, async () => {
+    const { id } = request.params;
+    const suggestion = await SuggestionModel.findById(id).populate("text");
+    return suggestion;
+  });
+};
+
 export const getSuggestionFromReader = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
@@ -279,11 +289,33 @@ export const getAllSuggestionsFromReader = (request, response) => {
   });
 };
 
-export const getSuggestion = (request, response) => {
-  send(response, async () => {
-    const { id } = request.params;
-    const suggestion = await SuggestionModel.findById(id).populate("text");
-    return suggestion;
+export const getSuggestionFromReaderDashboard = (request, response) => {
+  send(response, async() => {
+    const { id }  = request.params;
+    const reader = await ReaderModel.find({user: id})
+    const suggestion = await SuggestionModel.find( {$or: [
+      {
+        reader: reader,
+        suggestionStatus: ("Accepted")
+      },
+      {
+        reader: reader,
+        suggestionStatus: ("Pending")
+      }
+    ]});
+    if (suggestion === undefined)
+      return false
+    else
+      return suggestion[0];
+  });
+};
+
+export const getAllSuggestionsFromReaderDashboard = (request, response) => {
+  send(response, async() => {
+    const { id }  = request.params;
+    const reader = await ReaderModel.find({user: id})
+    const suggestions = await SuggestionModel.find({reader: reader})
+    return suggestions;
   });
 };
 
