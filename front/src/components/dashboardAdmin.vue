@@ -8,21 +8,62 @@
           <v-btn small color="primary" depressed @click="seeSuggestions(props)">Sugerencias</v-btn>
         </div>
         <div style="padding-top: 5px">
-          <v-btn small color="success" depressed @click="advancePhase(props)">Avanzar Fase</v-btn>
+          <v-btn small color="success" :disabled="props.isRejected" depressed @click="advancePhase(props)">Avanzar Fase</v-btn>
         </div>
         <div style="padding-top: 5px">
-          <v-btn small color="error" depressed @click="rejectText(props)">Rechazar</v-btn>
+          <v-btn small color="error" :disabled="props.isRejected" depressed @click="openRejectDialog(props)">Rechazar</v-btn>
         </div>
       </template>
+      <template #phase="{ props }">
+        <v-chip label class="ma-2" outlined small
+          :color="props.isRejected ? 'red' : 'primary'">
+          {{ props.isRejected ? 'Rechazado' : props.phase }}
+        </v-chip>
+      </template>
     </Table>
+    <v-layout row wrap>
+      <v-dialog v-model="dialogReject" persistent max-width="450">
+        <v-card>
+          <v-card-title class="headline">Rechazo del texto</v-card-title>
+          <v-card-text>
+            Favor de adjuntar un PDF explicando porque el texto del autor fue rechazado.
+            Se le mandará un correo al autor con esta explicación.
+          </v-card-text>
+          <v-card-text>
+            <v-file-input
+              accept=".pdf"
+              label="Subir PDF"
+              outlined
+              :rules="[requiredRule]"
+              v-model="rejectDocument"
+            ></v-file-input>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn
+              color="secondary darken-1"
+              text
+              @click="closeRejectDialog()">
+              Cancelar
+            </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="green darken-1"
+              text
+              @click="rejectText()">
+              Confirmar
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-layout>
   </div>
 </template>
 
 
 <script>
 import Table from "@/components/table.vue";
-import { getRequest } from "@/utils/requests";
-
+import { postRequest, getRequest } from "@/utils/requests";
+import { requiredRule } from "@/utils/rules";
 
 export default {
   components: {
@@ -66,10 +107,16 @@ export default {
         { text: "Fase", align: "start", sortable: false, value: "phase" },
         { text: "Acciones", actions: true, sortable: false }
       ],
-      dataTexts: []
+      dataTexts: [],
+      dialogReject: false,
+      rejectingText: undefined,
+      rejectDocument: undefined
     };
   },
-  asyncComputed: {
+  async created() {
+    await this.getTexts();
+  },
+  methods: {
     async getTexts() {
       const token = this.$cookies.get("token");
       var data = await getRequest("texts/", token);
@@ -85,9 +132,7 @@ export default {
         book.genres = genreNames;
       });
       this.dataTexts = data;
-    }
-  },
-  methods: {
+    },
     seeSuggestions(item) {
       var id = item._id
       this.$router.push('/Sugerencias_Texto/' +id);
@@ -96,9 +141,22 @@ export default {
       console.log(item)
 
     },
-    rejectText(item){
-      console.log(item)
-
+    openRejectDialog(text) {
+      this.dialogReject = true;
+      this.rejectingText = text;
+    },
+    closeRejectDialog() {
+      this.dialogReject = false;
+      this.rejectingText = undefined;
+      this.rejectDocument = undefined;
+    },
+    async rejectText() {
+      let formData = new FormData();
+      formData.append("document", this.rejectDocument);
+      const token = this.$cookies.get('token');
+      const newText = await postRequest(`texts/${this.rejectingText._id}/reject`, formData, token, true);
+      this.closeRejectDialog();
+      await this.getTexts();
     }
   }
 };

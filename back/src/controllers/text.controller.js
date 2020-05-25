@@ -1,7 +1,10 @@
 import { send } from "@/utils/errors";
 import { TextModel } from "@/models/text.model";
-import { assignReaders } from "@/controllers/suggestion.controller"
-import { uploadDocument, getDocument } from "@/controllers/aws.controller"
+import { assignReaders } from "@/controllers/suggestion.controller";
+import { sendEmail } from "@/utils/mailSender";
+import { uploadDocument, getDocument } from "@/controllers/aws.controller";
+import { UserModel } from '@/models/user.model';
+import { rejectTextEmail } from '@/utils/emails'; 
 
 export const getAllTexts = (request, response) => {
   send(response, async () => {
@@ -62,5 +65,27 @@ export const getTextsOfWriter = (request, response) => {
     const { writer } = request.params;
     const reader = await TextModel.find({ writer }).populate("genres");
     return reader;
+  });
+};
+
+export const rejectText = (request, response) => {
+  send(response, async () => {
+    const { id } = request.params;
+    await TextModel.updateOne({ _id: id }, { isRejected: true });
+    const text = await TextModel.findById(id).populate("writer");
+    const user = await UserModel.findById(text.writer.user);
+    const document = request.files.document;
+    const emailData = rejectTextEmail(user, text);
+    await sendEmail({
+      ...emailData,
+      email: user.email,
+      attachments: [
+        {
+          filename: document.name,
+          content: document.data
+        }
+      ]
+    });
+    return text;
   });
 };
