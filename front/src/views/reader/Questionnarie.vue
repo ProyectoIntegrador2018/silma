@@ -198,7 +198,6 @@ export default {
         await postRequest("/suggestions/"+this.feedback.suggestion+"/complete", {} ,token);
         this.dialogSuccess = true
       } catch (error) {
-        console.log(error.response.data)
         this.errorMessage = this.errorServerRegister
         this.dialogError = true
       }
