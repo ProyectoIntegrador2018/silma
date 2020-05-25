@@ -43,9 +43,9 @@ const runAll = async () => {
   });
   console.log('Admin 2: ', admin2.data._id);
   const reader1 = await axios.post("http://localhost:3000/api/register/readers", {
-    name: "Admin 1",
+    name: "Reader 1",
     password: "prueba12345",
-    email: "admin1@gmail.com",
+    email: "reader1@gmail.com",
     birthdate: "12/12/2012",
     phone: "8116690319",
     nationality: "Mexico",
