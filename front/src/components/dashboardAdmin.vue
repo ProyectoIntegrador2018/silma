@@ -21,6 +21,12 @@
         </v-chip>
       </template>
     </Table>
+    <h1 align="left">Escritores</h1>
+    <Table :headers="userHeaders" :items="dataWriters">
+    </Table>
+    <h1 align="left">Lectores Beta</h1>
+    <Table :headers="userHeaders" :items="dataReaders">
+    </Table>
     <v-layout row wrap>
       <v-dialog v-model="dialogReject" persistent max-width="450">
         <v-card>
@@ -65,7 +71,6 @@
 import Table from "@/components/table.vue";
 import { postRequest, getRequest } from "@/utils/requests";
 import DialogComponent from "@/components/dialogComponent.vue"
-import { requiredRule, numericRule, phasesRule } from "@/utils/rules";
 
 export default {
   components: {
@@ -110,7 +115,13 @@ export default {
         { text: "Fase", align: "start", sortable: false, value: "phase" },
         { text: "Acciones", actions: true, sortable: false }
       ],
+      userHeaders:[
+        {text: "Nombre", align: "start", sortable: false, value: "name"},
+        {text: "Correo", sortable: false, value: "email"}
+      ],
       dataTexts: [],
+      dataReaders: [],
+      dataWriters: [],
       dialogReject: false,
       rejectingText: undefined,
       rejectDocument: undefined
@@ -118,6 +129,8 @@ export default {
   },
   async created() {
     await this.getTexts();
+    await this.composeReaders();
+    await this.composeWriters();
   },
   methods: {
     async getTexts() {
@@ -142,13 +155,9 @@ export default {
     },
     async advancePhase(item){
       if (await this.$refs.confirm.open('Avanzar', '¿Seguro que quieres avanzar el texto de fase?', { color: 'primary' })) {
-        try {
           const token = this.$cookies.get('token');
           await postRequest("/admins/texts/movePhase/"+ item._id, {}, token);
-          this.getTexts()
-        } catch (error) {
-            console.log(error.response.data)
-        }   
+          this.getTexts() 
       }
     },
     openRejectDialog(text) {
@@ -167,7 +176,37 @@ export default {
       const newText = await postRequest(`texts/${this.rejectingText._id}/reject`, formData, token, true);
       this.closeRejectDialog();
       await this.getTexts();
-    }
+    },
+    async composeReaders(){
+      const token = this.$cookies.get('token');
+      const readers = await getRequest('/readers', token);
+      var i;
+      var user;
+      var data = [];
+      for(i = 0; i < readers.length; i++) {
+          user = await getRequest('/user/' + readers[i].user._id, token);
+          data.push({
+            name: user.name,
+            email: user.email
+          })
+      }
+      this.dataReaders = data
+    },
+    async composeWriters(){
+      const token = this.$cookies.get('token');
+      const writers = await getRequest('/writers', token);
+      var i;
+      var user;
+      var data = [];
+      for(i = 0; i < writers.length; i++) {
+          user = await getRequest('/user/' + writers[i].user._id, token);
+          data.push({
+            name: user.name,
+            email: user.email
+          })
+      }
+      this.dataWriters = data
+    },
   }
 };
 </script>
