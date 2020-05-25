@@ -71,25 +71,15 @@ export default {
   },
   methods: {
       async accept(){
-        try {
           await postRequest('/suggestions/'+this.suggestion._id+'/accept', {} ,this.token)
           await this.getInfo()
           await this.getHistory()
-        } catch (error) {
-          this.errorMessage = this.errorServerRegister
-          this.dialogError = true
-        }
       },
       async reject(){
-        try {
           await postRequest('/suggestions/'+this.suggestion._id+'/reject', {} ,this.token)
           this.suggestionExists = false
           await this.getInfo()
           await this.getHistory()
-        } catch (error) {
-          this.errorMessage = this.errorServerRegister
-          this.dialogError = true
-        }
       },
       async getInfo(){
           this.token = this.$cookies.get('token');
