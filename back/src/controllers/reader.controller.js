@@ -1,4 +1,5 @@
 import { ReaderModel } from "@/models/reader.model";
+import { FeedbackModel } from "@/models/feedback.model";
 import { send } from "@/utils/errors";
 import { createUser } from "@/controllers/user.controller"
 
@@ -18,8 +19,6 @@ export const getReader = (request, response) => {
   });
 };
 
-
-
 export const createReader = (request, response) => {
   send(response, async () => {
     const UserNew = await createUser(request, response, "reader");
@@ -36,5 +35,13 @@ export const createReader = (request, response) => {
     } else {
       throw { error: "The e-mail already has a reader account" };
     }
+  });
+};
+
+export const createFeedback = (request, response) => {
+  send(response, async () => {
+    const data = request.body;
+    const feedback = await FeedbackModel.create(data);
+    return feedback;
   });
 };

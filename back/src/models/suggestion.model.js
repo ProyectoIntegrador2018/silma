@@ -18,6 +18,10 @@ export const SuggestionSchema = new Schema({
   },
   score: {
     type: Number
+  },
+  readingChapters:{
+    type: Number,
+    default: 5
   }
 });
 SuggestionSchema.plugin(beautifyUnique);

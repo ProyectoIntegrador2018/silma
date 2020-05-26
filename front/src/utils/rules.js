@@ -15,4 +15,6 @@ export const passwordMinRule = entry => /.{8,}/.test(entry) || "Mínimo 8 caract
 
 export const phoneRule = entry => /\d{10}/.test(entry) || "Los 10 dígito de tu celular"
 
-export const letterRule = entry => /^[A-Za-z\s]+$/.test(entry) || "Solo se aceptan letras"
+export const letterRule = entry => /^[A-Za-záéíóúÁÉÍÓÚ\s]+$/.test(entry) || "Solo se aceptan letras"
+
+export const phasesRule = entry => /([1-4]){1}/.test(entry) || "Solo se aceptan las fases del 1 al 4"
