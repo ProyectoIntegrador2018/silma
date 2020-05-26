@@ -14,6 +14,7 @@ var addTextRoutes = router => {
   router.post("/texts", _text.createText);
   router.post("/texts/:id/uploads", _text.uploadTextDocument);
   router.get("/texts/:id/uploads", _text.retrieveTextDocument);
+  router.post("/texts/:id/reject", _text.rejectText);
   router.get("/texts/writer/:writer", _text.getTextsOfWriter);
 };
 
