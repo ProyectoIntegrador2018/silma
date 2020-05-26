@@ -20,6 +20,9 @@ var sendEmail = /*#__PURE__*/function () {
       auth: {
         user: "manuscritos@silmaed.com",
         pass: "Fr33fora11!"
+      },
+      tls: {
+        rejectUnauthorized: false
       }
     });
     yield transporter.sendMail({
@@ -27,7 +30,8 @@ var sendEmail = /*#__PURE__*/function () {
       to: request.email,
       subject: request.subject,
       text: request.text,
-      html: request.html
+      html: request.html,
+      attachments: request.attachments
     });
   });
 

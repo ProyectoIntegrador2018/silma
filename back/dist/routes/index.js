@@ -22,6 +22,7 @@ var _user = require("../controllers/user.controller");
 var createRoutes = () => {
   var router = new _express.Router();
   router.post("/user/authentication", _user.authUser);
+  router.get("/user/:id", _user.getUser);
   router.get("/user/genres", _user.getAllGenres);
   (0, _writer.addWriterRoutes)(router);
   (0, _admin.addAdminRoutes)(router);

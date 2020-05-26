@@ -3,15 +3,27 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.fillGenres = exports.createGenre = exports.createAdmin = exports.getAdmin = exports.getAdmins = exports.genres = void 0;
+exports.movePhase = exports.getFeedback = exports.fillGenres = exports.createGenre = exports.createAdmin = exports.getAdmin = exports.getAdmins = exports.genres = void 0;
 
 var _admin = require("../models/admin.model");
 
 var _genre = require("../models/genre.model");
 
-var _user = require("./user.controller");
+var _feedback = require("../models/feedback.model");
+
+var _text = require("../models/text.model");
+
+var _writer = require("../models/writer.model");
+
+var _user = require("../models/user.model");
+
+var _user2 = require("./user.controller");
 
 var _errors = require("../utils/errors");
+
+var _emails = require("../utils/emails");
+
+var _mailSender = require("../utils/mailSender");
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -49,7 +61,7 @@ exports.getAdmin = getAdmin;
 
 var createAdmin = (request, response) => {
   (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
-    var newUser = yield (0, _user.createUser)(request, response, "admin");
+    var newUser = yield (0, _user2.createUser)(request, response, "admin");
     var data = request.body;
     var lookUserAdmin = yield _admin.AdminModel.findOne({
       user: newUser._id
@@ -99,3 +111,42 @@ var fillGenres = (request, response) => {
 };
 
 exports.fillGenres = fillGenres;
+
+var getFeedback = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    var {
+      id
+    } = request.params;
+    var feedback = yield _feedback.FeedbackModel.findById(id);
+    return feedback;
+  }));
+};
+
+exports.getFeedback = getFeedback;
+
+var movePhase = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    var {
+      id
+    } = request.params;
+    var text = yield _text.TextModel.findById(id);
+    var newPhase = text.phase + 1;
+    var phase = yield _text.TextModel.updateOne({
+      _id: id
+    }, {
+      $set: {
+        phase: newPhase
+      }
+    }, function (err, res) {
+      if (err) throw err;
+    });
+    var writer = yield _writer.WriterModel.findById(text.writer);
+    var user = yield _user.UserModel.findById(writer.user);
+    var email = _emails.movePhaseEmail[newPhase - 2];
+    email.email = user.email;
+    email.subject = "Tu texto avanzo a Fase " + newPhase;
+    yield (0, _mailSender.sendEmail)(email);
+  }));
+};
+
+exports.movePhase = movePhase;

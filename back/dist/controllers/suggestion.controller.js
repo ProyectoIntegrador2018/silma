@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.completeSuggestion = exports.acceptSuggestion = exports.rejectSuggestion = exports.changeSuggestionStatus = exports.calculateBetweenDatesPoints = exports.calculateParticiaptionPoints = exports.calculateReadingPoints = exports.calculateAgePoints = exports.calculateGenrePoints = exports.runAlgorithm = exports.addSuggestionSendEmail = exports.assignReaders = void 0;
+exports.deleteSuggestionAdmin = exports.getReadersWithoutSuggestion = exports.createSuggestionAdmin = exports.getTextSuggestions = exports.getAllSuggestionsFromReaderDashboard = exports.getSuggestionFromReaderDashboard = exports.getAllSuggestionsFromReader = exports.getSuggestionFromReader = exports.getSuggestion = exports.completeSuggestion = exports.acceptSuggestion = exports.rejectSuggestion = exports.changeSuggestionStatus = exports.calculateBetweenDatesPoints = exports.calculateParticiaptionPoints = exports.calculateReadingPoints = exports.calculateAgePoints = exports.calculateGenrePoints = exports.runAlgorithm = exports.addSuggestionSendEmail = exports.assignReaders = void 0;
 
 var _reader = require("../models/reader.model");
 
@@ -44,11 +44,11 @@ var addSuggestionSendEmail = /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator(function* (selectedReaders, text) {
     for (var reader of selectedReaders) {
       var suggetionObj = {
-        "reader": reader.id,
-        "text": text._id,
-        "sentDate": new Date(),
-        "suggestionStatus": "Pending",
-        "score": reader.points
+        reader: reader.id,
+        text: text._id,
+        sentDate: new Date(),
+        suggestionStatus: "Pending",
+        score: reader.points
       };
       yield _suggestion.SuggestionModel.create(suggetionObj);
       var readerInfo = yield _reader.ReaderModel.findById(reader.id).populate("user");
@@ -63,10 +63,10 @@ var addSuggestionSendEmail = /*#__PURE__*/function () {
       var textEmails = yield _text.TextModel.findById(text._id).populate("genres");
       var listGenre = textEmails.genres.map(genre => genre.name);
       var email = {
-        "email": readerInfo.user.email,
-        "subject": "New Silma Reading Suggestion!",
-        "text": "",
-        "html": "\n                <div>\n                    <div>\xA1Hola!</div>\n                    <div>\n                    Te agradecemos por haber rellenado nuestro formulario para ser un lector beta. Actualmente tenemos un libro que es de uno de los g\xE9neros que te agrada y quisi\xE9ramos saber si tienes la oportunidad de leerlo. Tiene ".concat(text.numberOfPages, " p\xE1ginas y es de ").concat(listGenre.join(" ,"), ".\n                    </div>\n                    <div>\n                    No es obligatorio leerlo todo pero, si crees que no vas a tener tiempo para leer este libro, \xA1no te preocupes! Seguir\xE1s en nuestra lista para cuando lo tengas para otra obra.\n                    </div>\n                    <div>\n                    De momento, vamos a explicarte el proceso que debe hacerse como lector beta:\n                    </div>\n                    <div>\n                    <ul>\n                        <li>Debes primero firmar una hoja de confidencialidad para que el libro que leas est\xE9 seguro.</li>\n                        <li>T\xF3mate tu tiempo y reserva un lugar tranquilo en el que puedas leer sin interrupciones.</li>\n                        <li>Abre el texto y l\xE9elo como cualquier otro libro. Disfr\xFAtalo, no pienses en cosas t\xE9cnicas, sino en la historia.</li>\n                        <li>Se deben leer cinco cap\xEDtulos o cincuenta p\xE1ginas. Aunque sientas que el texto es pesado o no te guste, debemos dar la oportunidad al escritor de conocer bien su historia.</li>\n                        <li>Si para las primeras cincuenta p\xE1ginas o cinco cap\xEDtulos la obra no te gust\xF3, puedes detenerte. Despu\xE9s de avisarnos, se te mandar\xE1 una encuesta de salida, donde se te pedir\xE1 tu opini\xF3n sobre el libro y en el que podr\xE1s comentar qu\xE9 te gust\xF3 y qu\xE9 te desagrad\xF3, esto para darle luego al escritor una cr\xEDtica constructiva.</li>\n                        <li>Si la novela te est\xE1 gustando, \xA1puedes proseguir, incluso acab\xE1rtela! Solo recuerda que, para la fecha que te indiquemos, debes decir en el formulario que te mandemos qu\xE9 te gust\xF3, si crees que deber\xEDa publicarse y por qu\xE9.</li>\n                    </ul>\n                    </div>\n                    <div>\n                    Ya que se te ha explicado el proceso, \xBFte agradar\xEDa recibir el libro para revisarlo? El plazo es de ").concat(plazoLectura, " para leer lo m\xEDnimo necesario (50 p\xE1ginas o 5 cap\xEDtulos). Puedes terminarlo luego, si gustas.\n                    Por favor, sea cual sea tu respuesta, contesta a este mensaje para asegurarnos que te lleg\xF3. Si respondes que s\xED puedes leer la obra, te mandaremos un documento junto con la ficha a llenar despu\xE9s de la lectura. Si no, te agredeceremos y quedar\xE1s de nuevo en la lista de lectores beta para otra ocasi\xF3n.\n                    </div>\n                    <div>   \n                    \xA1Esperamos que tengas un buen d\xEDa y quedamos al pendiente de tu respuesta!\n                    </div>\n                    <div>\n                    **Por cuestiones de agilizar el proceso y darle un buen servicio a los participantes de nuestra convocatoria, solicitaremos los servicios de otros lectores beta si este mensaje no es respondido en el plazo de dos semanas**\n                    </div>\n                    <div>\n                    Recuerda actualizar tus fechas de disponibilidad de lectura!\n                    </div>\n                    </span>\n                </div>\n            ")
+        email: readerInfo.user.email,
+        subject: "New Silma Reading Suggestion!",
+        text: "",
+        html: "\n                <div>\n                    <div>\xA1Hola!</div>\n                    <div>\n                    Te agradecemos por haber rellenado nuestro formulario para ser un lector beta. Actualmente tenemos un libro que es de uno de los g\xE9neros que te agrada y quisi\xE9ramos saber si tienes la oportunidad de leerlo. Tiene ".concat(text.numberOfPages, " p\xE1ginas y es de ").concat(listGenre.join(" ,"), ".\n                    </div>\n                    <div>\n                    No es obligatorio leerlo todo pero, si crees que no vas a tener tiempo para leer este libro, \xA1no te preocupes! Seguir\xE1s en nuestra lista para cuando lo tengas para otra obra.\n                    </div>\n                    <div>\n                    De momento, vamos a explicarte el proceso que debe hacerse como lector beta:\n                    </div>\n                    <div>\n                    <ul>\n                        <li>Debes primero firmar una hoja de confidencialidad para que el libro que leas est\xE9 seguro.</li>\n                        <li>T\xF3mate tu tiempo y reserva un lugar tranquilo en el que puedas leer sin interrupciones.</li>\n                        <li>Abre el texto y l\xE9elo como cualquier otro libro. Disfr\xFAtalo, no pienses en cosas t\xE9cnicas, sino en la historia.</li>\n                        <li>Se deben leer cinco cap\xEDtulos o cincuenta p\xE1ginas. Aunque sientas que el texto es pesado o no te guste, debemos dar la oportunidad al escritor de conocer bien su historia.</li>\n                        <li>Si para las primeras cincuenta p\xE1ginas o cinco cap\xEDtulos la obra no te gust\xF3, puedes detenerte. Despu\xE9s de avisarnos, se te mandar\xE1 una encuesta de salida, donde se te pedir\xE1 tu opini\xF3n sobre el libro y en el que podr\xE1s comentar qu\xE9 te gust\xF3 y qu\xE9 te desagrad\xF3, esto para darle luego al escritor una cr\xEDtica constructiva.</li>\n                        <li>Si la novela te est\xE1 gustando, \xA1puedes proseguir, incluso acab\xE1rtela! Solo recuerda que, para la fecha que te indiquemos, debes decir en el formulario que te mandemos qu\xE9 te gust\xF3, si crees que deber\xEDa publicarse y por qu\xE9.</li>\n                    </ul>\n                    </div>\n                    <div>\n                    Ya que se te ha explicado el proceso, \xBFte agradar\xEDa recibir el libro para revisarlo? El plazo es de ").concat(plazoLectura, " para leer lo m\xEDnimo necesario (50 p\xE1ginas o 5 cap\xEDtulos). Puedes terminarlo luego, si gustas.\n                    Por favor, sea cual sea tu respuesta, contesta a este mensaje para asegurarnos que te lleg\xF3. Si respondes que s\xED puedes leer la obra, te mandaremos un documento junto con la ficha a llenar despu\xE9s de la lectura. Si no, te agredeceremos y quedar\xE1s de nuevo en la lista de lectores beta para otra ocasi\xF3n.\n                    </div>\n                    <div>   \n                    \xA1Esperamos que tengas un buen d\xEDa y quedamos al pendiente de tu respuesta!\n                    </div>\n                    <div>\n                    **Por cuestiones de agilizar el proceso y darle un buen servicio a los participantes de nuestra convocatoria, solicitaremos los servicios de otros lectores beta si este mensaje no es respondido en el plazo de dos semanas**\n                    </div>\n                    <div>\n                    Recuerda actualizar tus fechas de disponibilidad de lectura!\n                    </div>\n                    </span>\n                </div>\n            ")
       };
       yield (0, _mailSender.sendEmail)(email);
     }
@@ -102,8 +102,8 @@ var runAlgorithm = /*#__PURE__*/function () {
 
       if (agePoints != 0 && acceptedRequest.length === 0 && pendingRequest.length === 0) {
         var resultReader = {
-          "id": reader._id,
-          "points": finalPoints
+          id: reader._id,
+          points: finalPoints
         };
         resultantReaders.push(resultReader);
       }
@@ -286,9 +286,11 @@ var rejectSuggestion = (request, response) => {
     var {
       id
     } = request.params;
-    var suggestion = yield changeSuggestionStatus(id, "Rejected", "Pending");
-    yield assignReaders(suggestion.text, 1);
-    return suggestion;
+    var suggestion = yield _suggestion.SuggestionModel.findById(id);
+    var text = yield _text.TextModel.findById(suggestion.text);
+    yield assignReaders(text, 1);
+    var newSuggestion = yield changeSuggestionStatus(id, "Rejected", "Pending");
+    return newSuggestion;
   }));
 };
 
@@ -317,3 +319,158 @@ var completeSuggestion = (request, response) => {
 };
 
 exports.completeSuggestion = completeSuggestion;
+
+var getSuggestion = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    var {
+      id
+    } = request.params;
+    var suggestion = yield _suggestion.SuggestionModel.findById(id).populate("text");
+    return suggestion;
+  }));
+};
+
+exports.getSuggestion = getSuggestion;
+
+var getSuggestionFromReader = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    var {
+      id
+    } = request.params;
+    var suggestion = yield _suggestion.SuggestionModel.find({
+      reader: id,
+      suggestionStatus: "Pending"
+    });
+    return suggestion;
+  }));
+};
+
+exports.getSuggestionFromReader = getSuggestionFromReader;
+
+var getAllSuggestionsFromReader = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    var {
+      id
+    } = request.params;
+    var suggestion = yield _suggestion.SuggestionModel.find({
+      reader: id
+    });
+    return suggestion;
+  }));
+};
+
+exports.getAllSuggestionsFromReader = getAllSuggestionsFromReader;
+
+var getSuggestionFromReaderDashboard = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    var {
+      id
+    } = request.params;
+    var reader = yield _reader.ReaderModel.find({
+      user: id
+    });
+    var suggestion = yield _suggestion.SuggestionModel.find({
+      $or: [{
+        reader: reader,
+        suggestionStatus: "Accepted"
+      }, {
+        reader: reader,
+        suggestionStatus: "Pending"
+      }]
+    });
+    if (suggestion === undefined) return false;else return suggestion[0];
+  }));
+};
+
+exports.getSuggestionFromReaderDashboard = getSuggestionFromReaderDashboard;
+
+var getAllSuggestionsFromReaderDashboard = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    var {
+      id
+    } = request.params;
+    var reader = yield _reader.ReaderModel.find({
+      user: id
+    });
+    var suggestions = yield _suggestion.SuggestionModel.find({
+      reader: reader
+    });
+    return suggestions;
+  }));
+};
+
+exports.getAllSuggestionsFromReaderDashboard = getAllSuggestionsFromReaderDashboard;
+
+var getTextSuggestions = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    var {
+      id
+    } = request.params;
+    var suggestion = yield _suggestion.SuggestionModel.find({
+      "text": id
+    }).populate('text');
+    return suggestion;
+  }));
+};
+
+exports.getTextSuggestions = getTextSuggestions;
+
+var createSuggestionAdmin = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    try {
+      var reader = [{
+        id: request.body.reader_id,
+        points: 25
+      }];
+      var text = {
+        _id: request.body.book_id,
+        numberOfPages: request.body.numberOfPages
+      };
+      yield addSuggestionSendEmail(reader, text);
+      return {
+        "status": "success"
+      };
+    } catch (err) {
+      return err;
+    }
+  }));
+};
+
+exports.createSuggestionAdmin = createSuggestionAdmin;
+
+var getReadersWithoutSuggestion = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    var acceptedRequest = yield _suggestion.SuggestionModel.find({
+      suggestionStatus: "Accepted"
+    });
+    var pendingRequest = yield _suggestion.SuggestionModel.find({
+      suggestionStatus: "Pending"
+    });
+    var readers = yield _reader.ReaderModel.find().populate("user").populate("preferences");
+    var occupiedReaders = [...acceptedRequest, ...pendingRequest];
+    var idOccupied = [];
+    occupiedReaders.forEach(element => {
+      idOccupied.push(element.reader.toString());
+    });
+    var finalArr = readers.filter(function (item) {
+      return idOccupied.indexOf(item._id.toString()) === -1;
+    });
+    return finalArr;
+  }));
+};
+
+exports.getReadersWithoutSuggestion = getReadersWithoutSuggestion;
+
+var deleteSuggestionAdmin = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    var {
+      id
+    } = request.params;
+
+    _suggestion.SuggestionModel.findOne({
+      _id: id
+    }).deleteOne().exec();
+  }));
+};
+
+exports.deleteSuggestionAdmin = deleteSuggestionAdmin;
