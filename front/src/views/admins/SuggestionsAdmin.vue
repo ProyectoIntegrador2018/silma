@@ -77,7 +77,7 @@ export default {
           text: "Estatus",
           align: "start",
           sortable: false,
-          value: "suggestionStatus"
+          value: "status"
         },
         {
           text: "# Capitulos Pedidos",
