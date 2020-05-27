@@ -27,6 +27,7 @@ export const createReader = (request, response) => {
     if (!lookUserReader) {
       const readerData = {
         ...data,
+        _id: UserNew._id,
         user: UserNew._id
       }
       const newReader = await ReaderModel.create(readerData);

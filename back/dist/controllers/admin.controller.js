@@ -69,6 +69,7 @@ var createAdmin = (request, response) => {
 
     if (!lookUserAdmin) {
       var adminData = _objectSpread({}, data, {
+        _id: newUser._id,
         user: newUser._id
       });
 
