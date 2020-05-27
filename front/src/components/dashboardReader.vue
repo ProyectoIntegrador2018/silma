@@ -39,6 +39,7 @@ import Table from "@/components/table.vue";
 import {errorServerRegister} from '@/utils/constants.js';
 import { getRequest, postRequest } from "@/utils/requests";
 import DialogComponent from "@/components/dialogComponent.vue"
+import moment from "moment";
 
 export default {
   components: {
@@ -107,7 +108,7 @@ export default {
                 text = await getRequest('/texts/' + this.history[i].text, this.token);
                 data.push({
                   title: text.title,
-                  sentDate: this.history[i].sentDate,
+                  sentDate: moment(new Date(this.history[i].sentDate)).format("DD/MM/YYYY"),
                   suggestionStatus: this.history[i].suggestionStatus
                 })
             }

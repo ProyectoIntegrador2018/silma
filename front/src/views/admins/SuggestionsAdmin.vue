@@ -74,6 +74,12 @@ export default {
           value: "sentDate"
         },
         {
+          text: "Estatus",
+          align: "start",
+          sortable: false,
+          value: "suggestionStatus"
+        },
+        {
           text: "# Capitulos Pedidos",
           align: "start",
           sortable: false,
