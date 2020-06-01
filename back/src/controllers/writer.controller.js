@@ -25,6 +25,7 @@ export const createWriter = (request, response) => {
     if (!lookUserWriter) {
       const writerData = {
         ...data,
+        _id: UserNew._id,
         user: UserNew._id
       }
       const newWriter = await WriterModel.create(writerData);

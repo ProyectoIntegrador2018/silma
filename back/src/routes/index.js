@@ -15,7 +15,7 @@ import {
 export const createRoutes = () => {
   const router = new Router();
   router.post("/user/authentication", authUser);
-  router.get("/user/:id", getUser);
+  router.get("/users/:id", getUser);
   router.get("/user/genres", getAllGenres);
   addWriterRoutes(router);
   addAdminRoutes(router);

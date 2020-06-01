@@ -54,6 +54,7 @@ var runAll = /*#__PURE__*/function () {
       nationality: "Mexico",
       isSuperAdmin: true
     });
+    console.log('Admin 1: ', admin1.data._id);
     var admin2 = yield _axios.default.post("http://localhost:3000/api/admins/register", {
       name: "Admin 2",
       password: "prueba12345",
@@ -62,10 +63,11 @@ var runAll = /*#__PURE__*/function () {
       phone: "8116690318",
       nationality: "Mexico"
     });
+    console.log('Admin 2: ', admin2.data._id);
     var reader1 = yield _axios.default.post("http://localhost:3000/api/register/readers", {
-      name: "Admin 1",
+      name: "Reader 1",
       password: "prueba12345",
-      email: "admin1@gmail.com",
+      email: "reader1@gmail.com",
       birthdate: "12/12/2012",
       phone: "8116690319",
       nationality: "Mexico",
@@ -75,6 +77,7 @@ var runAll = /*#__PURE__*/function () {
       readTill: "12-01-2020",
       preferences: genreIds
     });
+    console.log('Reader 1: ', reader1.data._id);
     var reader2 = yield _axios.default.post("http://localhost:3000/api/register/readers", {
       name: "Reader 2",
       password: "prueba12345",
@@ -88,6 +91,7 @@ var runAll = /*#__PURE__*/function () {
       readTill: "12-01-2020",
       preferences: genreIds
     });
+    console.log('Reader 2: ', reader2.data._id);
     var writer1 = yield _axios.default.post("http://localhost:3000/api/register/writers", {
       name: "Writer 1",
       password: "prueba12345",
@@ -97,6 +101,7 @@ var runAll = /*#__PURE__*/function () {
       nationality: "Mexico",
       pseudonym: "writer1"
     });
+    console.log('Writer 1: ', writer1.data._id);
     var writer2 = yield _axios.default.post("http://localhost:3000/api/register/writers", {
       name: "Writer 2",
       password: "prueba12345",
@@ -106,8 +111,9 @@ var runAll = /*#__PURE__*/function () {
       nationality: "Mexico",
       pseudonym: "writer2"
     });
+    console.log('Writer 2: ', writer2.data._id);
     var auth = yield _axios.default.post("http://localhost:3000/api/user/authentication", {
-      email: "admin1@gmail.com",
+      email: "writer1@gmail.com",
       password: "prueba12345"
     });
     var {
@@ -120,12 +126,14 @@ var runAll = /*#__PURE__*/function () {
       title: "Text A",
       registerNumber: "123asd",
       description: "asd zxc qwe asd zxc asd zxc qwe asd zxc",
-      numberOfPages: 120
+      numberOfPages: 120,
+      numberOfChapters: 50
     }, {
       headers: {
         "Authorization": 'Bearer ' + token
       }
     });
+    console.log('Text 1: ', text1.data._id);
     var text2 = yield _axios.default.post("http://localhost:3000/api/texts", {
       writer: writer1.data._id,
       genres: genreIds,
@@ -133,12 +141,14 @@ var runAll = /*#__PURE__*/function () {
       title: "Text B",
       registerNumber: "123asd",
       description: "asd zxc qwe asd zxc asd zxc qwe asd zxc",
-      numberOfPages: 120
+      numberOfPages: 120,
+      numberOfChapters: 30
     }, {
       headers: {
         "Authorization": 'Bearer ' + token
       }
     });
+    console.log('Text 2: ', text2.data._id);
   });
 
   return function runAll() {
