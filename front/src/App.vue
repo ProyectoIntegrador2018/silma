@@ -16,12 +16,16 @@
       </v-toolbar-title>
       <v-spacer />
       <typeOfUserSelection />
+      <v-btn outlined small text @click="logOut()" style="margin-left: 16px; height: 48px;">
+        Cerrar Sesión
+      </v-btn>
     </v-toolbar>
     <router-view />
   </v-app>
 </template>
 <script>
 import typeOfUserSelection from "@/components/typeOfUserSelection.vue";
+import { cleanAuthCookies } from "@/utils/cookies";
 
 export default {
   components: {
@@ -54,6 +58,10 @@ export default {
       this.userId = this.$cookies.get("user_id");
       this.role = this.$cookies.get("user_type");
       this.name = this.$cookies.get("user_name");
+    },
+    async logOut() {
+      cleanAuthCookies();
+      this.$router.go();
     }
   }
 };

@@ -11,7 +11,15 @@
       item-text="title"
       light
       solo
-    ></v-select>
+    >
+      <template v-slot:append-item>
+        <v-divider class="mb-2"></v-divider>
+        <v-list-item @click="goToRegister(role.link)" v-for="role of shownNoRoles" :key="role.title">
+          <v-icon>mdi-plus</v-icon>
+          {{ role.titleRegister }}
+        </v-list-item>
+      </template>
+    </v-select>
   </div>
 </template>
 
@@ -22,8 +30,8 @@ export default {
   data() {
     return {
       items: [
-        { title: "Escritor", type: "writer" },
-        { title: "Lector", type: "reader" },
+        { title: "Escritor", type: "writer", titleRegister: "Registrate como Escritor", link: "Registro_Escritor" },
+        { title: "Lector", type: "reader", titleRegister: "Registrate como Lector", link: "Registro_Lector" },
         { title: "Administrador", type: "admin" }
       ],
       roles: [],
@@ -38,6 +46,9 @@ export default {
   computed: {
     shownRoles() {
       return this.items.filter(x => this.roles.includes(x.type));
+    },
+    shownNoRoles() {
+      return this.items.filter(x => !this.roles.includes(x.type) && x.type !== "admin");
     }
   },
   methods: {
@@ -51,6 +62,9 @@ export default {
       this.$cookies.set("user_type", newRole);
       this.currentRole = this.items.find(x => x.type === newRole);
       this.$router.go();
+    },
+    goToRegister(link) {
+      this.$router.push(link);
     }
   }
 };
