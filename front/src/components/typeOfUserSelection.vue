@@ -55,7 +55,7 @@ export default {
     async updateRoles() {
       const id = this.$cookies.get("user_id");
       const token = this.$cookies.get("token");
-      const user = await getRequest(`user/${id}`, token);
+      const user = await getRequest(`users/${id}`, token);
       this.roles = user.roles;
     },
     async changeRole(newRole) {

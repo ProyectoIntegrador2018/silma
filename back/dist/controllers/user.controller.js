@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getAllGenres = exports.createUser = exports.authUser = void 0;
+exports.getAllGenres = exports.createUser = exports.getUser = exports.authUser = void 0;
 
 var _user = require("../models/user.model");
 
@@ -59,8 +59,19 @@ var authUser = (request, response) => {
 
 exports.authUser = authUser;
 
+var getUser = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    var {
+      id
+    } = request.params;
+    return yield _user.UserModel.findById(id);
+  }));
+};
+
+exports.getUser = getUser;
+
 var createUser = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator(function* (request, response, role) {
+  var _ref3 = _asyncToGenerator(function* (request, response, role) {
     var data = request.body;
     var user = yield _user.UserModel.findOne({
       email: data.email
@@ -93,7 +104,7 @@ var createUser = /*#__PURE__*/function () {
   });
 
   return function createUser(_x, _x2, _x3) {
-    return _ref2.apply(this, arguments);
+    return _ref3.apply(this, arguments);
   };
 }();
 

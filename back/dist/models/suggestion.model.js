@@ -29,6 +29,10 @@ var SuggestionSchema = new _mongoose.Schema({
   },
   score: {
     type: Number
+  },
+  readingChapters: {
+    type: Number,
+    default: 5
   }
 });
 exports.SuggestionSchema = SuggestionSchema;

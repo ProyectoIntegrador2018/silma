@@ -4,7 +4,7 @@ import { FeedbackModel } from "@/models/feedback.model";
 import { TextModel } from "@/models/text.model";
 import { WriterModel } from "@/models/writer.model";
 import { UserModel } from "@/models/user.model";
-import { createUser } from "@/controllers/user.controller"; 
+import { createUser } from "@/controllers/user.controller";
 import { send } from "@/utils/errors";
 import { movePhaseEmail } from "@/utils/emails";
 import { sendEmail } from "@/utils/mailSender";
@@ -48,6 +48,7 @@ export const createAdmin = (request, response) => {
     if (!lookUserAdmin) {
       const adminData = {
         ...data,
+        _id: newUser._id,
         user: newUser._id
       }
       const newAdmin = await AdminModel.create(adminData);
@@ -87,22 +88,22 @@ export const getFeedback = (request, response) => {
 };
 
 export const movePhase = (request, response) => {
-  send(response, async() =>{
-      const { id } = request.params;
-      const text = await TextModel.findById(id);
-      const newPhase = text.phase + 1
-      const phase = await TextModel.updateOne(
-          {_id: id},
-          {$set: {phase: newPhase}},
-          function(err, res) {
-            if (err) throw err;
-          }
-      )
-      const writer = await WriterModel.findById(text.writer);
-      const user = await UserModel.findById(writer.user)
-      var email = movePhaseEmail[newPhase - 2];
-      email.email = user.email
-      email.subject = "Tu texto avanzo a Fase " + newPhase
-      await sendEmail(email);
+  send(response, async () => {
+    const { id } = request.params;
+    const text = await TextModel.findById(id);
+    const newPhase = text.phase + 1
+    const phase = await TextModel.updateOne(
+      { _id: id },
+      { $set: { phase: newPhase } },
+      function (err, res) {
+        if (err) throw err;
+      }
+    )
+    const writer = await WriterModel.findById(text.writer);
+    const user = await UserModel.findById(writer.user)
+    var email = movePhaseEmail[newPhase - 2];
+    email.email = user.email
+    email.subject = "Tu texto avanzo a Fase " + newPhase
+    await sendEmail(email);
   });
 };
