@@ -9,13 +9,13 @@ import {
   getAllGenres,
   getUser
 } from "@/controllers/user.controller";
-
+import { verifyToken } from "@/utils/jwt";
 
 
 export const createRoutes = () => {
   const router = new Router();
   router.post("/user/authentication", authUser);
-  router.get("/users/:id", getUser);
+  router.get("/users/:id", verifyToken(), getUser);
   router.get("/user/genres", getAllGenres);
   addWriterRoutes(router);
   addAdminRoutes(router);
