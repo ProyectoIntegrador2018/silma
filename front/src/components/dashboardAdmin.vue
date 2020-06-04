@@ -156,7 +156,7 @@ export default {
     async advancePhase(item){
       if (await this.$refs.confirm.open('Avanzar', '¿Seguro que quieres avanzar el texto de fase?', { color: 'primary' })) {
           const token = this.$cookies.get('token');
-          await postRequest("/admins/texts/movePhase/"+ item._id, {}, token);
+          await postRequest("admins/texts/movePhase/"+ item._id, {}, token);
           this.getTexts() 
       }
     },
@@ -184,7 +184,7 @@ export default {
       var user;
       var data = [];
       for(i = 0; i < readers.length; i++) {
-          user = await getRequest('/user/' + readers[i].user._id, token);
+          user = await getRequest('users/' + readers[i].user._id, token);
           data.push({
             name: user.name,
             email: user.email
@@ -194,12 +194,12 @@ export default {
     },
     async composeWriters(){
       const token = this.$cookies.get('token');
-      const writers = await getRequest('/writers', token);
+      const writers = await getRequest('writers', token);
       var i;
       var user;
       var data = [];
       for(i = 0; i < writers.length; i++) {
-          user = await getRequest('/user/' + writers[i].user._id, token);
+          user = await getRequest('users/' + writers[i].user._id, token);
           data.push({
             name: user.name,
             email: user.email

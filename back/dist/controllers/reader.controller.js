@@ -3,9 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createReader = exports.getReader = exports.getReaders = void 0;
+exports.createFeedback = exports.createReader = exports.getReader = exports.getReaders = void 0;
 
 var _reader = require("../models/reader.model");
+
+var _feedback = require("../models/feedback.model");
 
 var _errors = require("../utils/errors");
 
@@ -52,6 +54,7 @@ var createReader = (request, response) => {
 
     if (!lookUserReader) {
       var readerData = _objectSpread({}, data, {
+        _id: UserNew._id,
         user: UserNew._id
       });
 
@@ -67,3 +70,13 @@ var createReader = (request, response) => {
 };
 
 exports.createReader = createReader;
+
+var createFeedback = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    var data = request.body;
+    var feedback = yield _feedback.FeedbackModel.create(data);
+    return feedback;
+  }));
+};
+
+exports.createFeedback = createFeedback;

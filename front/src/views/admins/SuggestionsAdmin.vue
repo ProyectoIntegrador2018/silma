@@ -74,6 +74,12 @@ export default {
           value: "sentDate"
         },
         {
+          text: "Estatus",
+          align: "start",
+          sortable: false,
+          value: "status"
+        },
+        {
           text: "# Capitulos Pedidos",
           align: "start",
           sortable: false,
@@ -161,13 +167,13 @@ export default {
     },
     async getTextInfo() {
       const token = this.$cookies.get("token");
-      var text = await getRequest("/texts/" + this.$route.params.id, token);
+      var text = await getRequest("texts/" + this.$route.params.id, token);
       this.textData = text
     },
     async getReadersWithoutSuggestion() {
       const token = this.$cookies.get("token");
       var readersWithoutSuggestion = await getRequest(
-        "/suggestions/getReadersWithoutSuggestion/",
+        "suggestions/getReadersWithoutSuggestion/",
         token
       );
       var readersData = [];

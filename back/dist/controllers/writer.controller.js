@@ -52,6 +52,7 @@ var createWriter = (request, response) => {
 
     if (!lookUserWriter) {
       var writerData = _objectSpread({}, data, {
+        _id: UserNew._id,
         user: UserNew._id
       });
 

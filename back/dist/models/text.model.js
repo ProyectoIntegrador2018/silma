@@ -54,9 +54,13 @@ var TextSchema = new _mongoose.Schema({
     min: 1,
     max: 4
   },
-  documentPath: {
-    type: String,
-    default: ''
+  numberOfChapters: {
+    type: Number,
+    required: true
+  },
+  isRejected: {
+    type: Boolean,
+    default: false
   }
 });
 exports.TextSchema = TextSchema;

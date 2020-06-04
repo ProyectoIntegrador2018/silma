@@ -7,6 +7,7 @@ import { ReaderModel } from "@/models/reader.model";
 import { SuggestionModel } from "@/models/suggestion.model";
 import { GenreModel } from "@/models/genre.model";
 import axios from "axios";
+import { createAdmin } from "@/controllers/admin.controller";
 
 const deleteEverything = async () => {
   await UserModel.deleteMany({});
@@ -18,21 +19,32 @@ const deleteEverything = async () => {
   await GenreModel.deleteMany({});
 };
 
+const createFirstAdmin = () => {
+  return new Promise(async (resolve, reject) => {
+    await createAdmin({ body: {
+      name: "Admin 1",
+      password: "prueba12345",
+      email: "admin1@gmail.com",
+      birthdate: "12/12/2012",
+      phone: "8116690319",
+      nationality: "Mexico",
+      isSuperAdmin: true
+    } }, { send: (data) => resolve(data) });
+  });
+};
+
 
 const runAll = async () => {
   await deleteEverything();
   const genres = await axios.post("http://localhost:3000/api/admins/fillGenres");
   const genreIds = genres.data.splice(0, 3).map(x => x._id);
-  const admin1 = await axios.post("http://localhost:3000/api/admins/register", {
-    name: "Admin 1",
-    password: "prueba12345",
+  const admin1 = await createFirstAdmin();
+  console.log('Admin 1: ', admin1._id);
+  const authAdmin = await axios.post("http://localhost:3000/api/user/authentication", {
     email: "admin1@gmail.com",
-    birthdate: "12/12/2012",
-    phone: "8116690319",
-    nationality: "Mexico",
-    isSuperAdmin: true
+    password: "prueba12345"
   });
-  console.log('Admin 1: ', admin1.data._id);
+  const tokenAdmin = authAdmin.data.token;
   const admin2 = await axios.post("http://localhost:3000/api/admins/register", {
     name: "Admin 2",
     password: "prueba12345",
@@ -40,7 +52,7 @@ const runAll = async () => {
     birthdate: "12/12/1996",
     phone: "8116690318",
     nationality: "Mexico"
-  });
+  }, { headers: { "Authorization": 'Bearer ' + tokenAdmin } });
   console.log('Admin 2: ', admin2.data._id);
   const reader1 = await axios.post("http://localhost:3000/api/register/readers", {
     name: "Reader 1",
