@@ -365,3 +365,10 @@ export const deleteSuggestionAdmin = (request, response) => {
   });
 }
 
+export const getSuggestionForFeedback = (request, response) => {
+  send(response, async () => {
+    const { id } = request.params;
+    const suggestion = await SuggestionModel.findById(id);
+    return suggestion;
+  });
+};

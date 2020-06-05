@@ -43,6 +43,9 @@
         <div style="padding-top: 5px">
           <v-btn small color="error" depressed @click="deleteSuggestion(props)">Eliminar</v-btn>
         </div>
+        <div style="padding-top: 5px">
+          <v-btn small color="success" v-show="props.status == 'Completa'" :href="props.feedback_url">Retroalimentacion</v-btn>
+        </div>
       </template>
     </Table>
     <DialogComponent ref="confirm"></DialogComponent>
@@ -54,6 +57,7 @@
 
 import Table from "@/components/table.vue";
 import { getRequest, postRequest, deleteRequest } from "@/utils/requests";
+import { translateStatus } from "@/utils/functions";
 import moment from "moment";
 import DialogComponent from "@/components/dialogComponent.vue"
 
@@ -150,16 +154,22 @@ export default {
           "readers/" + suggestion.reader,
           token
         );
+        var url = ""
+        if(suggestion.suggestionStatus == "Completed"){
+          var feedback = await getRequest("/admins/feedbacks/"+suggestion._id, token)
+          url = "/Retroalimentacion/"+feedback
+        }
         var temp = {
           name: dataReader.user.name,
           email: dataReader.user.email,
-          status: suggestion.suggestionStatus,
+          status: translateStatus(suggestion.suggestionStatus),
           sentDate: moment(new Date(suggestion.sentDate)).format("DD/MM/YYYY"),
           readingChapters: suggestion.readingChapters,
           score: suggestion.score,
           reader_id: dataReader.reader,
           text_id: suggestion.reader,
-          suggestion_id: suggestion._id
+          suggestion_id: suggestion._id,
+          feedback_url: url
         };
         final.push(temp);
       });
@@ -208,7 +218,6 @@ export default {
       this.getReadersWithoutSuggestion();
       this.dialog = false
     }
-
   }
 };
 </script>

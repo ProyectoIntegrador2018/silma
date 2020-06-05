@@ -6,7 +6,7 @@ import { createRoutes } from "./routes";
 import fileupload from "express-fileupload";
 
 if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config({ path: '.env' });
+  require('dotenv').config({ path: '.env.local' });
 }
 
 const mongoUrl = process.env.MONGODB_URI;

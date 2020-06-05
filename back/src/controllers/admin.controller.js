@@ -107,3 +107,11 @@ export const movePhase = (request, response) => {
     await sendEmail(email);
   });
 };
+
+export const getFeedbackIdBySuggestion = (request, response) => {
+  send(response, async () => {
+    const { id } = request.params;
+    const feedback = await FeedbackModel.find({ "suggestion": id });
+    return feedback[0]._id;
+  });
+};

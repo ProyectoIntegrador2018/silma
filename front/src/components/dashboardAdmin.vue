@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div class="my-2" align="right">
+      <v-btn color="primary" dark href="/Generos">Administración de Géneros</v-btn>
+    </div>
     <h1 align="left">Textos Recibidos</h1>
     <Table :headers="headers" :items="dataTexts">
       <!-- Actions -->

@@ -10,6 +10,7 @@ import TextRegister from "@/views/writer/TextRegister.vue";
 import Questionnarie from "@/views/reader/Questionnarie.vue";
 import SuggestionsAdmin from "@/views/admins/SuggestionsAdmin.vue";
 import ChaptersVisualization from "@/views/reader/VisualizationChapters.vue";
+import Feedback from "@/views/admins/Feedbacks.vue";
 
 Vue.use(VueRouter);
 
@@ -84,6 +85,15 @@ const routes = [
     meta: {
       requiresAuth: true,
       withAccess: ["reader"],
+    },
+  },
+  {
+    path: "/Retroalimentacion/:id",
+    name: "Feedback",
+    component: Feedback,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
     },
   },
   {
