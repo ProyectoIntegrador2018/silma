@@ -28,3 +28,15 @@ export const markdownToHTML = (text) => {
   var parsed = readerCM.parse(text);
   return writerCM.render(parsed); // result is a String
 };
+
+export const translateStatus = (status) =>{
+  if(status == "Completed"){
+    return "Completado"
+  }
+  else if(status == "Rejected"){
+    return "Rechazado"
+  }
+  else{
+    return "Pendiente"
+  }
+};

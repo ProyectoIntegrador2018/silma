@@ -9,7 +9,7 @@ export const requiredRule = entry =>
 
 export const numericRule = entry => /^\d+$/.test(entry) || 'Solo se aceptan números';
 
-export const facebookRule = entry => /(https:\/\/www\.facebook\.com\/){1}(.)+/.test(entry) || "Perfil de facebook inválido"
+export const facebookRule = entry => /^((https:\/\/www\.)|(www\.))?(facebook\.com\/){1}(.)+/.test(entry) || "Perfil de facebook inválido"
 
 export const passwordMinRule = entry => /.{8,}/.test(entry) || "Mínimo 8 caracteres"
 

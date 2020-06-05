@@ -5,7 +5,8 @@ import {
   createGenre,
   fillGenres,
   getFeedback,
-  movePhase
+  movePhase,
+  getFeedbackIdBySuggestion
 } from "@/controllers/admin.controller";
 
 import {
@@ -26,5 +27,5 @@ export const addAdminRoutes = (router) => {
   router.get("/admins/suggestions/getTextSuggestions/:id", verifyToken(["admin", "reader"]), getTextSuggestions);
   router.post("/admins/suggestions/createSuggestions/", verifyToken(["admin"]), createSuggestionAdmin);
   router.delete("/admins/suggestions/deleteSuggestion/:id", verifyToken(["admin"]), deleteSuggestionAdmin)
-
+  router.get("/admins/feedbacks/:id", verifyToken(["admin"]), getFeedbackIdBySuggestion)
 };

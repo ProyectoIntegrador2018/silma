@@ -8,7 +8,8 @@ import {
   getAllSuggestionsFromReaderDashboard,
   getReadersWithoutSuggestion,
   getTextSuggestions,
-  getSuggestion
+  getSuggestion,
+  getSuggestionForFeedback
 } from "@/controllers/suggestion.controller";
 import { verifyToken } from "@/utils/jwt";
 
@@ -23,4 +24,5 @@ export const addSuggestionRoutes = (router) => {
   router.get("/suggestions/getAllSuggestionsDashboard/:id", verifyToken(["reader"]), getAllSuggestionsFromReaderDashboard);
   router.get("/suggestions/getTextSuggestions/:id", verifyToken(["admin"]), getTextSuggestions);
   router.get("/suggestions/:id", verifyToken(["admin", "reader"]), getSuggestion);
+  router.get("/suggestions/feedback/:id", verifyToken(["admin"]), getSuggestionForFeedback)
 };
