@@ -74,7 +74,7 @@
       <p>
         Los capítulos tendrán que ser indicados como encabezados (Heading 1)
       </p>
-      <a href="https://commonmark.org/help/"
+      <a href="https://commonmark.org/help/" target="_blank"
         >Presiona aquí para más información</a
       >
       <v-layout row wrap>

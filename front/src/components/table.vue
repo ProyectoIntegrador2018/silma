@@ -11,12 +11,13 @@
       <template #body="props">
         <tr v-for="item in props.items" :key="item._id">
           <td v-for="header in displayedHeaders" :key="header.value">
-            <div class="text-truncate" :style="{width:header.width}">
+            <div class="text-truncate" :style="{ width: header.width }">
               <slot
                 :name="header.value"
                 :value="item[header.value]"
                 :props="item"
-              >{{ item[header.value] }}</slot>
+                >{{ item[header.value] }}</slot
+              >
             </div>
           </td>
           <td class="text-xs-center">
@@ -37,14 +38,14 @@ export default {
     headers: { type: Array },
     items: { type: Array },
     withPagination: { type: Boolean, default: false },
-    expand: { type: Boolean, default: false }
+    expand: { type: Boolean, default: false },
   },
   data() {
     return {
       pagination: {
         rowsPerPage: 300,
-        totalItems: 20
-      }
+        totalItems: 20,
+      },
     };
   },
   computed: {
@@ -57,25 +58,24 @@ export default {
       return this.items.length;
     },
     displayedHeaders() {
-      return this.headers.filter(x => !x.actions);
+      return this.headers.filter((x) => !x.actions);
     },
     formattedHeaders() {
       const expandColumn = this.expand
         ? [
             {
-              text: '',
-              value: 'expand',
+              text: "",
+              value: "expand",
               sortable: false,
-              align: 'left',
-              width: '10px'
-            }
+              align: "left",
+              width: "10px",
+            },
           ]
         : [];
       return [...expandColumn, ...this.headers];
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style>
-</style>
+<style></style>
