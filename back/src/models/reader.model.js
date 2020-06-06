@@ -6,7 +6,7 @@ export const ReaderSchema = new Schema({
   user: {type: Schema.Types.ObjectId, ref: 'User'},
   facebookLink: {
     type: String,
-    validate: [validateURL, "Invalid URL"],
+    //validate: [validateURL, "Invalid URL"],
   },
   readingProficiency: {
     type: String,
