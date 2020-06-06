@@ -251,3 +251,13 @@ export const errorNumberOfChaptersEqualsZero = {
   title: "Número de capítulos igual a cero",
   message: "El número de capítulos tiene que ser mayor a cero.",
 };
+
+export const updateChaptersMax = {
+  title: "Número de capítulos máximos alcanzados",
+  message: "Usted ya cuenta con todos los capítulos del libro",
+};
+
+export const updateChapters = {
+  title: "Capítulos extra agregados",
+  message: "Se han agregado más capítulos exitosamente",
+};
