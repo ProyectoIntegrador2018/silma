@@ -1,9 +1,7 @@
 <template>
   <v-app id="app">
-    <v-toolbar
+    <v-toolbar 
       v-if="userId"
-      :clipped-left="$vuetify.breakpoint.lgAndUp"
-      app
       color="blue darken-3"
       dark
       max-height="65"
@@ -23,6 +21,7 @@
     <router-view />
   </v-app>
 </template>
+
 <script>
 import typeOfUserSelection from "@/components/typeOfUserSelection.vue";
 import { cleanAuthCookies } from "@/utils/cookies";

@@ -25,7 +25,7 @@ const createFirstAdmin = () => {
       name: "Admin 1",
       password: "prueba12345",
       email: "admin1@gmail.com",
-      birthdate: "12/12/2012",
+      birthdate: "12/12/2000",
       phone: "8116690319",
       nationality: "Mexico",
       isSuperAdmin: true
@@ -58,7 +58,7 @@ const runAll = async () => {
     name: "Reader 1",
     password: "prueba12345",
     email: "reader1@gmail.com",
-    birthdate: "12/12/2012",
+    birthdate: "12/12/2000",
     phone: "8116690319",
     nationality: "Mexico",
     readingProficiency: "4 to 6",
@@ -86,7 +86,7 @@ const runAll = async () => {
     name: "Writer 1",
     password: "prueba12345",
     email: "writer1@gmail.com",
-    birthdate: "12/12/2012",
+    birthdate: "12/12/2000",
     phone: "8116690319",
     nationality: "Mexico",
     pseudonym: "writer1"

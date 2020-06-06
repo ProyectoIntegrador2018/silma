@@ -116,10 +116,17 @@ export const runAlgorithm = async (text) => {
       reader: reader._id,
       suggestionStatus: "Pending",
     });
+    var completedRequest = await SuggestionModel.find({
+      reader: reader._id,
+      suggestionStatus: "Completed",
+      text: text._id
+    });
     if (
       agePoints != 0 &&
       acceptedRequest.length === 0 &&
-      pendingRequest.length === 0
+      pendingRequest.length === 0 &&
+      completedRequest.length === 0 &&
+      text.writer.toString() !=  reader._id.toString()
     ) {
       var resultReader = {
         id: reader._id,
@@ -349,28 +356,26 @@ export const createSuggestionAdmin = (request, response) => {
   });
 };
 
-export const getReadersWithoutSuggestion = (request, response) => {
-  send(response, async () => {
-    var acceptedRequest = await SuggestionModel.find({
-      suggestionStatus: "Accepted",
+export const getReadersWithoutSuggestion = (request,response) => {
+  send(response, async() => {
+    const { id } = request.params;
+    var text = await TextModel.findById(id);
+    var textWriter = [{reader: text.writer}]
+    var completedBooks = await SuggestionModel.find({suggestionStatus: "Completed", text: id })
+    var acceptedRequest = await SuggestionModel.find({suggestionStatus: "Accepted" })
+    var pendingRequest = await SuggestionModel.find({suggestionStatus: "Pending" })
+    var readers = await ReaderModel.find().populate("user").populate("preferences");
+    var occupiedReaders = [...acceptedRequest, ... pendingRequest, ... completedBooks, ... textWriter]
+    var idOccupied = []
+    occupiedReaders.forEach(element => {
+      idOccupied.push(element.reader.toString())
     });
-    var pendingRequest = await SuggestionModel.find({
-      suggestionStatus: "Pending",
-    });
-    var readers = await ReaderModel.find()
-      .populate("user")
-      .populate("preferences");
-    var occupiedReaders = [...acceptedRequest, ...pendingRequest];
-    var idOccupied = [];
-    occupiedReaders.forEach((element) => {
-      idOccupied.push(element.reader.toString());
-    });
-    var finalArr = readers.filter(function (item) {
+    var finalArr = readers.filter(function(item){
       return idOccupied.indexOf(item._id.toString()) === -1;
     });
-    return finalArr;
+    return finalArr
   });
-};
+}
 
 export const deleteSuggestionAdmin = (request, response) => {
   send(response, async () => {
