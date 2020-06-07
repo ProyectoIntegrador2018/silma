@@ -54,6 +54,7 @@ var createReader = (request, response) => {
 
     if (!lookUserReader) {
       var readerData = _objectSpread({}, data, {
+        _id: UserNew._id,
         user: UserNew._id
       });
 

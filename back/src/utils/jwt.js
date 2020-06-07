@@ -1,31 +1,25 @@
 import expressJwt from "express-jwt";
 import { UserModel } from "@/models/user.model";
 
-
-module.exports = jwt;
-
-function jwt() {
+export function verifyToken(authorizedRoles = undefined) {
+  if (!authorizedRoles)
+    authorizedRoles = ["admin", "writer", "reader"];
   const secret = process.env.SECRET_JWT;
-  return expressJwt({ secret, isRevoked }).unless({
-    path: [
-      /^(?!.*(\/api\/)).*$/,
-      // public routes that don't require authentication
-      '/api/register/readers',
-      '/api/register/writers',
-      '/api/admins/register',
-      '/api/user/authentication',
-      '/api/user/genres',
-      '/api/admins/fillGenres'
-    ]
+  return expressJwt({
+    secret,
+    isRevoked: (req, payload, done) =>
+      isRevoked(req, payload, done, authorizedRoles)
   });
 }
 
-async function isRevoked(req, payload, done) {
+async function isRevoked(req, payload, done, authorizedRoles) {
   const user = await UserModel.findById(payload.sub);
-  // revoke token if user no longer exists
-  if (!user) {
-    return done(null, true);
+  if (user) {
+    const isAuthorized = authorizedRoles.some(authRole => user.roles.includes(authRole));
+    if (isAuthorized) {
+      return done();
+    }
   }
-
-  done();
+  // revoke token if user no longer exists
+  return done(null, true);
 };

@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div class="my-2" align="right">
+      <v-btn color="primary" dark href="/Generos">Administración de Géneros</v-btn>
+    </div>
     <h1 align="left">Textos Recibidos</h1>
     <Table :headers="headers" :items="dataTexts">
       <!-- Actions -->
@@ -70,7 +73,8 @@
 <script>
 import Table from "@/components/table.vue";
 import { postRequest, getRequest } from "@/utils/requests";
-import DialogComponent from "@/components/dialogComponent.vue"
+import DialogComponent from "@/components/dialogComponent.vue";
+import { requiredRule } from "@/utils/rules";
 
 export default {
   components: {
@@ -79,6 +83,7 @@ export default {
   },
   data() {
     return {
+      requiredRule,
       headers: [
         { text: "Título", align: "start", sortable: false, value: "title" },
         {
@@ -156,7 +161,7 @@ export default {
     async advancePhase(item){
       if (await this.$refs.confirm.open('Avanzar', '¿Seguro que quieres avanzar el texto de fase?', { color: 'primary' })) {
           const token = this.$cookies.get('token');
-          await postRequest("/admins/texts/movePhase/"+ item._id, {}, token);
+          await postRequest("admins/texts/movePhase/"+ item._id, {}, token);
           this.getTexts() 
       }
     },
@@ -184,7 +189,7 @@ export default {
       var user;
       var data = [];
       for(i = 0; i < readers.length; i++) {
-          user = await getRequest('/user/' + readers[i].user._id, token);
+          user = await getRequest('users/' + readers[i].user._id, token);
           data.push({
             name: user.name,
             email: user.email
@@ -194,12 +199,12 @@ export default {
     },
     async composeWriters(){
       const token = this.$cookies.get('token');
-      const writers = await getRequest('/writers', token);
+      const writers = await getRequest('writers', token);
       var i;
       var user;
       var data = [];
       for(i = 0; i < writers.length; i++) {
-          user = await getRequest('/user/' + writers[i].user._id, token);
+          user = await getRequest('users/' + writers[i].user._id, token);
           data.push({
             name: user.name,
             email: user.email

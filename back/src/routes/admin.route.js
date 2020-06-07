@@ -5,7 +5,8 @@ import {
   createGenre,
   fillGenres,
   getFeedback,
-  movePhase
+  movePhase,
+  getFeedbackIdBySuggestion
 } from "@/controllers/admin.controller";
 
 import {
@@ -13,17 +14,18 @@ import {
   createSuggestionAdmin,
   deleteSuggestionAdmin
 } from "@/controllers/suggestion.controller";
+import { verifyToken } from "@/utils/jwt";
 
 export const addAdminRoutes = (router) => {
-  router.get("/admins", getAdmins);
-  router.get("/admins/:id", getAdmin);
-  router.post("/admins/register", createAdmin);
-  router.post("/admins/register/genres", createGenre);
+  router.get("/admins", verifyToken(["admin"]), getAdmins);
+  router.get("/admins/:id", verifyToken(["admin"]), getAdmin);
+  router.post("/admins/register", verifyToken(["admin"]), createAdmin);
+  router.post("/admins/register/genres", verifyToken(["admin"]), createGenre);
   router.post("/admins/fillGenres", fillGenres);
-  router.get("/admins/feedback/:id", getFeedback);
-  router.post("/admins/texts/movePhase/:id", movePhase);
-  router.get("/admins/suggestions/getTextSuggestions/:id", getTextSuggestions);
-  router.post("/admins/suggestions/createSuggestions/", createSuggestionAdmin);
-  router.delete("/admins/suggestions/deleteSuggestion/:id",deleteSuggestionAdmin)
-
+  router.get("/admins/feedback/:id", verifyToken(["admin", "reader"]), getFeedback);
+  router.post("/admins/texts/movePhase/:id", verifyToken(["admin"]), movePhase);
+  router.get("/admins/suggestions/getTextSuggestions/:id", verifyToken(["admin", "reader"]), getTextSuggestions);
+  router.post("/admins/suggestions/createSuggestions/", verifyToken(["admin"]), createSuggestionAdmin);
+  router.delete("/admins/suggestions/deleteSuggestion/:id", verifyToken(["admin"]), deleteSuggestionAdmin)
+  router.get("/admins/feedbacks/:id", verifyToken(["admin"]), getFeedbackIdBySuggestion)
 };

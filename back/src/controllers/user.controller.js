@@ -31,21 +31,17 @@ export const getUser = (request, response) => {
 export const createUser = async (request, response, role) => {
   let data = request.body;
   let user = await UserModel.findOne({ email: data.email }).select(['+password']);
-  if (user) {
-    await UserModel.updateOne(
-      { email: data.email },
-      { $addToSet: { roles: role } }
-    );
-  } else {
+  if (!user) {
     if (data.password.length < 8) {
       return { status: "Password needs to be at least 8 characters long" };
     }
     data.roles = [role];
     data.password = bcrypt.hashSync(data.password, 10);
     user = await UserModel.create(data);
+    const foundUser = await UserModel.findOne({ _id: user._id });
+    return foundUser;
   }
-  const foundUser = await UserModel.findOne({ _id: user._id });
-  return foundUser;
+  throw { error: "User already registered" }; 
 };
 
 export const getAllGenres = (request, response) => {

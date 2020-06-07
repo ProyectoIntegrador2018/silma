@@ -3,11 +3,11 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import mongoose from "mongoose";
 import { createRoutes } from "./routes";
-import jwt from "./utils/jwt";
 import fileupload from "express-fileupload";
+import { sendEmail } from "@/utils/mailSender";
 
 if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config({ path: '.env' });
+  require('dotenv').config({ path: '.env.local' });
 }
 
 const mongoUrl = process.env.MONGODB_URI;
@@ -29,7 +29,6 @@ app.use(
   })
 );
 app.use(bodyParser.json());
-app.use(jwt());
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(__dirname + '/public'));
   app.get(/^(?!.*(\/api\/)).*$/, (req, res) => res.sendFile(__dirname + '/public/index.html'));

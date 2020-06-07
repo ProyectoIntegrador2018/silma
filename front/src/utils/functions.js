@@ -9,7 +9,6 @@ export const readChapters = (document) => {
   for (var line = 0; line < lines.length; line++) {
     var currentLine = lines[line];
     if (titleChapterRegex(currentLine)) {
-      console.log(currentLine);
       counter = counter + 1;
       if (counter > 1) {
         chapters.push(tempChaps);
@@ -27,4 +26,16 @@ export const markdownToHTML = (text) => {
   var writerCM = new commonmark.HtmlRenderer();
   var parsed = readerCM.parse(text);
   return writerCM.render(parsed); // result is a String
+};
+
+export const translateStatus = (status) =>{
+  if(status == "Completed"){
+    return "Completado"
+  }
+  else if(status == "Rejected"){
+    return "Rechazado"
+  }
+  else{
+    return "Pendiente"
+  }
 };

@@ -1,7 +1,10 @@
 import { ReaderModel } from "@/models/reader.model";
+import { UserModel } from "@/models/user.model";
+
 import { FeedbackModel } from "@/models/feedback.model";
 import { send } from "@/utils/errors";
 import { createUser } from "@/controllers/user.controller"
+import jwt from "jsonwebtoken";
 
 
 export const getReaders = (request, response) => {
@@ -27,6 +30,7 @@ export const createReader = (request, response) => {
     if (!lookUserReader) {
       const readerData = {
         ...data,
+        _id: UserNew._id,
         user: UserNew._id
       }
       const newReader = await ReaderModel.create(readerData);
@@ -37,6 +41,30 @@ export const createReader = (request, response) => {
     }
   });
 };
+
+export const addReaderRegister = (request,response) => {
+  send(response, async () => {
+    const data = request.body;
+    try{
+      const readerData = {
+        ...data,
+        _id: data.userid,
+        user: data.userid
+      }
+      const newReader = await ReaderModel.create(readerData);
+      await UserModel.updateOne(
+        { _id: data.userid },
+        { $addToSet: { roles: "reader" } }
+      );
+       return {
+        reader: newReader
+      };
+    }catch{
+      throw { error: "Register Error" };
+    }
+  });
+
+}
 
 export const createFeedback = (request, response) => {
   send(response, async () => {

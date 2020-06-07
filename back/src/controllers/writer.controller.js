@@ -1,6 +1,7 @@
 import { WriterModel } from "@/models/writer.model";
 import { send } from "@/utils/errors";
 import { createUser } from "@/controllers/user.controller";
+import { UserModel } from "@/models/user.model";
 
 export const getWriters = (request, response) => {
   send(response, async () => {
@@ -25,6 +26,7 @@ export const createWriter = (request, response) => {
     if (!lookUserWriter) {
       const writerData = {
         ...data,
+        _id: UserNew._id,
         user: UserNew._id
       }
       const newWriter = await WriterModel.create(writerData);
@@ -35,3 +37,26 @@ export const createWriter = (request, response) => {
     }
   });
 };
+
+export const addWriterRegister = (request, response) => {
+  send(response, async () => {
+    const data = request.body;
+    try{
+      const writerData = {
+        ...data,
+        _id: data.userid,
+        user: data.userid
+      }
+      const newWriter = await WriterModel.create(writerData);
+      await UserModel.updateOne(
+        { _id: data.userid },
+        { $addToSet: { roles: "writer" } }
+      );
+      return {
+        writer: newWriter
+      };
+    }catch{
+      throw { error: "Register Error" };
+    }
+  });
+}

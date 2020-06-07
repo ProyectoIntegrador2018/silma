@@ -43,6 +43,14 @@
         <div style="padding-top: 5px">
           <v-btn small color="error" depressed @click="deleteSuggestion(props)">Eliminar</v-btn>
         </div>
+        <div style="padding-top: 5px">
+          <v-btn
+            small
+            color="success"
+            v-show="props.status == 'Completado'"
+            :href="props.feedback_url"
+          >Retroalimentacion</v-btn>
+        </div>
       </template>
     </Table>
     <DialogComponent ref="confirm"></DialogComponent>
@@ -51,11 +59,11 @@
 
 
 <script>
-
 import Table from "@/components/table.vue";
 import { getRequest, postRequest, deleteRequest } from "@/utils/requests";
+import { translateStatus } from "@/utils/functions";
 import moment from "moment";
-import DialogComponent from "@/components/dialogComponent.vue"
+import DialogComponent from "@/components/dialogComponent.vue";
 
 export default {
   components: {
@@ -72,6 +80,12 @@ export default {
           align: "start",
           sortable: false,
           value: "sentDate"
+        },
+        {
+          text: "Estatus",
+          align: "start",
+          sortable: false,
+          value: "status"
         },
         {
           text: "# Capitulos Pedidos",
@@ -105,7 +119,12 @@ export default {
           sortable: false,
           value: "readTill"
         },
-        { text: "Preferencias", align: "start", sortable: false, value: "genres" },
+        {
+          text: "Preferencias",
+          align: "start",
+          sortable: false,
+          value: "genres"
+        },
         {
           text: "Velocidad de Lectura",
           align: "start",
@@ -125,8 +144,17 @@ export default {
   methods: {
     async deleteSuggestion(item) {
       const token = this.$cookies.get("token");
-      if (await this.$refs.confirm.open('Eliminar', 'Seguro que quieres eliminar?', { color: 'primary' })) {
-        await deleteRequest("admins/suggestions/deleteSuggestion/" + item.suggestion_id ,token)
+      if (
+        await this.$refs.confirm.open(
+          "Eliminar",
+          "Seguro que quieres eliminar?",
+          { color: "primary" }
+        )
+      ) {
+        await deleteRequest(
+          "admins/suggestions/deleteSuggestion/" + item.suggestion_id,
+          token
+        );
         this.getTextInfo();
         this.getSuggestions();
         this.getReadersWithoutSuggestion();
@@ -144,16 +172,25 @@ export default {
           "readers/" + suggestion.reader,
           token
         );
+        var url = "";
+        if (suggestion.suggestionStatus == "Completed") {
+          var feedback = await getRequest(
+            "/admins/feedbacks/" + suggestion._id,
+            token
+          );
+          url = "/Retroalimentacion/" + feedback;
+        }
         var temp = {
           name: dataReader.user.name,
           email: dataReader.user.email,
-          status: suggestion.suggestionStatus,
+          status: translateStatus(suggestion.suggestionStatus),
           sentDate: moment(new Date(suggestion.sentDate)).format("DD/MM/YYYY"),
           readingChapters: suggestion.readingChapters,
           score: suggestion.score,
           reader_id: dataReader.reader,
           text_id: suggestion.reader,
-          suggestion_id: suggestion._id
+          suggestion_id: suggestion._id,
+          feedback_url: url
         };
         final.push(temp);
       });
@@ -161,13 +198,13 @@ export default {
     },
     async getTextInfo() {
       const token = this.$cookies.get("token");
-      var text = await getRequest("/texts/" + this.$route.params.id, token);
-      this.textData = text
+      var text = await getRequest("texts/" + this.$route.params.id, token);
+      this.textData = text;
     },
     async getReadersWithoutSuggestion() {
       const token = this.$cookies.get("token");
       var readersWithoutSuggestion = await getRequest(
-        "/suggestions/getReadersWithoutSuggestion/",
+        "suggestions/getReadersWithoutSuggestion/" + this.$route.params.id,
         token
       );
       var readersData = [];
@@ -194,15 +231,22 @@ export default {
       });
       this.readersNoSuggestion = readersData;
     },
-    async sendSuggestion(reader){
-      const token = this.$cookies.get('token');
-      await postRequest('admins/suggestions/createSuggestions/', { reader_id: reader.id,book_id: this.textData._id,numberOfPages: this.textData.numberOfPages }, token);
+    async sendSuggestion(reader) {
+      const token = this.$cookies.get("token");
+      await postRequest(
+        "admins/suggestions/createSuggestions/",
+        {
+          reader_id: reader.id,
+          book_id: this.textData._id,
+          numberOfPages: this.textData.numberOfPages
+        },
+        token
+      );
       this.getTextInfo();
       this.getSuggestions();
       this.getReadersWithoutSuggestion();
-      this.dialog = false
+      this.dialog = false;
     }
-
   }
 };
 </script>

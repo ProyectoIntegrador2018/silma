@@ -15,3 +15,10 @@ export const setAuthCookies = (user) => {
   }
   return false;
 };
+
+export const cleanAuthCookies = () => {
+  Vue.$cookies.remove('token');
+  Vue.$cookies.remove('user_type');
+  Vue.$cookies.remove('user_id');
+  Vue.$cookies.remove('user_name');
+};
