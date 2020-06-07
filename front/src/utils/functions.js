@@ -9,7 +9,6 @@ export const readChapters = (document) => {
   for (var line = 0; line < lines.length; line++) {
     var currentLine = lines[line];
     if (titleChapterRegex(currentLine)) {
-      console.log(currentLine);
       counter = counter + 1;
       if (counter > 1) {
         chapters.push(tempChaps);

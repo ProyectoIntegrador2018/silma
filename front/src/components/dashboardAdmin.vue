@@ -73,7 +73,8 @@
 <script>
 import Table from "@/components/table.vue";
 import { postRequest, getRequest } from "@/utils/requests";
-import DialogComponent from "@/components/dialogComponent.vue"
+import DialogComponent from "@/components/dialogComponent.vue";
+import { requiredRule } from "@/utils/rules";
 
 export default {
   components: {
@@ -82,6 +83,7 @@ export default {
   },
   data() {
     return {
+      requiredRule,
       headers: [
         { text: "Título", align: "start", sortable: false, value: "title" },
         {

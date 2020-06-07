@@ -74,7 +74,7 @@
       <p>
         Los capítulos tendrán que ser indicados como encabezados (Heading 1)
       </p>
-      <a href="https://commonmark.org/help/"
+      <a href="https://commonmark.org/help/" target="_blank"
         >Presiona aquí para más información</a
       >
       <v-layout row wrap>
@@ -134,7 +134,7 @@
       <v-dialog v-model="dialogError" persistent max-width="400">
         <v-card>
           <v-card-title class="headline">{{ errorMessage.title }}</v-card-title>
-          <v-card-text>{{ errorMessage.text }}</v-card-text>
+          <v-card-text>{{ errorMessage.message }}</v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="red darken-1" text @click="dialogError = false"
@@ -162,6 +162,7 @@ import {
   errorDescriptionRange,
   ageRanges,
   errorNumberOfChapters,
+  errorNumberOfChaptersEqualsZero,
 } from "@/utils/constants";
 import { getRequest, postRequest } from "@/utils/requests";
 import { markdownToHTML, readChapters } from "@/utils/functions";
@@ -226,6 +227,12 @@ export default {
         return;
       }
       var getFile = await this.getFile();
+
+      if (parseInt(this.text.numberOfChapters) <= 0) {
+        this.errorMessage = errorNumberOfChaptersEqualsZero;
+        this.dialogError = true;
+        return;
+      }
 
       var numChaptersFile = readChapters(getFile).length;
       if (numChaptersFile != parseInt(this.text.numberOfChapters)) {
