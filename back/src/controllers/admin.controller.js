@@ -6,8 +6,8 @@ import { WriterModel } from "@/models/writer.model";
 import { UserModel } from "@/models/user.model";
 import { createUser } from "@/controllers/user.controller";
 import { send } from "@/utils/errors";
-import { movePhaseEmail } from "@/utils/emails";
 import { sendEmail } from "@/utils/mailSender";
+import { phases } from "@/utils/emails";
 
 export const genres = [
   "Sobrenatural (paranormal)",
@@ -99,12 +99,28 @@ export const movePhase = (request, response) => {
         if (err) throw err;
       }
     )
+    const phaseInfo = phases[newPhase - 1];
     const writer = await WriterModel.findById(text.writer);
-    const user = await UserModel.findById(writer.user)
-    var email = movePhaseEmail[newPhase - 2];
-    email.email = user.email
-    email.subject = "Tu texto avanzo a Fase " + newPhase
-    await sendEmail(email);
+    const user = await UserModel.findById(writer.user);
+    if (newPhase === 2) { // La fase es la de aceptacion
+      await sendEmail({
+        email: user.email,
+        subject: "¡Tu novela fue aprobada!",
+      }, 'accepted', {
+        name: user.name,
+        title: text.title
+      });
+    } else {
+      await sendEmail({
+        email: user.email,
+        subject: "Tu novela avanzó de Fase",
+      }, 'next_phase', {
+        name: user.name,
+        title: text.title,
+        phase: newPhase + '-' + phaseInfo.name,
+        description: phaseInfo.description
+      });
+    }
   });
 };
 

@@ -47,7 +47,7 @@
           <v-btn
             small
             color="success"
-            v-show="props.status == 'Completa'"
+            v-show="props.status == 'Completado'"
             :href="props.feedback_url"
           >Retroalimentacion</v-btn>
         </div>

@@ -36,49 +36,11 @@ export const addSuggestionSendEmail = async (selectedReaders, text) => {
     var email = {
       email: readerInfo.user.email,
       subject: "New Silma Reading Suggestion!",
-      text: "",
-      html: `
-                <div>
-                    <div>¡Hola!</div>
-                    <div>
-                    Te agradecemos por haber rellenado nuestro formulario para ser un lector beta. Actualmente tenemos un libro que es de uno de los géneros que te agrada y quisiéramos saber si tienes la oportunidad de leerlo. Tiene ${
-                      text.numberOfPages
-                    } páginas y es de ${listGenre.join(" ,")}.
-                    </div>
-                    <div>
-                    No es obligatorio leerlo todo pero, si crees que no vas a tener tiempo para leer este libro, ¡no te preocupes! Seguirás en nuestra lista para cuando lo tengas para otra obra.
-                    </div>
-                    <div>
-                    De momento, vamos a explicarte el proceso que debe hacerse como lector beta:
-                    </div>
-                    <div>
-                    <ul>
-                        <li>Debes primero firmar una hoja de confidencialidad para que el libro que leas esté seguro.</li>
-                        <li>Tómate tu tiempo y reserva un lugar tranquilo en el que puedas leer sin interrupciones.</li>
-                        <li>Abre el texto y léelo como cualquier otro libro. Disfrútalo, no pienses en cosas técnicas, sino en la historia.</li>
-                        <li>Se deben leer cinco capítulos o cincuenta páginas. Aunque sientas que el texto es pesado o no te guste, debemos dar la oportunidad al escritor de conocer bien su historia.</li>
-                        <li>Si para las primeras cincuenta páginas o cinco capítulos la obra no te gustó, puedes detenerte. Después de avisarnos, se te mandará una encuesta de salida, donde se te pedirá tu opinión sobre el libro y en el que podrás comentar qué te gustó y qué te desagradó, esto para darle luego al escritor una crítica constructiva.</li>
-                        <li>Si la novela te está gustando, ¡puedes proseguir, incluso acabártela! Solo recuerda que, para la fecha que te indiquemos, debes decir en el formulario que te mandemos qué te gustó, si crees que debería publicarse y por qué.</li>
-                    </ul>
-                    </div>
-                    <div>
-                    Ya que se te ha explicado el proceso, ¿te agradaría recibir el libro para revisarlo? El plazo es de ${plazoLectura} para leer lo mínimo necesario (50 páginas o 5 capítulos). Puedes terminarlo luego, si gustas.
-                    Por favor, sea cual sea tu respuesta, contesta a este mensaje para asegurarnos que te llegó. Si respondes que sí puedes leer la obra, te mandaremos un documento junto con la ficha a llenar después de la lectura. Si no, te agredeceremos y quedarás de nuevo en la lista de lectores beta para otra ocasión.
-                    </div>
-                    <div>   
-                    ¡Esperamos que tengas un buen día y quedamos al pendiente de tu respuesta!
-                    </div>
-                    <div>
-                    **Por cuestiones de agilizar el proceso y darle un buen servicio a los participantes de nuestra convocatoria, solicitaremos los servicios de otros lectores beta si este mensaje no es respondido en el plazo de dos semanas**
-                    </div>
-                    <div>
-                    Recuerda actualizar tus fechas de disponibilidad de lectura!
-                    </div>
-                    </span>
-                </div>
-            `,
     };
-    await sendEmail(email);
+    await sendEmail(email, 'new_suggestion', {
+      numberOfPages: text.numberOfPages,
+      genres: listGenre.join(" ,")
+    });
   }
 };
 
@@ -126,7 +88,7 @@ export const runAlgorithm = async (text) => {
       acceptedRequest.length === 0 &&
       pendingRequest.length === 0 &&
       completedRequest.length === 0 &&
-      text.writer.toString() !=  reader._id.toString()
+      text.writer.toString() != reader._id.toString()
     ) {
       var resultReader = {
         id: reader._id,
@@ -356,21 +318,21 @@ export const createSuggestionAdmin = (request, response) => {
   });
 };
 
-export const getReadersWithoutSuggestion = (request,response) => {
-  send(response, async() => {
+export const getReadersWithoutSuggestion = (request, response) => {
+  send(response, async () => {
     const { id } = request.params;
     var text = await TextModel.findById(id);
-    var textWriter = [{reader: text.writer}]
-    var completedBooks = await SuggestionModel.find({suggestionStatus: "Completed", text: id })
-    var acceptedRequest = await SuggestionModel.find({suggestionStatus: "Accepted" })
-    var pendingRequest = await SuggestionModel.find({suggestionStatus: "Pending" })
+    var textWriter = [{ reader: text.writer }]
+    var completedBooks = await SuggestionModel.find({ suggestionStatus: "Completed", text: id })
+    var acceptedRequest = await SuggestionModel.find({ suggestionStatus: "Accepted" })
+    var pendingRequest = await SuggestionModel.find({ suggestionStatus: "Pending" })
     var readers = await ReaderModel.find().populate("user").populate("preferences");
-    var occupiedReaders = [...acceptedRequest, ... pendingRequest, ... completedBooks, ... textWriter]
+    var occupiedReaders = [...acceptedRequest, ...pendingRequest, ...completedBooks, ...textWriter]
     var idOccupied = []
     occupiedReaders.forEach(element => {
       idOccupied.push(element.reader.toString())
     });
-    var finalArr = readers.filter(function(item){
+    var finalArr = readers.filter(function (item) {
       return idOccupied.indexOf(item._id.toString()) === -1;
     });
     return finalArr
