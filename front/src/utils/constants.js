@@ -261,3 +261,35 @@ export const updateChapters = {
   title: "Capítulos extra agregados",
   message: "Se han agregado más capítulos exitosamente",
 };
+
+export const termsAndConditionsReader = `
+Silma se preocupa por la protección de los datos de los lectores editoriales, es por eso que te
+compartimos nuestras políticas de protección de datos. Te informamos que:
+<ol>
+  <li>Tus datos personales son para nuestro uso interno.</li>
+  <li>Silma se reserva la facultad de cambiar la política de uso de datos con el objetivo de adaptarla a
+  novedades legislativas, prácticas del sector o intereses especiales. En cualquier caso, se te
+  serán anunciados los cambios para contar con tu aprobación.</li>
+  <li>Trata de mantener tus datos en Silma actualizados para que podamos servirte de una mejor
+  manera.</li>
+  <li>No usamos cookies. </li>
+  <li>Tus datos son tuyos para verificarlos, rectificarlos y cancelarlos. En caso de desear la
+  cancelación, comunícate con la editorial.</li>
+</ol>
+`
+export const termsAndConditionsWriter = `Silma se preocupa por la protección de los datos de los escritores, es por eso que te compartimos
+nuestras políticas de protección de datos. Te informamos que:
+<ol>
+<li>Tus datos personales son para nuestro uso interno. </li>
+<li>Tu texto está protegido por tu Registro de Derechos de Autor. Por eso es importante que lo
+anotes al registrarte para dictamen. </li>
+<li>Silma se reserva la facultad de cambiar la política de uso de datos con el objetivo de adaptarla a
+novedades legislativas, prácticas del sector o intereses especiales. En cualquier caso, te serán
+anunciados los cambios para contar con tu aprobación. </li>
+<li>Trata de mantener tus datos en Silma actualizados para que podamos servirte de una mejor
+manera. </li>
+<li>No usamos cookies. </li>
+<li>Tus datos son tuyos para verificarlos, rectificarlos y cancelarlos. En caso de desear la
+cancelación, comunícate con la editorial. </li>
+</ol>
+`

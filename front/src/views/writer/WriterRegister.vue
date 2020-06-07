@@ -96,6 +96,27 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <v-dialog v-model="termsAndConditionsDialog" width="70%">
+        <v-card>
+          <v-card-title class="title">Términos y Condiciones</v-card-title>
+          <v-card-text v-html="termsAndConditionsContent"></v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn text color="gray" @click="termsAndConditionsDialog = false"
+              >Entendido</v-btn
+            >
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-col cols="12">
+        <div @click.stop="">
+          <v-icon>mdi-checkbox-marked-circle</v-icon>
+          Al registrarte, aceptas los
+          <a href="javascript:;" @click.stop="termsAndConditionsDialog = true">
+            términos y condiciones</a
+          >
+        </div>
+      </v-col>
     </v-layout>
     <v-layout row wrap>
       <v-col align="end">
@@ -115,7 +136,7 @@ import {
   passwordMinRule,
   phoneRule
 } from "@/utils/rules";
-import { countries } from "@/utils/constants";
+import { countries, termsAndConditionsWriter } from "@/utils/constants";
 import { postRequest } from "@/utils/requests";
 import { setAuthCookies } from "@/utils/cookies";
 
@@ -145,7 +166,9 @@ export default {
       passwordMinRule,
       phoneRule,
       countries,
-      showPassword: false
+      showPassword: false,
+      termsAndConditionsDialog: false,
+      termsAndConditionsContent: termsAndConditionsWriter,
     };
   },
   created: function() {
