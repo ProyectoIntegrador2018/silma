@@ -77,15 +77,7 @@ var createUser = /*#__PURE__*/function () {
       email: data.email
     }).select(['+password']);
 
-    if (user) {
-      yield _user.UserModel.updateOne({
-        email: data.email
-      }, {
-        $addToSet: {
-          roles: role
-        }
-      });
-    } else {
+    if (!user) {
       if (data.password.length < 8) {
         return {
           status: "Password needs to be at least 8 characters long"
@@ -95,12 +87,15 @@ var createUser = /*#__PURE__*/function () {
       data.roles = [role];
       data.password = _bcrypt.default.hashSync(data.password, 10);
       user = yield _user.UserModel.create(data);
+      var foundUser = yield _user.UserModel.findOne({
+        _id: user._id
+      });
+      return foundUser;
     }
 
-    var foundUser = yield _user.UserModel.findOne({
-      _id: user._id
-    });
-    return foundUser;
+    throw {
+      error: "User already registered"
+    };
   });
 
   return function createUser(_x, _x2, _x3) {

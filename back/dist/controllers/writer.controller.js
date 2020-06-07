@@ -3,13 +3,15 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createWriter = exports.getWriter = exports.getWriters = void 0;
+exports.addWriterRegister = exports.createWriter = exports.getWriter = exports.getWriters = void 0;
 
 var _writer = require("../models/writer.model");
 
 var _errors = require("../utils/errors");
 
 var _user = require("./user.controller");
+
+var _user2 = require("../models/user.model");
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -68,3 +70,34 @@ var createWriter = (request, response) => {
 };
 
 exports.createWriter = createWriter;
+
+var addWriterRegister = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    var data = request.body;
+
+    try {
+      var writerData = _objectSpread({}, data, {
+        _id: data.userid,
+        user: data.userid
+      });
+
+      var newWriter = yield _writer.WriterModel.create(writerData);
+      yield _user2.UserModel.updateOne({
+        _id: data.userid
+      }, {
+        $addToSet: {
+          roles: "writer"
+        }
+      });
+      return {
+        writer: newWriter
+      };
+    } catch (_unused) {
+      throw {
+        error: "Register Error"
+      };
+    }
+  }));
+};
+
+exports.addWriterRegister = addWriterRegister;

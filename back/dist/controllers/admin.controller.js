@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.movePhase = exports.getFeedback = exports.fillGenres = exports.createGenre = exports.createAdmin = exports.getAdmin = exports.getAdmins = exports.genres = void 0;
+exports.getFeedbackIdBySuggestion = exports.movePhase = exports.getFeedback = exports.fillGenres = exports.createGenre = exports.createAdmin = exports.getAdmin = exports.getAdmins = exports.genres = void 0;
 
 var _admin = require("../models/admin.model");
 
@@ -21,9 +21,9 @@ var _user2 = require("./user.controller");
 
 var _errors = require("../utils/errors");
 
-var _emails = require("../utils/emails");
-
 var _mailSender = require("../utils/mailSender");
+
+var _emails = require("../utils/emails");
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -141,13 +141,45 @@ var movePhase = (request, response) => {
     }, function (err, res) {
       if (err) throw err;
     });
+    var phaseInfo = _emails.phases[newPhase - 1];
     var writer = yield _writer.WriterModel.findById(text.writer);
     var user = yield _user.UserModel.findById(writer.user);
-    var email = _emails.movePhaseEmail[newPhase - 2];
-    email.email = user.email;
-    email.subject = "Tu texto avanzo a Fase " + newPhase;
-    yield (0, _mailSender.sendEmail)(email);
+
+    if (newPhase === 2) {
+      // La fase es la de aceptacion
+      yield (0, _mailSender.sendEmail)({
+        email: user.email,
+        subject: "¡Tu novela fue aprobada!"
+      }, 'accepted', {
+        name: user.name,
+        title: text.title
+      });
+    } else {
+      yield (0, _mailSender.sendEmail)({
+        email: user.email,
+        subject: "Tu novela avanzó de Fase"
+      }, 'next_phase', {
+        name: user.name,
+        title: text.title,
+        phase: newPhase + '-' + phaseInfo.name,
+        description: phaseInfo.description
+      });
+    }
   }));
 };
 
 exports.movePhase = movePhase;
+
+var getFeedbackIdBySuggestion = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    var {
+      id
+    } = request.params;
+    var feedback = yield _feedback.FeedbackModel.find({
+      "suggestion": id
+    });
+    return feedback[0]._id;
+  }));
+};
+
+exports.getFeedbackIdBySuggestion = getFeedbackIdBySuggestion;

@@ -10,15 +10,15 @@ var _mongoose = _interopRequireDefault(require("mongoose"));
 
 var _routes = require("./routes");
 
-var _jwt = _interopRequireDefault(require("./utils/jwt"));
-
 var _expressFileupload = _interopRequireDefault(require("express-fileupload"));
+
+var _mailSender = require("./utils/mailSender");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config({
-    path: '.env'
+    path: '.env.local'
   });
 }
 
@@ -35,7 +35,6 @@ app.use(_bodyParser.default.urlencoded({
   extended: true
 }));
 app.use(_bodyParser.default.json());
-app.use((0, _jwt.default)());
 
 if (process.env.NODE_ENV === 'production') {
   app.use(_express.default.static(__dirname + '/public'));

@@ -3,15 +3,21 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createFeedback = exports.createReader = exports.getReader = exports.getReaders = void 0;
+exports.createFeedback = exports.addReaderRegister = exports.createReader = exports.getReader = exports.getReaders = void 0;
 
 var _reader = require("../models/reader.model");
+
+var _user = require("../models/user.model");
 
 var _feedback = require("../models/feedback.model");
 
 var _errors = require("../utils/errors");
 
-var _user = require("./user.controller");
+var _user2 = require("./user.controller");
+
+var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -46,7 +52,7 @@ exports.getReader = getReader;
 
 var createReader = (request, response) => {
   (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
-    var UserNew = yield (0, _user.createUser)(request, response, "reader");
+    var UserNew = yield (0, _user2.createUser)(request, response, "reader");
     var data = request.body;
     var lookUserReader = yield _reader.ReaderModel.findOne({
       user: UserNew._id
@@ -70,6 +76,37 @@ var createReader = (request, response) => {
 };
 
 exports.createReader = createReader;
+
+var addReaderRegister = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    var data = request.body;
+
+    try {
+      var readerData = _objectSpread({}, data, {
+        _id: data.userid,
+        user: data.userid
+      });
+
+      var newReader = yield _reader.ReaderModel.create(readerData);
+      yield _user.UserModel.updateOne({
+        _id: data.userid
+      }, {
+        $addToSet: {
+          roles: "reader"
+        }
+      });
+      return {
+        reader: newReader
+      };
+    } catch (_unused) {
+      throw {
+        error: "Register Error"
+      };
+    }
+  }));
+};
+
+exports.addReaderRegister = addReaderRegister;
 
 var createFeedback = (request, response) => {
   (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {

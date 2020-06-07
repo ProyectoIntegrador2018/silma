@@ -18,6 +18,8 @@ var _genre = require("../models/genre.model");
 
 var _axios = _interopRequireDefault(require("axios"));
 
+var _admin2 = require("../controllers/admin.controller");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -40,21 +42,42 @@ var deleteEverything = /*#__PURE__*/function () {
   };
 }();
 
+var createFirstAdmin = () => {
+  return new Promise( /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator(function* (resolve, reject) {
+      yield (0, _admin2.createAdmin)({
+        body: {
+          name: "Admin 1",
+          password: "prueba12345",
+          email: "admin1@gmail.com",
+          birthdate: "12/12/2000",
+          phone: "8116690319",
+          nationality: "Mexico",
+          isSuperAdmin: true
+        }
+      }, {
+        send: data => resolve(data)
+      });
+    });
+
+    return function (_x, _x2) {
+      return _ref2.apply(this, arguments);
+    };
+  }());
+};
+
 var runAll = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator(function* () {
+  var _ref3 = _asyncToGenerator(function* () {
     yield deleteEverything();
     var genres = yield _axios.default.post("http://localhost:3000/api/admins/fillGenres");
     var genreIds = genres.data.splice(0, 3).map(x => x._id);
-    var admin1 = yield _axios.default.post("http://localhost:3000/api/admins/register", {
-      name: "Admin 1",
-      password: "prueba12345",
+    var admin1 = yield createFirstAdmin();
+    console.log('Admin 1: ', admin1._id);
+    var authAdmin = yield _axios.default.post("http://localhost:3000/api/user/authentication", {
       email: "admin1@gmail.com",
-      birthdate: "12/12/2012",
-      phone: "8116690319",
-      nationality: "Mexico",
-      isSuperAdmin: true
+      password: "prueba12345"
     });
-    console.log('Admin 1: ', admin1.data._id);
+    var tokenAdmin = authAdmin.data.token;
     var admin2 = yield _axios.default.post("http://localhost:3000/api/admins/register", {
       name: "Admin 2",
       password: "prueba12345",
@@ -62,13 +85,17 @@ var runAll = /*#__PURE__*/function () {
       birthdate: "12/12/1996",
       phone: "8116690318",
       nationality: "Mexico"
+    }, {
+      headers: {
+        "Authorization": 'Bearer ' + tokenAdmin
+      }
     });
     console.log('Admin 2: ', admin2.data._id);
     var reader1 = yield _axios.default.post("http://localhost:3000/api/register/readers", {
       name: "Reader 1",
       password: "prueba12345",
       email: "reader1@gmail.com",
-      birthdate: "12/12/2012",
+      birthdate: "12/12/2000",
       phone: "8116690319",
       nationality: "Mexico",
       readingProficiency: "4 to 6",
@@ -96,7 +123,7 @@ var runAll = /*#__PURE__*/function () {
       name: "Writer 1",
       password: "prueba12345",
       email: "writer1@gmail.com",
-      birthdate: "12/12/2012",
+      birthdate: "12/12/2000",
       phone: "8116690319",
       nationality: "Mexico",
       pseudonym: "writer1"
@@ -152,7 +179,7 @@ var runAll = /*#__PURE__*/function () {
   });
 
   return function runAll() {
-    return _ref2.apply(this, arguments);
+    return _ref3.apply(this, arguments);
   };
 }();
 

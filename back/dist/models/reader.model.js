@@ -19,8 +19,8 @@ var ReaderSchema = new _mongoose.Schema({
     ref: 'User'
   },
   facebookLink: {
-    type: String,
-    validate: [_validators.validateURL, "Invalid URL"]
+    type: String //validate: [validateURL, "Invalid URL"],
+
   },
   readingProficiency: {
     type: String,

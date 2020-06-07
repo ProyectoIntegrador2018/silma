@@ -50,7 +50,7 @@ export const uploadTextDocument = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
     const document = request.files.document;
-    uploadDocument(id + ".md", document.data)
+    uploadDocument(id + ".md",document.data)
   });
 };
 
@@ -59,7 +59,7 @@ export const retrieveTextDocument = (request, response) => {
     try {
       const { id } = request.params;
       var book = await getDocument(id)
-      return { "message": book.Body.toString() }
+      return { "message": book.Body.toString()}
     } catch (err) {
       response.status(404).send({ message: 'File does not exist' });
     }
