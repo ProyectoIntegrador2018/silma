@@ -5,7 +5,6 @@ import { assignReaders } from "@/controllers/suggestion.controller";
 import { sendEmail } from "@/utils/mailSender";
 import { uploadDocument, getDocument } from "@/controllers/aws.controller";
 import { UserModel } from '@/models/user.model';
-import { rejectTextEmail, bookReceivedEmail } from '@/utils/emails'; 
 
 export const getAllTexts = (request, response) => {
   send(response, async () => {
@@ -38,11 +37,10 @@ export const createText = (request, response) => {
     var email = user.user.email
     if (text._id) {
       await assignReaders(text, 3);
-      const emailData = bookReceivedEmail(text);
       await sendEmail({
-        ...emailData,
+        subject: "Enviaste tu texto para que sea dictaminado.",
         email: email
-      });
+      }, 'received', { title: text.title, name: user.user.name });
     }
     return text;
   });
@@ -83,17 +81,16 @@ export const rejectText = (request, response) => {
     const text = await TextModel.findById(id).populate("writer");
     const user = await UserModel.findById(text.writer.user);
     const document = request.files.document;
-    const emailData = rejectTextEmail(user, text);
     await sendEmail({
-      ...emailData,
       email: user.email,
+      subject: "No se aprobó tu texto",
       attachments: [
         {
           filename: document.name,
           content: document.data
         }
       ]
-    });
+    }, 'rejected', { title: text.title, name: user.name });
     return text;
   });
 };

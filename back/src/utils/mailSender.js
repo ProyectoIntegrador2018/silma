@@ -1,6 +1,18 @@
 import nodemailer from "nodemailer";
+import Email from "email-templates";
+import path from "path";
+const templatesDir = path.resolve(__dirname, '../email-templates');
 
-export const sendEmail = async (request) => {
+export const sendEmail = async (request, htmlFile, data) => {
+  const email = new Email({
+    views: {
+      root: templatesDir,
+      options: {
+        extension: 'hbs'
+      }
+    },
+  });
+  const html = await email.render(htmlFile, data);
   let transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
@@ -16,10 +28,8 @@ export const sendEmail = async (request) => {
     from: process.env.EMAIL_USER,
     to: request.email,
     subject: request.subject,
-    text: request.text,
-    html: request.html,
+    html: html,
     attachments: request.attachments
   });
-
 }
 

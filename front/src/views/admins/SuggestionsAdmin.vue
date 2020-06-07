@@ -44,7 +44,7 @@
           <v-btn small color="error" depressed @click="deleteSuggestion(props)">Eliminar</v-btn>
         </div>
         <div style="padding-top: 5px">
-          <v-btn small color="success" v-show="props.status == 'Completa'" :href="props.feedback_url">Retroalimentacion</v-btn>
+          <v-btn small color="success" v-show="props.status == 'Completado'" :href="props.feedback_url">Retroalimentacion</v-btn>
         </div>
       </template>
     </Table>

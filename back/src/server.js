@@ -4,6 +4,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import { createRoutes } from "./routes";
 import fileupload from "express-fileupload";
+import { sendEmail } from "@/utils/mailSender";
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config({ path: '.env.local' });

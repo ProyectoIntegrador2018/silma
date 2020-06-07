@@ -30,8 +30,8 @@ export default {
   data() {
     return {
       items: [
-        { title: "Escritor", type: "writer", titleRegister: "Registrate como Escritor", link: "Registro_Escritor" },
-        { title: "Lector", type: "reader", titleRegister: "Registrate como Lector", link: "Registro_Lector" },
+        { title: "Escritor", type: "writer", titleRegister: "Registrate como Escritor", link: "/Registro_Escritor" },
+        { title: "Lector", type: "reader", titleRegister: "Registrate como Lector", link: "/Registro_Lector" },
         { title: "Administrador", type: "admin" }
       ],
       roles: [],
