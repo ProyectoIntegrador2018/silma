@@ -12,5 +12,6 @@ git add .
 git commit -m "Build for production"
 git push
 
+heroku login
 # Push code to heroku
 git push -f heroku heroku-setup:master
