@@ -14,6 +14,3 @@ git push
 
 # Push code to heroku
 git push -f heroku heroku-setup:master
-
-# Add /dist from .gitignore
-(echo '/dist' && cat back/.gitignore) >> .gitignore1 && mv .gitignore1 back/.gitignore
