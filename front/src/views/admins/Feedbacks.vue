@@ -140,7 +140,6 @@ export default {
       for (const genre of feedback.selectedGenres){
             this.genresNames.push(this.preferenceId(genre))
       }
-      console.log(feedback.suggestion)
       const suggestion = await getRequest('/suggestions/feedback/'+feedback.suggestion, this.token);
       const text = await getRequest('/texts/'+suggestion.text, this.token)
       this.textTitle = text.title

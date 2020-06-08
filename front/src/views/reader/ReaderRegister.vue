@@ -1,6 +1,8 @@
 <template>
   <v-container>
-    <div class="display-3 font-weight-medium" align="center">Registro de Lector Beta</div>
+    <div class="display-3 font-weight-medium" align="center">
+      Registro de Lector Beta
+    </div>
     <br />
     <v-form ref="form">
       <h2 class="primary--text">Datos personales</h2>
@@ -89,9 +91,17 @@
             v-model="reader.readingProficiency"
             row
           >
-            <v-radio label="3 días o menos" value="3 or less" color="success"></v-radio>
+            <v-radio
+              label="3 días o menos"
+              value="3 or less"
+              color="success"
+            ></v-radio>
             <v-radio label="5 días" value="4 to 6" color="success"></v-radio>
-            <v-radio label="7 días o más" value="7 or more" color="success"></v-radio>
+            <v-radio
+              label="7 días o más"
+              value="7 or more"
+              color="success"
+            ></v-radio>
           </v-radio-group>
         </v-col>
       </v-layout>
@@ -135,20 +145,49 @@
           <v-card-text>Serás reenviado a tu dashboard</v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="green darken-1" text @click="dialogSuccess = false" href="/">Entendido</v-btn>
+            <v-btn
+              color="green darken-1"
+              text
+              @click="dialogSuccess = false"
+              href="/"
+              >Entendido</v-btn
+            >
           </v-card-actions>
         </v-card>
       </v-dialog>
       <v-dialog v-model="dialogError" persistent max-width="500">
         <v-card>
-          <v-card-title class="headline">{{errorMessage.title}}</v-card-title>
-          <v-card-text>{{errorMessage.message}}</v-card-text>
+          <v-card-title class="headline">{{ errorMessage.title }}</v-card-title>
+          <v-card-text>{{ errorMessage.message }}</v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="red darken-1" text @click="dialogError = false">Entendido</v-btn>
+            <v-btn color="red darken-1" text @click="dialogError = false"
+              >Entendido</v-btn
+            >
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <v-dialog v-model="termsAndConditionsDialog" width="70%">
+        <v-card>
+          <v-card-title class="title">Términos y Condiciones</v-card-title>
+          <v-card-text v-html="termsAndConditionsContent"></v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn text color="gray" @click="termsAndConditionsDialog = false"
+              >Entendido</v-btn
+            >
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-col cols="12">
+        <div @click.stop="">
+          <v-icon>mdi-checkbox-marked-circle</v-icon>
+          Al registrarte, aceptas los
+          <a href="javascript:;" @click.stop="termsAndConditionsDialog = true">
+            términos y condiciones</a
+          >
+        </div>
+      </v-col>
     </v-layout>
     <v-layout row wrap>
       <v-col align="end">
@@ -158,14 +197,14 @@
   </v-container>
 </template>
 
-
 <script>
 import TimestampDateField from "@/components/timestampDate.vue";
 import {
   administrators,
   countries,
   errorServerRegister,
-  errorPreferencesMinimun
+  errorPreferencesMinimun,
+  termsAndConditionsReader,
 } from "@/utils/constants.js";
 import {
   requiredRule,
@@ -174,14 +213,14 @@ import {
   facebookRule,
   passwordMinRule,
   phoneRule,
-  letterRule
+  letterRule,
 } from "@/utils/rules";
 import { getRequest, postRequest } from "@/utils/requests";
 import { setAuthCookies } from "@/utils/cookies";
 
 export default {
   components: {
-    TimestampDateField
+    TimestampDateField,
   },
   data() {
     return {
@@ -198,12 +237,12 @@ export default {
         readingProficiency: "",
         nationality: "",
         readFrom: "",
-        readTill: ""
+        readTill: "",
         //lastReview:''
       },
       errorMessage: {
         title: "",
-        message: ""
+        message: "",
       },
       preferencesNames: [],
       dialogSuccess: false,
@@ -220,14 +259,16 @@ export default {
       letterRule,
       errorServerRegister,
       errorPreferencesMinimun,
-      showPassword: false
+      showPassword: false,
+      termsAndConditionsDialog: false,
+      termsAndConditionsContent: termsAndConditionsReader,
     };
   },
   asyncComputed: {
     async getGenres() {
       this.genres = await getRequest("user/genres");
       return this.genres;
-    }
+    },
   },
   created: function() {
     if (this.$cookies.get("token") === null) {
@@ -259,7 +300,7 @@ export default {
         }
         var authUser = {
           email: "",
-          password: ""
+          password: "",
         };
         if (this.logedIn === false) {
           this.reader.userid = this.$cookies.get("user_id");
@@ -272,7 +313,7 @@ export default {
             token: this.$cookies.get("token"),
             user_type: "reader",
             user_id: this.$cookies.get("user_id"),
-            user_name: this.$cookies.get("user_name")
+            user_name: this.$cookies.get("user_name"),
           };
           setAuthCookies(user);
         } else {
@@ -287,8 +328,8 @@ export default {
         this.errorMessage = this.errorServerRegister;
         this.dialogError = true;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
