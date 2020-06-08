@@ -82,7 +82,7 @@ git clone https://github.com/ProyectoIntegrador2018/silma.git
 2. Add a `.env.local` file inside `back` folder. Inside this file add all the credentials needed, such as: `SECRET_JWT`, `MONGODB_URI`, etc.
 <b>IMPORTANT: </b><i>This is needed for the server and database to work.</i>
 
-3. It's now required for you to download to download `AWS CLI` and configure your account using the following guide: https://docs.aws.amazon.com/es_es/cli/latest/userguide/cli-chap-configure.html Request the AWS login information to Lorena Martínez.
+3. Request the AWS login information to Lorena Martínez. It's now required for you to download `AWS CLI` and configure the SILMA account using the following guide: https://docs.aws.amazon.com/es_es/cli/latest/userguide/cli-chap-configure.html 
 
 4. Fire up a terminal and run for development:
 
