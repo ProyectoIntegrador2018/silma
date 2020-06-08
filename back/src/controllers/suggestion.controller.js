@@ -4,6 +4,7 @@ import { TextModel } from "@/models/text.model";
 import { sendEmail } from "@/utils/mailSender";
 import { send } from "@/utils/errors";
 
+//Asigna X cantindad de lectores a un libro
 export const assignReaders = async (text, amount) => {
   var resultsAlgorithm = await runAlgorithm(text);
   resultsAlgorithm = resultsAlgorithm.sort((a, b) =>
@@ -13,6 +14,7 @@ export const assignReaders = async (text, amount) => {
   await addSuggestionSendEmail(selectedReaders, text);
 };
 
+//Función que agrega la sugerencia para un libro a un arreglo de lectores, además se envia un correo
 export const addSuggestionSendEmail = async (selectedReaders, text) => {
   for (const reader of selectedReaders) {
     var suggetionObj = {
@@ -44,6 +46,7 @@ export const addSuggestionSendEmail = async (selectedReaders, text) => {
   }
 };
 
+//Funcion que ejecuta el algoritmo de asignación para un libro
 export const runAlgorithm = async (text) => {
   const readers = await ReaderModel.find().populate("user");
   var resultantReaders = [];
@@ -100,6 +103,7 @@ export const runAlgorithm = async (text) => {
   return resultantReaders;
 };
 
+//Funcion que calcula la cantidad de puntos en la regla de generos
 export const calculateGenrePoints = async (userGenres, textGenres) => {
   var similar = 0;
   for (const uGenre of userGenres) {
@@ -118,6 +122,7 @@ export const calculateGenrePoints = async (userGenres, textGenres) => {
   }
 };
 
+//Funcion que calcula la cantidad de puntos en la regla de edad
 export const calculateAgePoints = async (userBirthDate, textYears) => {
   var today = new Date();
   var birthDate = new Date(userBirthDate);
@@ -150,6 +155,7 @@ export const calculateAgePoints = async (userBirthDate, textYears) => {
   }
 };
 
+//Funcion que calcula la cantidad de puntos en la regla de velocidad de lectura
 export const calculateReadingPoints = async (readingProficiency) => {
   if (readingProficiency === "3 or less") {
     return 2;
@@ -160,6 +166,7 @@ export const calculateReadingPoints = async (readingProficiency) => {
   }
 };
 
+//Funcion que calcula la cantidad de puntos a partir de la ultima fecha de participación
 export const calculateParticiaptionPoints = async (participationDate) => {
   var todaysDate = new Date();
   var months =
@@ -174,6 +181,7 @@ export const calculateParticiaptionPoints = async (participationDate) => {
   return 0;
 };
 
+//Funcion que calcula la cantidad de puntos a partir de las fechas de disponibilidad del lector
 export const calculateBetweenDatesPoints = async (initialDate, finalDate) => {
   var todaysDate = new Date();
   if (todaysDate <= finalDate && todaysDate >= initialDate) {
@@ -183,6 +191,7 @@ export const calculateBetweenDatesPoints = async (initialDate, finalDate) => {
   }
 };
 
+//Funcion que modifica el status de la sugerencia de un lector a un libro
 export const changeSuggestionStatus = async (id, newStatus, previousStatus) => {
   const suggestion = await SuggestionModel.findById(id).populate("text");
   if (!suggestion) throw { error: `Suggestion with id: ${id} not found` };
@@ -200,6 +209,7 @@ export const changeSuggestionStatus = async (id, newStatus, previousStatus) => {
   }
 };
 
+//Funcion que rechaza la sugerencia a un libro por parte de un lector
 export const rejectSuggestion = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
@@ -215,6 +225,7 @@ export const rejectSuggestion = (request, response) => {
   });
 };
 
+//Funcion que acepta la sugerencia a un libro por parte de un lector
 export const acceptSuggestion = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
@@ -223,6 +234,7 @@ export const acceptSuggestion = (request, response) => {
   });
 };
 
+//Funcion que completa la sugerencia a un libro por parte de un lector
 export const completeSuggestion = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
@@ -235,6 +247,7 @@ export const completeSuggestion = (request, response) => {
   });
 };
 
+//Funcion que obtiene una sugerencia de un libro para un lector
 export const getSuggestion = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
@@ -243,6 +256,7 @@ export const getSuggestion = (request, response) => {
   });
 };
 
+//Funcion que obtiene las sugerencias pendientes de un lector
 export const getSuggestionFromReader = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
@@ -254,6 +268,7 @@ export const getSuggestionFromReader = (request, response) => {
   });
 };
 
+//Funcion que obtiene las sugerencias de un lector
 export const getAllSuggestionsFromReader = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
@@ -262,6 +277,7 @@ export const getAllSuggestionsFromReader = (request, response) => {
   });
 };
 
+//Funcion que obtiene la sugerencia activa para el lector
 export const getSuggestionFromReaderDashboard = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
@@ -283,6 +299,7 @@ export const getSuggestionFromReaderDashboard = (request, response) => {
   });
 };
 
+//Obtiene todas las sugerenicias de un lector para el dashboard
 export const getAllSuggestionsFromReaderDashboard = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
@@ -292,6 +309,7 @@ export const getAllSuggestionsFromReaderDashboard = (request, response) => {
   });
 };
 
+//Obtiene todas las sugerencias de un texto
 export const getTextSuggestions = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
@@ -302,6 +320,7 @@ export const getTextSuggestions = (request, response) => {
   });
 };
 
+//Funcion que permite la creación de sugerencias de un Admin
 export const createSuggestionAdmin = (request, response) => {
   send(response, async () => {
     try {
@@ -318,6 +337,7 @@ export const createSuggestionAdmin = (request, response) => {
   });
 };
 
+//Obtiene los lectores que no cuentan con sugerencia para asignar a un libro
 export const getReadersWithoutSuggestion = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
@@ -339,6 +359,7 @@ export const getReadersWithoutSuggestion = (request, response) => {
   });
 }
 
+//Elimina una sugerencia para un libro si el admin lo desea
 export const deleteSuggestionAdmin = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
@@ -346,6 +367,7 @@ export const deleteSuggestionAdmin = (request, response) => {
   });
 };
 
+//Obtiene el feedback dado por el lector en una sugerencia
 export const getSuggestionForFeedback = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
@@ -354,6 +376,7 @@ export const getSuggestionForFeedback = (request, response) => {
   });
 };
 
+//Modifica la cantidad de capitulo que un lector pide para su sugerencia
 export const changeReadingChapters = async (request, response) => {
   send(response, async () => {
     const { id } = request.params;

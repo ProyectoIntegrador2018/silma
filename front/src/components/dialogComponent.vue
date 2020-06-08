@@ -30,6 +30,7 @@ export default {
     }
   }),
   methods: {
+    //Activa el dialogo de confirmación con los parametros enviados.
     open(title, message, options) {
       this.dialog = true
       this.title = title
@@ -40,10 +41,12 @@ export default {
         this.reject = reject
       })
     },
+    //Regresa el resultado True para confirmar la acción 
     agree() {
       this.resolve(true)
       this.dialog = false
     },
+    //Regresa el resultado False para cancelar la acción 
     cancel() {
       this.resolve(false)
       this.dialog = false
