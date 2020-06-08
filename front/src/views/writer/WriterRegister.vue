@@ -172,6 +172,7 @@ export default {
     };
   },
   created: function() {
+    //Verifica si el usuario está iniciado sesión por medio de cookies
     if (this.$cookies.get("token") === null) {
       this.logedIn = true;
     } else {
@@ -179,6 +180,7 @@ export default {
     }
   },
   methods: {
+    //Crea el usuario escritor dependiendo si está iniciado sesión o no
     async create() {
       if (!this.$refs.form.validate()) {
         return;
@@ -188,6 +190,7 @@ export default {
         password: this.writer.password
       };
       try {
+        //Solamente agrega el rol de escritor a un usuario existente
         if (this.logedIn === false) {
           this.writer.userid = this.$cookies.get("user_id");
           var readerData = await postRequest(
@@ -203,6 +206,7 @@ export default {
           };
           setAuthCookies(user);
         } else {
+          //Agrega un usuario nuevo con rol de escritor
           await postRequest("register/writers", this.writer);
           authUser.email = this.writer.email;
           authUser.password = this.writer.password;

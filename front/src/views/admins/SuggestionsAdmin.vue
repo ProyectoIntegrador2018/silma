@@ -102,19 +102,19 @@ export default {
         { text: "Name", align: "start", sortable: false, value: "name" },
         { text: "E-mail", align: "start", sortable: false, value: "email" },
         {
-          text: "Last Review",
+          text: "Fecha ultima Sugerencia",
           align: "start",
           sortable: false,
           value: "lastReview"
         },
         {
-          text: "Read From",
+          text: "Disponibilidad Desde",
           align: "start",
           sortable: false,
           value: "readFrom"
         },
         {
-          text: "Read Until",
+          text: "Disponibilidad Hasta",
           align: "start",
           sortable: false,
           value: "readTill"
@@ -142,6 +142,7 @@ export default {
     this.getReadersWithoutSuggestion();
   },
   methods: {
+    //Elimina una sugerencia para un libro
     async deleteSuggestion(item) {
       const token = this.$cookies.get("token");
       if (
@@ -160,6 +161,7 @@ export default {
         this.getReadersWithoutSuggestion();
       }
     },
+    // Obtiene las sugerencias de un libro
     async getSuggestions() {
       const token = this.$cookies.get("token");
       var suggestions = await getRequest(
@@ -196,11 +198,13 @@ export default {
       });
       this.dataSuggestions = final;
     },
+    //Obtiene la información del texto
     async getTextInfo() {
       const token = this.$cookies.get("token");
       var text = await getRequest("texts/" + this.$route.params.id, token);
       this.textData = text;
     },
+    //Obtiene los lectores a los que se puede sugerir el texto
     async getReadersWithoutSuggestion() {
       const token = this.$cookies.get("token");
       var readersWithoutSuggestion = await getRequest(
@@ -231,6 +235,7 @@ export default {
       });
       this.readersNoSuggestion = readersData;
     },
+    //Envia la sugerencia al lector seleccionado
     async sendSuggestion(reader) {
       const token = this.$cookies.get("token");
       await postRequest(
