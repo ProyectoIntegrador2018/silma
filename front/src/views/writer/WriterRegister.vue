@@ -204,8 +204,8 @@ export default {
           setAuthCookies(user);
         } else {
           await postRequest("register/writers", this.writer);
-          authUser.email = this.reader.email;
-          authUser.password = this.reader.password;
+          authUser.email = this.writer.email;
+          authUser.password = this.writer.password;
           const user = await postRequest("user/authentication", authUser);
           setAuthCookies(user);
         }
