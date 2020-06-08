@@ -8,12 +8,15 @@
       <!-- Actions -->
       <template #actions="{ props }">
         <div style="padding-top: 5px">
+          <!-- avanzar fase -->
           <v-btn small color="success" :disabled="props.isRejected || props.phase == 4" depressed @click="advancePhase(props)">Avanzar Fase</v-btn>
         </div>
         <div style="padding-top: 5px">
+          <!-- Accesar a las sugerencias pertenecientes a este texto -->
           <v-btn small color="primary" depressed @click="seeSuggestions(props)">Sugerencias</v-btn>
         </div>
         <div style="padding-top: 5px">
+          <!-- Rechazar texto -->
           <v-btn small color="error" :disabled="props.isRejected" depressed @click="openRejectDialog(props)">Rechazar</v-btn>
         </div>
       </template>
@@ -24,6 +27,7 @@
         </v-chip>
       </template>
     </Table>
+    <!-- Tablas de usuarios registrados -->
     <h1 align="left">Escritores</h1>
     <Table :headers="userHeaders" :items="dataWriters">
     </Table>
@@ -84,6 +88,7 @@ export default {
   data() {
     return {
       requiredRule,
+      //Titulos que corresponden a la tabla y de donde se obtienen sus datos
       headers: [
         { text: "Título", align: "start", sortable: false, value: "title" },
         {
@@ -133,11 +138,13 @@ export default {
     };
   },
   async created() {
+    //Funciones que se lanzan al cargar la vista
     await this.getTexts();
     await this.composeReaders();
     await this.composeWriters();
   },
   methods: {
+    //Funcion que al inicio obtiene todos los textos en proceso
     async getTexts() {
       const token = this.$cookies.get("token");
       var data = await getRequest("texts/", token);
@@ -158,6 +165,7 @@ export default {
       var id = item._id
       this.$router.push('/Sugerencias_Texto/' +id);
     },
+    //Funcion que avanza la fase del texto, primero confirmando el avance de fase
     async advancePhase(item){
       if (await this.$refs.confirm.open('Avanzar', '¿Seguro que quieres avanzar el texto de fase?', { color: 'primary' })) {
           const token = this.$cookies.get('token');
@@ -165,15 +173,18 @@ export default {
           this.getTexts() 
       }
     },
+    //Abrir mensaje de rechazo
     openRejectDialog(text) {
       this.dialogReject = true;
       this.rejectingText = text;
     },
+    //Cerrar mensaje de rechazo
     closeRejectDialog() {
       this.dialogReject = false;
       this.rejectingText = undefined;
       this.rejectDocument = undefined;
     },
+    //Funcion que manda a rechazar el texto
     async rejectText() {
       let formData = new FormData();
       formData.append("document", this.rejectDocument);
@@ -182,6 +193,7 @@ export default {
       this.closeRejectDialog();
       await this.getTexts();
     },
+    //Funcion que se encarga de formatear los lectores con sus datos de su modelo usuario
     async composeReaders(){
       const token = this.$cookies.get('token');
       const readers = await getRequest('/readers', token);
@@ -197,6 +209,7 @@ export default {
       }
       this.dataReaders = data
     },
+    //Funcion que se encarga de formatear los escritores con sus datos de su modelo usuario
     async composeWriters(){
       const token = this.$cookies.get('token');
       const writers = await getRequest('writers', token);

@@ -25,6 +25,6 @@ export const addSuggestionRoutes = (router) => {
   router.get("/suggestions/getAllSuggestionsDashboard/:id", verifyToken(["reader"]), getAllSuggestionsFromReaderDashboard);
   router.get("/suggestions/getTextSuggestions/:id", verifyToken(["admin"]), getTextSuggestions);
   router.get("/suggestions/:id", verifyToken(["admin", "reader"]), getSuggestion);
-  router.get("/suggestions/feedback/:id", verifyToken(["admin"]), getSuggestionForFeedback)
+  router.get("/suggestions/feedback/:id", verifyToken(["admin", "reader"]), getSuggestionForFeedback)
   router.post("/suggestions/:id/requestChapters",verifyToken(["reader"]),changeReadingChapters)
 };

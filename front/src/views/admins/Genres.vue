@@ -58,6 +58,7 @@
           </v-col>
       </v-layout>
     <br>
+    <!-- Boton para poblar base de datos -->
     <div align="center" >
         <v-btn @click="fill" class="btn btn-indigo">LLenar géneros</v-btn>
     </div>
@@ -82,14 +83,17 @@ export default {
         }
     },
     async created(){
+        //Funcion que se llama al iniciar la vista
         await this.getGenres()
     },
     methods: {
+    //Funcion que crea un nuevo genero
     async create() {
       if (!this.$refs.form.validate()) {
         return;
       }
       try {
+        //Verificar que no es un genero existente
         if(this.genres.some(genre => genre.name === this.name)){
           this.dialogRepeat = true
           return
@@ -102,6 +106,7 @@ export default {
         this.dialogError = true;
       }
     },
+    //Funcion que se utiliza para poblar de generos la base de datos
     async fill(){
       try{
         const token = this.$cookies.get('token');
@@ -111,6 +116,7 @@ export default {
       }
       this.getGenres()
     },
+    //Funcion que obtiene todos los generos
     async getGenres(){
         const token = this.$cookies.get('token');
         this.genres = await getRequest('user/genres', token);
