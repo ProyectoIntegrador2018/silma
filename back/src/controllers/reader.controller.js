@@ -73,3 +73,17 @@ export const createFeedback = (request, response) => {
     return feedback;
   });
 };
+
+export const updateLastReview = (request, response) => {
+  send(response, async () => {
+    const { id } = request.params;
+    const newReview = Date.now
+    const reader = await ReaderModel.updateOne(
+      { _id: id },
+      { $set: { lastReview: Date(newReview) } },
+      function (err, res) {
+        if (err) throw err;
+      }
+    )
+  });
+};

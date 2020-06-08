@@ -3,7 +3,8 @@ import {
   getReader,
   createReader,
   createFeedback,
-  addReaderRegister
+  addReaderRegister,
+  updateLastReview
 } from "@/controllers/reader.controller";
 import { verifyToken } from "@/utils/jwt";
 
@@ -13,5 +14,5 @@ export const addReaderRoutes = (router) => {
   router.post("/register/readers", createReader);
   router.post("/register/feedback", verifyToken(["reader"]), createFeedback);
   router.post("/register/addReader", verifyToken(["writer","admin"]), addReaderRegister);
-
+  router.post("/readers/review/:id", verifyToken(["reader"]), updateLastReview);
 };

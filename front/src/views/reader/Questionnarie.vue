@@ -208,6 +208,8 @@ export default {
         const token = this.$cookies.get('token');
         await postRequest("/register/feedback", this.feedback, token);
         await postRequest("/suggestions/"+this.feedback.suggestion+"/complete", {} ,token);
+        const suggestion = await getRequest('/suggestions/feedback/'+this.feedback.suggestion, token);
+        await postRequest("/readers/review/"+suggestion.reader, {}, token);
         this.dialogSuccess = true
       } catch (error) {
         this.errorMessage = this.errorServerRegister
