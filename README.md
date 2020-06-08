@@ -4,15 +4,13 @@ Silma Web is a platform that facilitates the process for the acceptance of texts
 
 ## Table of contents
 
-* [Detalle de Clientes](#detalle-de-clientes)
-* [URLS del Ambiente](#urls-del-ambiente)
+* [Client Information](#Client-Information)
+* [Enviornment URLS](#Enviornment-URLS)
 * [Antlers](#antlers)
-* [Tecnología Utilizada](#tecnología-utilizada)
-* [Management resources](#management-resources)
+* [Technologies](#Technologies)
+* [Management tools](#management-tools)
 * [Setup the project](#setup-the-project)
 * [Restoring the database](#restoring-the-database)
-* [Debugging](#debugging)
-* [Running specs](#running-specs)
 
 
 ### Client Information
