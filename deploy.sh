@@ -7,10 +7,11 @@ echo "$(tail -n +2 back/.gitignore)" > back/.gitignore
 # Build for production
 npm run build-prod
 
-# Commit and push changes to heroku-setup
+# Commit and push changes to production
 git add .
 git commit -m "Build for production"
 git push
 
+heroku login
 # Push code to heroku
-git push -f heroku heroku-setup:master
+git push -f heroku production:master
