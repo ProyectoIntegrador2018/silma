@@ -4,8 +4,8 @@ import cors from "cors";
 import mongoose from "mongoose";
 import { createRoutes } from "./routes";
 import fileupload from "express-fileupload";
-import { sendEmail } from "@/utils/mailSender";
 
+// In development use .env.local for environment variables
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config({ path: '.env.local' });
 }
@@ -29,6 +29,7 @@ app.use(
   })
 );
 app.use(bodyParser.json());
+// When in production redirect everything not starting with 'api/*' to the static website
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(__dirname + '/public'));
   app.get(/^(?!.*(\/api\/)).*$/, (req, res) => res.sendFile(__dirname + '/public/index.html'));
