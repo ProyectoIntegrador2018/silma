@@ -102,19 +102,19 @@ export default {
         { text: "Name", align: "start", sortable: false, value: "name" },
         { text: "E-mail", align: "start", sortable: false, value: "email" },
         {
-          text: "Last Review",
+          text: "Fecha ultima Sugerencia",
           align: "start",
           sortable: false,
           value: "lastReview"
         },
         {
-          text: "Read From",
+          text: "Disponibilidad Desde",
           align: "start",
           sortable: false,
           value: "readFrom"
         },
         {
-          text: "Read Until",
+          text: "Disponibilidad Hasta",
           align: "start",
           sortable: false,
           value: "readTill"
