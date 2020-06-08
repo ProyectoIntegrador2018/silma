@@ -17,7 +17,7 @@ Silma Web is a platform that facilitates the process for the acceptance of texts
 
 ### Client Information
 
-| Nombre             | Email                | Rol              |
+| Name               | Email                | Role             |
 | ------------------ | -------------------- | ---------------- |
 | Lorena Martínez    | lorenamtze@tec.mx    | CEO              |
 | Yolanda Chapa      | yoli.chapa@gmail.com | Editora en Jefe  |
@@ -30,7 +30,7 @@ Silma Web is a platform that facilitates the process for the acceptance of texts
 
 ### Antlers
 
-| Nombre         | Email                         | Rol                     | 
+| Name           | Email                         | Role                    | 
 | -------------- | ----------------------------- | ------------------------|
 | Luisa Pineda   | fernandapinedaochoa@gmail.com | Scrum Master            |
 | Iván Ramírez   | ivanrmzmtz@gmail.com          | Admin. de Proyecto      |
