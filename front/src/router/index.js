@@ -13,7 +13,7 @@ import ChaptersVisualization from "@/views/reader/VisualizationChapters.vue";
 import Feedback from "@/views/admins/Feedbacks.vue";
 
 Vue.use(VueRouter);
-
+// NOTE: Use 'withAccess' for pages that can only be accessed by certain users.
 const routes = [
   {
     path: "/Registro_Lector",
@@ -37,7 +37,6 @@ const routes = [
     meta: {
       requiresAuth: true,
       withAccess: ["writer"],
-      // NOTE: Use 'withAccess' for pages that can only be accessed by certain users.
     },
   },
   {
@@ -56,7 +55,6 @@ const routes = [
     meta: {
       requiresAuth: true,
       withAccess: ["admin", "reader", "writer"],
-      // NOTE: Use 'withAccess' for pages that can only be accessed by certain users.
     },
   },
   {
@@ -75,7 +73,6 @@ const routes = [
     meta: {
       requiresAuth: true,
       withAccess: ["admin"],
-      // NOTE: Use 'withAccess' for pages that can only be accessed by certain users.
     },
   },
   {
@@ -110,7 +107,6 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   // Redirect when authentication is required and token is not provided.
-  // TODO: Add validation with API.
   const token = Vue.$cookies.get("token");
   const userType = Vue.$cookies.get("user_type");
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
