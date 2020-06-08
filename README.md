@@ -78,22 +78,25 @@ After installing you can follow this simple steps:
 1. Clone this repository into your local machine
 
 ```bash
-$ git clone https://github.com/ProyectoIntegrador2018/silma.git
+git clone https://github.com/ProyectoIntegrador2018/silma.git
 ```
+
+2. Add a `.env.local` file inside `back` folder. Inside this file add all the credentials needed, such as: `SECRET_JWT`, `MONGODB_URI`, etc.
+<b>IMPORTANT: </b><i>This is needed for the server and database to work.</i>
 
 2. Fire up a terminal and run for development:
 
 ```bash
-$ cd back
-$ npm install
-$ npm run serve
+cd back
+npm install
+npm run serve
 ```
 
 2. Fire up another terminal and run:
 ```bash
-$ cd front
-$ npm install
-$ npm run serve
+cd front
+npm install
+npm run serve
 ```
 
 3. Open MongoDB Community Edition in order to manage the DB and write:
@@ -101,6 +104,13 @@ $ npm run serve
 ```
 % mongodb://localhost/silma
 ```
+
+4. To generate some testing data run:
+```bash
+cd back
+npm run generate
+```
+This will create 2 admins, 2 readers, 2 writers, 2 texts and suggestions.
 
 ### Restoring the database
 
