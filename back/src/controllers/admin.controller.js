@@ -9,6 +9,7 @@ import { send } from "@/utils/errors";
 import { sendEmail } from "@/utils/mailSender";
 import { phases } from "@/utils/emails";
 
+//Generos base de Silma
 export const genres = [
   "Sobrenatural (paranormal)",
   "Romance",
@@ -25,6 +26,7 @@ export const genres = [
   "Otros"
 ];
 
+//Funcion que regresa todo los usuarios de tipo administrador
 export const getAdmins = (request, response) => {
   send(response, async () => {
     const admins = await AdminModel.find().populate("user");
@@ -32,6 +34,7 @@ export const getAdmins = (request, response) => {
   });
 };
 
+//Funcion que regresa el administrador que coincide con el id recibido
 export const getAdmin = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
@@ -40,10 +43,12 @@ export const getAdmin = (request, response) => {
   });
 };
 
+//Funcion que crea un administrador
 export const createAdmin = (request, response) => {
   send(response, async () => {
     const newUser = await createUser(request, response, "admin");
     const data = request.body;
+    //Autenticar que no existe ya alguien registrado con el correo
     const lookUserAdmin = await AdminModel.findOne({ user: newUser._id });
     if (!lookUserAdmin) {
       const adminData = {
@@ -60,6 +65,7 @@ export const createAdmin = (request, response) => {
   });
 };
 
+//Funcion que crea un nuevo genero por parte de un administrador
 export const createGenre = (request, response) => {
   send(response, async () => {
     const data = request.body;
@@ -68,6 +74,7 @@ export const createGenre = (request, response) => {
   });
 };
 
+//Funcion que en caso de no tener generos en la base de datos, los crea
 export const fillGenres = (request, response) => {
   send(response, async () => {
     await GenreModel.deleteMany({});
@@ -79,6 +86,7 @@ export const fillGenres = (request, response) => {
   })
 }
 
+//Funcion que regresa la retroalimentacion de un lector de un texto
 export const getFeedback = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
@@ -87,6 +95,7 @@ export const getFeedback = (request, response) => {
   });
 };
 
+//Funcion que avanza la fase del texto del cual recibe su ID
 export const movePhase = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
@@ -102,6 +111,7 @@ export const movePhase = (request, response) => {
     const phaseInfo = phases[newPhase - 1];
     const writer = await WriterModel.findById(text.writer);
     const user = await UserModel.findById(writer.user);
+    //Enviar correo al autor del avance de su texto
     if (newPhase === 2) { // La fase es la de aceptacion
       await sendEmail({
         email: user.email,
@@ -124,6 +134,7 @@ export const movePhase = (request, response) => {
   });
 };
 
+//Funcion que obtiene la retroalimentacion ligada a la sugerencia recibida por su id
 export const getFeedbackIdBySuggestion = (request, response) => {
   send(response, async () => {
     const { id } = request.params;

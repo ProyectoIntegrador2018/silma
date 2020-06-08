@@ -6,7 +6,7 @@
       <h2 class="primary--text">¿Debería publicarse el libro?</h2>
       <v-layout row wrap>
         <v-col cols="12" sm="8">
-          <v-radio-group :rules="[requiredRule]" v-model="feedback.publish" row disabled>
+          <v-radio-group v-model="feedback.publish" row disabled>
             <v-radio 
               label="Si" 
               value="Yes"
@@ -26,7 +26,6 @@
           <v-text-field
                 readonly
                 outlined
-                :rules="[requiredRule, numericRule]"
                 v-model="feedback.page"
           ></v-text-field>
         </v-col>
@@ -51,7 +50,6 @@
           <v-textarea
             readonly
             outlined
-            :rules="[requiredRule]"
             v-model="feedback.liked"
           ></v-textarea>
         </v-col>
@@ -62,7 +60,6 @@
           <v-textarea
             readonly
             outlined
-            :rules="[requiredRule]"
             v-model="feedback.disliked"
           ></v-textarea>
         </v-col>
@@ -73,7 +70,6 @@
           <v-textarea
             readonly
             outlined
-            :rules="[requiredRule]"
             v-model="feedback.goodCharacter"
           ></v-textarea>
         </v-col>
@@ -84,7 +80,6 @@
           <v-textarea
             readonly
             outlined
-            :rules="[requiredRule]"
             v-model="feedback.badCharacter"
           ></v-textarea>
         </v-col>
@@ -92,9 +87,9 @@
       <h2 class="primary--text">En general el libro, No me gustó (1) - Lo amé (10)</h2>
       <v-layout row wrap>
         <v-col cols="12" sm="8">
-          <v-radio-group :rules="[requiredRule]" v-model="feedback.grade" row disabled>
+          <v-radio-group v-model="feedback.grade" row disabled>
             <v-radio v-for="index in 10" :key="index"
-              :label="index" 
+              :label="String(index)" 
               :value="index"
               color="success"
             ></v-radio>
@@ -120,10 +115,12 @@ export default {
     }
   },
   async created(){
+    //Funciones que se llaman al iniciar la vista
         await this.getGenres();
         await this.getFeedback();
   },
   methods: {
+    //Funcion que se encarga de traducir el nombre de el ID al nombre del genero
     preferenceId(preference){
         for(const genre of this.genres){
           if(preference == genre._id){
@@ -131,12 +128,15 @@ export default {
           }
         }
     },
+    //Funcion que llama todos los generos
     async getGenres(){
       const genres = await getRequest('/user/genres', this.token);
       return this.genres = genres
     },
+    //Funcion que llama el feedback al cual se esta entrando especificamente
     async getFeedback(){
       const feedback = await getRequest('/admins/feedback/'+this.$route.params.id, this.token)
+      //Se necesita traducir el arreglo de preferencias en ID a nombre
       for (const genre of feedback.selectedGenres){
             this.genresNames.push(this.preferenceId(genre))
       }
