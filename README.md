@@ -1,46 +1,43 @@
 # Silma
 
-Silma Web es una plataforma que facilita el proceso para la aceptación de escritos dentro de la empresa Silma Editorial, dando seguimiento por medio de retroalimentación de lectores y administradores que guían al escritor durante el proceso.
+Silma Web is a platform that facilitates the process for the acceptance of texts within the Silma Editorial company, giving follow-up through feedback from readers and administrators who guide the writer in the process of publishing.
 
 ## Table of contents
 
-* [Detalle de Clientes](#detalle-de-clientes)
-* [URLS del Ambiente](#urls-del-ambiente)
+* [Client Information](#Client-Information)
+* [Enviornment URLS](#Enviornment-URLS)
 * [Antlers](#antlers)
-* [Tecnología Utilizada](#tecnología-utilizada)
-* [Management resources](#management-resources)
+* [Technologies](#Technologies)
+* [Management tools](#management-tools)
 * [Setup the project](#setup-the-project)
 * [Restoring the database](#restoring-the-database)
-* [Debugging](#debugging)
-* [Running specs](#running-specs)
 
 
-### Detalle de Clientes
+### Client Information
 
-| Nombre             | Email                | Rol              |
+| Name               | Email                | Role             |
 | ------------------ | -------------------- | ---------------- |
 | Lorena Martínez    | lorenamtze@tec.mx    | CEO              |
 | Yolanda Chapa      | yoli.chapa@gmail.com | Editora en Jefe  |
 
 
-### URLS del Ambiente
+### Enviornment URLS
 
-* **Producción** - [TBD](TBD)
-* **QA** - [TBD](TBD)
-* **Desarrollo** - [TBD](TBD)
+* **Production** - [Silma Heroku App](https://silma.herokuapp.com/)
+
 
 ### Antlers
 
-| Nombre         | Email                         | Rol                     | 
+| Name           | Email                         | Role                    | 
 | -------------- | ----------------------------- | ------------------------|
 | Luisa Pineda   | fernandapinedaochoa@gmail.com | Scrum Master            |
 | Iván Ramírez   | ivanrmzmtz@gmail.com          | Admin. de Proyecto      |
 | Uriel Salazar  | usurquidi.96@gmail.com        | Admin. de Configuración |
 | Alfredo Ávila  | a00818666@itesm.mx            | Product Owner Proxy     |
 
-### Tecnología Utilizada
+### Technologies
 Front end:
-| Tecnologia    | Versión      |
+| Technology    | Version      |
 | ------------- | -------------|
 | Node Js       | 12.15        |
 | Express       | 4.17.1       |
@@ -48,16 +45,17 @@ Front end:
 | Vuetify       | 2.2.17       |
 | vue-router    | 3.1.5        |
 | Axios         | 0.19.2       |
+|moment         |2.26.0        |
 
 Back-end:
-| Tecnologia    | Versión      |
+| Technology    | Version      |
 | ------------- | -------------|
 | Node Js       | 12.15        |
 | Mongoose      | 5.9.6        |
 | Express-jwt   | 5.3.3        |
 | jsonwebtoken  | 8.5.1        |
 | bcrypt        | 4.0.1        |
-
+|email-templates| 7.0.5        |
 ### Management tools
 
 You should ask for access to this tools if you don't have it already:
@@ -84,7 +82,9 @@ git clone https://github.com/ProyectoIntegrador2018/silma.git
 2. Add a `.env.local` file inside `back` folder. Inside this file add all the credentials needed, such as: `SECRET_JWT`, `MONGODB_URI`, etc.
 <b>IMPORTANT: </b><i>This is needed for the server and database to work.</i>
 
-2. Fire up a terminal and run for development:
+3. Request the AWS login information to Lorena Martínez. It's now required for you to download `AWS CLI` and configure the SILMA account using the following guide: https://docs.aws.amazon.com/es_es/cli/latest/userguide/cli-chap-configure.html 
+
+4. Fire up a terminal and run for development:
 
 ```bash
 cd back
@@ -92,20 +92,20 @@ npm install
 npm run serve
 ```
 
-2. Fire up another terminal and run:
+5. Fire up another terminal and run:
 ```bash
 cd front
 npm install
 npm run serve
 ```
 
-3. Open MongoDB Community Edition in order to manage the DB and write:
+6. Open MongoDB Community Edition in order to manage the DB and write:
 
 ```
 % mongodb://localhost/silma
 ```
 
-4. To generate some testing data run:
+7. To generate some testing data run:
 ```bash
 cd back
 npm run generate
@@ -125,6 +125,3 @@ Drop the following collections:
  db.writers.drop()
  db.readers.drop()
 ```
-### Debugging
-
-### Running specs

@@ -26,6 +26,7 @@
       </v-card-actions>
     </v-card>
     <br />
+    <!-- Dialogo para mostrar la actualizacion al pedir mas capitulos -->
     <v-dialog v-model="dialogUpdate" persistent max-width="400">
       <v-card>
         <v-card-title class="headline">{{ errorMessage.title }}</v-card-title>
@@ -66,11 +67,7 @@ export default {
     };
   },
   asyncComputed: {
-    async getSuggestion() {
-      const token = this.$cookies.get("token");
-      this.genres = await getRequest(`user/genres`, token);
-      return this.genres;
-    },
+    //Funcion que regresa los muestra la visualizacion de los capitulos al cargar la pagina
     async visualizeChapters() {
       const token = this.$cookies.get("token");
       this.suggestion = await getRequest(
@@ -91,15 +88,19 @@ export default {
     },
   },
   methods: {
+    //Funcion para pedir 5 capitulos mas a los previamente registrados
     async moreChapters() {
       if (this.chaptersRequired >= this.chaptersTotal) {
+        //Si ya se cuenta con el escrito completo, se muestra un dialogo indicandolo
         this.errorMessage = updateChaptersMax;
         this.dialogUpdate = true;
         return;
       }
+      //Si se cuentan con menos de 5 capitulos extra disponible, se pide el escrito completo
       if (this.chaptersRequired + 5 > this.chaptersTotal) {
         this.chaptersRequired = this.chaptersTotal;
       } else {
+        //Si se cuenta con 5 capitulos extra disponible o mas, se piden 5
         this.chaptersRequired = this.chaptersRequired + 5;
       }
       const token = this.$cookies.get("token");
@@ -115,6 +116,7 @@ export default {
       this.dialogUpdate = true;
       return;
     },
+    //Funcion que muestra el numero de capitulos solicitados en la sugerencia
     async cropChapters() {
       var currentChapters = [];
       if (this.chaptersRequired <= this.chaptersTotal) {

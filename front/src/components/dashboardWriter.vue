@@ -20,7 +20,7 @@
     <v-btn color="primary" dark class="mb-2" href="/Agregar_Escrito"
       >Agregar Escrito</v-btn
     >
-
+    <!-- Tabla de escritos registrados -->
     <Table :headers="headers" :items="data">
       <template #phase="{ props }">
         <v-chip
@@ -48,6 +48,7 @@ export default {
   props: ["tripId", "ticketId"],
   data() {
     return {
+      //Titulos que corresponden a la tabla y de donde se obtienen sus datos
       headers: [
         {
           text: "Título",
@@ -64,16 +65,10 @@ export default {
     };
   },
   asyncComputed: {
+    //Funcion que obtiene todos los escritos registrados del escritor
     async getTexts() {
       const token = this.$cookies.get("token");
       this.data = await getRequest(`texts/writer/${this.writer}`, token);
-    },
-  },
-  methods: {
-    getColor(status) {
-      if (status == 0) return "red";
-      else if (status == 1) return "green";
-      else return "yellow";
     },
   },
 };

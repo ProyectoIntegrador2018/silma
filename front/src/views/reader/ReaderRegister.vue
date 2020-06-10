@@ -265,11 +265,13 @@ export default {
     };
   },
   asyncComputed: {
+    //Funcion que llama los generos
     async getGenres() {
       this.genres = await getRequest("user/genres");
       return this.genres;
     },
   },
+  //Funcion para saber si ya se encuentra una sesion activa
   created: function() {
     if (this.$cookies.get("token") === null) {
       this.logedIn = true;
@@ -278,6 +280,7 @@ export default {
     }
   },
   methods: {
+    //Funcion que obtiene el ID de las preferencias seleccionadas
     preferenceId(preference) {
       for (const genre of this.genres) {
         if (preference == genre.name) {
@@ -285,16 +288,19 @@ export default {
         }
       }
     },
+    //Funcion que crea el lector
     async create() {
       if (!this.$refs.form.validate()) {
         return;
       }
       try {
+        //Necesita tener al menos 3 preferencias
         if (this.preferencesNames.length < 3) {
           this.errorMessage = this.errorPreferencesMinimun;
           this.dialogError = true;
           return;
         }
+        //Obtener el id de las preferencias
         for (const preference of this.preferencesNames) {
           this.reader.preferences.push(this.preferenceId(preference));
         }
@@ -302,6 +308,7 @@ export default {
           email: "",
           password: "",
         };
+        //Validar si existe una sesion activa para agregar funcionalidad nueva
         if (this.logedIn === false) {
           this.reader.userid = this.$cookies.get("user_id");
           var readerData = await postRequest(
@@ -309,6 +316,7 @@ export default {
             this.reader,
             this.$cookies.get("token")
           );
+          //Autenticar usuario
           var user = {
             token: this.$cookies.get("token"),
             user_type: "reader",
@@ -317,10 +325,12 @@ export default {
           };
           setAuthCookies(user);
         } else {
+          //Solo crear el usuario por que no existe ya con otro rol
           await postRequest("register/readers", this.reader);
           authUser.email = this.reader.email;
           authUser.password = this.reader.password;
           const user = await postRequest("user/authentication", authUser);
+          //Autenticar usuario
           setAuthCookies(user);
         }
         this.dialogSuccess = true;

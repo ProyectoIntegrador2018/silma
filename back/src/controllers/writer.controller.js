@@ -3,6 +3,7 @@ import { send } from "@/utils/errors";
 import { createUser } from "@/controllers/user.controller";
 import { UserModel } from "@/models/user.model";
 
+//Obtiene del modelo de escritores todos los usuarios
 export const getWriters = (request, response) => {
   send(response, async () => {
     const writers = await WriterModel.find().populate("user");
@@ -10,6 +11,7 @@ export const getWriters = (request, response) => {
   });
 };
 
+//Obtiene un escritor especifico por su ID
 export const getWriter = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
@@ -18,6 +20,7 @@ export const getWriter = (request, response) => {
   });
 };
 
+//Funcion que crea un usuario y lector que no está registrado
 export const createWriter = (request, response) => {
   send(response, async () => {
     const UserNew = await createUser(request, response, "writer");
@@ -38,6 +41,7 @@ export const createWriter = (request, response) => {
   });
 };
 
+//Funcion que agrega el rol de escritor a un usuario existente
 export const addWriterRegister = (request, response) => {
   send(response, async () => {
     const data = request.body;
