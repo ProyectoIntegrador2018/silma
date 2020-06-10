@@ -70,6 +70,7 @@
           ></v-textarea>
         </v-col>
       </v-layout>
+      <!-- Instrucciones para subir el archivo -->
       <p>Los archivos deberán subirse con el formato de Common Mark.</p>
       <p>
         Los capítulos tendrán que ser indicados como encabezados (Heading 1)
@@ -98,7 +99,7 @@
                 >Vista Previa</v-btn
               >
             </template>
-
+            <!-- Previa visualizacion del escrito -->
             <v-card>
               <v-card-title>Previa visualización del escrito</v-card-title>
               <v-card-text id="commonMarkHTML" v-html="data"></v-card-text>
@@ -113,7 +114,7 @@
         </v-col>
       </v-layout>
     </v-form>
-
+    <!-- Dialogo para mostrar el registro exitoso del escrito-->
     <v-layout row wrap>
       <v-dialog v-model="dialogSuccess" persistent max-width="290">
         <v-card>
@@ -131,6 +132,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <!-- Dialogo para mostrar falla en el registro del escrito-->
       <v-dialog v-model="dialogError" persistent max-width="400">
         <v-card>
           <v-card-title class="headline">{{ errorMessage.title }}</v-card-title>
@@ -171,6 +173,7 @@ export default {
   components: {},
   data() {
     return {
+      //Modelo del texto
       text: {
         writer: this.$cookies.get("user_id"),
         title: "",
@@ -200,6 +203,7 @@ export default {
     };
   },
   asyncComputed: {
+    //Funcion que obtiene todos los generos
     async getGenres() {
       const token = this.$cookies.get("token");
       this.genres = await getRequest(`user/genres`, token);
@@ -207,6 +211,7 @@ export default {
     },
   },
   methods: {
+    //Funcion que lee un archivo en el registro
     async getFile() {
       return new Promise((resolve, reject) => {
         var fr = new FileReader();
@@ -217,10 +222,12 @@ export default {
         fr.readAsText(this.document);
       });
     },
+    //Funcion que crea un nuevo registro de escrito
     async create() {
       if (!this.$refs.form.validate()) {
         return;
       }
+      //Validacion de numero de generos del escrito
       if (this.text.genres.length < 1 || this.text.genres.length > 3) {
         this.errorMessage = errorGenresRange;
         this.dialogError = true;
@@ -228,6 +235,7 @@ export default {
       }
       var getFile = await this.getFile();
 
+      //Validacion de un numero de capitulos mayor a 0
       if (parseInt(this.text.numberOfChapters) <= 0) {
         this.errorMessage = errorNumberOfChaptersEqualsZero;
         this.dialogError = true;
@@ -235,11 +243,13 @@ export default {
       }
 
       var numChaptersFile = readChapters(getFile).length;
+      //Validacion de numero de capitulos ingresado contra el numero de capitulos que contiene el archivo ingresado
       if (numChaptersFile != parseInt(this.text.numberOfChapters)) {
         this.errorMessage = errorNumberOfChapters;
         this.dialogError = true;
         return;
       }
+      //Validacion del numero de caracteres de la descripcion del escrito
       if (
         this.text.description.length < 20 ||
         this.text.description.length > 200
@@ -266,6 +276,7 @@ export default {
         this.isDisabled = false;
       }
     },
+    //Funcion que muestra la visualizacion del archivo ingresado en el registro
     previewData() {
       if (!this.document) {
         this.data = "No se ha seleccionado ningún archivo";

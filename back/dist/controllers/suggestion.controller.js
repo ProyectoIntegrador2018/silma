@@ -25,6 +25,7 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+//Asigna X cantindad de lectores a un libro
 var assignReaders = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator(function* (text, amount) {
     var resultsAlgorithm = yield runAlgorithm(text);
@@ -36,7 +37,8 @@ var assignReaders = /*#__PURE__*/function () {
   return function assignReaders(_x, _x2) {
     return _ref.apply(this, arguments);
   };
-}();
+}(); //Función que agrega la sugerencia para un libro a un arreglo de lectores, además se envia un correo
+
 
 exports.assignReaders = assignReaders;
 
@@ -76,7 +78,8 @@ var addSuggestionSendEmail = /*#__PURE__*/function () {
   return function addSuggestionSendEmail(_x3, _x4) {
     return _ref2.apply(this, arguments);
   };
-}();
+}(); //Funcion que ejecuta el algoritmo de asignación para un libro
+
 
 exports.addSuggestionSendEmail = addSuggestionSendEmail;
 
@@ -121,7 +124,8 @@ var runAlgorithm = /*#__PURE__*/function () {
   return function runAlgorithm(_x5) {
     return _ref3.apply(this, arguments);
   };
-}();
+}(); //Funcion que calcula la cantidad de puntos en la regla de generos
+
 
 exports.runAlgorithm = runAlgorithm;
 
@@ -149,7 +153,8 @@ var calculateGenrePoints = /*#__PURE__*/function () {
   return function calculateGenrePoints(_x6, _x7) {
     return _ref4.apply(this, arguments);
   };
-}();
+}(); //Funcion que calcula la cantidad de puntos en la regla de edad
+
 
 exports.calculateGenrePoints = calculateGenrePoints;
 
@@ -197,7 +202,8 @@ var calculateAgePoints = /*#__PURE__*/function () {
   return function calculateAgePoints(_x8, _x9) {
     return _ref5.apply(this, arguments);
   };
-}();
+}(); //Funcion que calcula la cantidad de puntos en la regla de velocidad de lectura
+
 
 exports.calculateAgePoints = calculateAgePoints;
 
@@ -215,7 +221,8 @@ var calculateReadingPoints = /*#__PURE__*/function () {
   return function calculateReadingPoints(_x10) {
     return _ref6.apply(this, arguments);
   };
-}();
+}(); //Funcion que calcula la cantidad de puntos a partir de la ultima fecha de participación
+
 
 exports.calculateReadingPoints = calculateReadingPoints;
 
@@ -236,7 +243,8 @@ var calculateParticiaptionPoints = /*#__PURE__*/function () {
   return function calculateParticiaptionPoints(_x11) {
     return _ref7.apply(this, arguments);
   };
-}();
+}(); //Funcion que calcula la cantidad de puntos a partir de las fechas de disponibilidad del lector
+
 
 exports.calculateParticiaptionPoints = calculateParticiaptionPoints;
 
@@ -254,7 +262,8 @@ var calculateBetweenDatesPoints = /*#__PURE__*/function () {
   return function calculateBetweenDatesPoints(_x12, _x13) {
     return _ref8.apply(this, arguments);
   };
-}();
+}(); //Funcion que modifica el status de la sugerencia de un lector a un libro
+
 
 exports.calculateBetweenDatesPoints = calculateBetweenDatesPoints;
 
@@ -283,7 +292,8 @@ var changeSuggestionStatus = /*#__PURE__*/function () {
   return function changeSuggestionStatus(_x14, _x15, _x16) {
     return _ref9.apply(this, arguments);
   };
-}();
+}(); //Funcion que rechaza la sugerencia a un libro por parte de un lector
+
 
 exports.changeSuggestionStatus = changeSuggestionStatus;
 
@@ -298,7 +308,8 @@ var rejectSuggestion = (request, response) => {
     var newSuggestion = yield changeSuggestionStatus(id, "Rejected", "Pending");
     return newSuggestion;
   }));
-};
+}; //Funcion que acepta la sugerencia a un libro por parte de un lector
+
 
 exports.rejectSuggestion = rejectSuggestion;
 
@@ -310,7 +321,8 @@ var acceptSuggestion = (request, response) => {
     var suggestion = yield changeSuggestionStatus(id, "Accepted", "Pending");
     return suggestion;
   }));
-};
+}; //Funcion que completa la sugerencia a un libro por parte de un lector
+
 
 exports.acceptSuggestion = acceptSuggestion;
 
@@ -322,7 +334,8 @@ var completeSuggestion = (request, response) => {
     var suggestion = yield changeSuggestionStatus(id, "Completed", "Accepted");
     return suggestion;
   }));
-};
+}; //Funcion que obtiene una sugerencia de un libro para un lector
+
 
 exports.completeSuggestion = completeSuggestion;
 
@@ -334,7 +347,8 @@ var getSuggestion = (request, response) => {
     var suggestion = yield _suggestion.SuggestionModel.findById(id).populate("text");
     return suggestion;
   }));
-};
+}; //Funcion que obtiene las sugerencias pendientes de un lector
+
 
 exports.getSuggestion = getSuggestion;
 
@@ -349,7 +363,8 @@ var getSuggestionFromReader = (request, response) => {
     });
     return suggestion;
   }));
-};
+}; //Funcion que obtiene las sugerencias de un lector
+
 
 exports.getSuggestionFromReader = getSuggestionFromReader;
 
@@ -363,7 +378,8 @@ var getAllSuggestionsFromReader = (request, response) => {
     });
     return suggestion;
   }));
-};
+}; //Funcion que obtiene la sugerencia activa para el lector
+
 
 exports.getAllSuggestionsFromReader = getAllSuggestionsFromReader;
 
@@ -386,7 +402,8 @@ var getSuggestionFromReaderDashboard = (request, response) => {
     });
     if (suggestion === undefined) return false;else return suggestion[0];
   }));
-};
+}; //Obtiene todas las sugerenicias de un lector para el dashboard
+
 
 exports.getSuggestionFromReaderDashboard = getSuggestionFromReaderDashboard;
 
@@ -403,7 +420,8 @@ var getAllSuggestionsFromReaderDashboard = (request, response) => {
     });
     return suggestions;
   }));
-};
+}; //Obtiene todas las sugerencias de un texto
+
 
 exports.getAllSuggestionsFromReaderDashboard = getAllSuggestionsFromReaderDashboard;
 
@@ -417,7 +435,8 @@ var getTextSuggestions = (request, response) => {
     }).populate("text");
     return suggestion;
   }));
-};
+}; //Funcion que permite la creación de sugerencias de un Admin
+
 
 exports.getTextSuggestions = getTextSuggestions;
 
@@ -440,7 +459,8 @@ var createSuggestionAdmin = (request, response) => {
       return err;
     }
   }));
-};
+}; //Obtiene los lectores que no cuentan con sugerencia para asignar a un libro
+
 
 exports.createSuggestionAdmin = createSuggestionAdmin;
 
@@ -474,7 +494,8 @@ var getReadersWithoutSuggestion = (request, response) => {
     });
     return finalArr;
   }));
-};
+}; //Elimina una sugerencia para un libro si el admin lo desea
+
 
 exports.getReadersWithoutSuggestion = getReadersWithoutSuggestion;
 
@@ -488,7 +509,8 @@ var deleteSuggestionAdmin = (request, response) => {
       _id: id
     }).deleteOne().exec();
   }));
-};
+}; //Obtiene el feedback dado por el lector en una sugerencia
+
 
 exports.deleteSuggestionAdmin = deleteSuggestionAdmin;
 
@@ -500,7 +522,8 @@ var getSuggestionForFeedback = (request, response) => {
     var suggestion = yield _suggestion.SuggestionModel.findById(id);
     return suggestion;
   }));
-};
+}; //Modifica la cantidad de capitulo que un lector pide para su sugerencia
+
 
 exports.getSuggestionForFeedback = getSuggestionForFeedback;
 

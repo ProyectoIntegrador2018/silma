@@ -1,5 +1,6 @@
 var AWS = require("aws-sdk");
 
+//Funcion que obtiene un documento de AWS S3
 export const getDocument = async(id) => {
     const params =  { Bucket: process.env.AWS_BUCKET + '/Texts', Key: id + ".md" }
     var s3 = new AWS.S3();
@@ -14,6 +15,7 @@ export const getDocument = async(id) => {
     });
 }
 
+//Funcion que sube un documento a AWS S3 
 export const uploadDocument = async (id,data) => {
     var s3 = new AWS.S3({params: { Bucket: process.env.AWS_BUCKET + '/Texts', Key: '', Body: ''}});
     var params = {

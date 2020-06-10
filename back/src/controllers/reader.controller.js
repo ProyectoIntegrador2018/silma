@@ -4,9 +4,8 @@ import { UserModel } from "@/models/user.model";
 import { FeedbackModel } from "@/models/feedback.model";
 import { send } from "@/utils/errors";
 import { createUser } from "@/controllers/user.controller"
-import jwt from "jsonwebtoken";
 
-
+//Obtiene todos los lectores
 export const getReaders = (request, response) => {
   send(response, async () => {
     const readers = await ReaderModel.find().populate("user");
@@ -14,6 +13,7 @@ export const getReaders = (request, response) => {
   });
 };
 
+// Obtiene un lector a través de su ID
 export const getReader = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
@@ -22,6 +22,7 @@ export const getReader = (request, response) => {
   });
 };
 
+// Función que crea un lector que no tiene una cuenta
 export const createReader = (request, response) => {
   send(response, async () => {
     const UserNew = await createUser(request, response, "reader");
@@ -42,6 +43,7 @@ export const createReader = (request, response) => {
   });
 };
 
+//Funcion que registra un lector que ya tiene una cuenta activa
 export const addReaderRegister = (request,response) => {
   send(response, async () => {
     const data = request.body;
@@ -66,10 +68,25 @@ export const addReaderRegister = (request,response) => {
 
 }
 
+//Funcion que crea un feedback para una sugerencia
 export const createFeedback = (request, response) => {
   send(response, async () => {
     const data = request.body;
     const feedback = await FeedbackModel.create(data);
     return feedback;
+  });
+};
+
+export const updateLastReview = (request, response) => {
+  send(response, async () => {
+    const { id } = request.params;
+    const newReview = Date.now
+    const reader = await ReaderModel.updateOne(
+      { _id: id },
+      { $set: { lastReview: Date(newReview) } },
+      function (err, res) {
+        if (err) throw err;
+      }
+    )
   });
 };

@@ -20,7 +20,7 @@ var addSuggestionRoutes = router => {
   router.get("/suggestions/getAllSuggestionsDashboard/:id", (0, _jwt.verifyToken)(["reader"]), _suggestion.getAllSuggestionsFromReaderDashboard);
   router.get("/suggestions/getTextSuggestions/:id", (0, _jwt.verifyToken)(["admin"]), _suggestion.getTextSuggestions);
   router.get("/suggestions/:id", (0, _jwt.verifyToken)(["admin", "reader"]), _suggestion.getSuggestion);
-  router.get("/suggestions/feedback/:id", (0, _jwt.verifyToken)(["admin"]), _suggestion.getSuggestionForFeedback);
+  router.get("/suggestions/feedback/:id", (0, _jwt.verifyToken)(["admin", "reader"]), _suggestion.getSuggestionForFeedback);
   router.post("/suggestions/:id/requestChapters", (0, _jwt.verifyToken)(["reader"]), _suggestion.changeReadingChapters);
 };
 

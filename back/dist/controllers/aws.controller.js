@@ -9,7 +9,8 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-var AWS = require("aws-sdk");
+var AWS = require("aws-sdk"); //Funcion que obtiene un documento de AWS S3
+
 
 var getDocument = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator(function* (id) {
@@ -33,7 +34,8 @@ var getDocument = /*#__PURE__*/function () {
   return function getDocument(_x) {
     return _ref.apply(this, arguments);
   };
-}();
+}(); //Funcion que sube un documento a AWS S3 
+
 
 exports.getDocument = getDocument;
 

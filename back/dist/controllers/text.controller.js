@@ -23,12 +23,14 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+// Response with all texts with their genres.
 var getAllTexts = (request, response) => {
   (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
     var readers = yield _text.TextModel.find().populate("genres");
     return readers;
   }));
-};
+}; // Response with a particular text based on its id.
+
 
 exports.getAllTexts = getAllTexts;
 
@@ -40,7 +42,8 @@ var getText = (request, response) => {
     var reader = yield _text.TextModel.findById(id).populate("genres");
     return reader;
   }));
-};
+}; // Response with all texts in a particul current phase.
+
 
 exports.getText = getText;
 
@@ -54,7 +57,8 @@ var getTextsInPhase = (request, response) => {
     }).populate("genres");
     return reader;
   }));
-};
+}; // Creates a text and sends an email to the writer.
+
 
 exports.getTextsInPhase = getTextsInPhase;
 
@@ -78,7 +82,8 @@ var createText = (request, response) => {
 
     return text;
   }));
-};
+}; // Uploads to aws the text document of a particular text.
+
 
 exports.createText = createText;
 
@@ -90,7 +95,8 @@ var uploadTextDocument = (request, response) => {
     var document = request.files.document;
     (0, _aws.uploadDocument)(id + ".md", document.data);
   }));
-};
+}; // Response with the text document of a particular text.
+
 
 exports.uploadTextDocument = uploadTextDocument;
 
@@ -110,7 +116,8 @@ var retrieveTextDocument = (request, response) => {
       });
     }
   }));
-};
+}; // Response with all the texts of a particular writer.
+
 
 exports.retrieveTextDocument = retrieveTextDocument;
 
@@ -124,7 +131,8 @@ var getTextsOfWriter = (request, response) => {
     }).populate("genres");
     return reader;
   }));
-};
+}; // Rejects a particular text and sends an email to the writer with a pdf file.
+
 
 exports.getTextsOfWriter = getTextsOfWriter;
 
@@ -140,7 +148,8 @@ var rejectText = (request, response) => {
     });
     var text = yield _text.TextModel.findById(id).populate("writer");
     var user = yield _user.UserModel.findById(text.writer.user);
-    var document = request.files.document;
+    var document = request.files.document; // Email with pdf file
+
     yield (0, _mailSender.sendEmail)({
       email: user.email,
       subject: "No se aprobó tu texto",

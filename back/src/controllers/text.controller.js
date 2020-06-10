@@ -6,6 +6,7 @@ import { sendEmail } from "@/utils/mailSender";
 import { uploadDocument, getDocument } from "@/controllers/aws.controller";
 import { UserModel } from '@/models/user.model';
 
+// Response with all texts with their genres.
 export const getAllTexts = (request, response) => {
   send(response, async () => {
     const readers = await TextModel.find().populate("genres");
@@ -13,6 +14,7 @@ export const getAllTexts = (request, response) => {
   });
 };
 
+// Response with a particular text based on its id.
 export const getText = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
@@ -21,6 +23,7 @@ export const getText = (request, response) => {
   });
 };
 
+// Response with all texts in a particul current phase.
 export const getTextsInPhase = (request, response) => {
   send(response, async () => {
     const { phase } = request.params;
@@ -29,6 +32,7 @@ export const getTextsInPhase = (request, response) => {
   });
 };
 
+// Creates a text and sends an email to the writer.
 export const createText = (request, response) => {
   send(response, async () => {
     const data = request.body;
@@ -46,26 +50,29 @@ export const createText = (request, response) => {
   });
 };
 
+// Uploads to aws the text document of a particular text.
 export const uploadTextDocument = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
     const document = request.files.document;
-    uploadDocument(id + ".md",document.data)
+    uploadDocument(id + ".md", document.data)
   });
 };
 
+// Response with the text document of a particular text.
 export const retrieveTextDocument = (request, response) => {
   send(response, async () => {
     try {
       const { id } = request.params;
       var book = await getDocument(id)
-      return { "message": book.Body.toString()}
+      return { "message": book.Body.toString() }
     } catch (err) {
       response.status(404).send({ message: 'File does not exist' });
     }
   });
 };
 
+// Response with all the texts of a particular writer.
 export const getTextsOfWriter = (request, response) => {
   send(response, async () => {
     const { writer } = request.params;
@@ -74,6 +81,7 @@ export const getTextsOfWriter = (request, response) => {
   });
 };
 
+// Rejects a particular text and sends an email to the writer with a pdf file.
 export const rejectText = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
@@ -81,6 +89,7 @@ export const rejectText = (request, response) => {
     const text = await TextModel.findById(id).populate("writer");
     const user = await UserModel.findById(text.writer.user);
     const document = request.files.document;
+    // Email with pdf file
     await sendEmail({
       email: user.email,
       subject: "No se aprobó tu texto",

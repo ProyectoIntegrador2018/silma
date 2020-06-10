@@ -15,6 +15,7 @@ var addReaderRoutes = router => {
   router.post("/register/readers", _reader.createReader);
   router.post("/register/feedback", (0, _jwt.verifyToken)(["reader"]), _reader.createFeedback);
   router.post("/register/addReader", (0, _jwt.verifyToken)(["writer", "admin"]), _reader.addReaderRegister);
+  router.post("/readers/review/:id", (0, _jwt.verifyToken)(["reader"]), _reader.updateLastReview);
 };
 
 exports.addReaderRoutes = addReaderRoutes;

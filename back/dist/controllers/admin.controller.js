@@ -35,7 +35,9 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-var genres = ["Sobrenatural (paranormal)", "Romance", "Aventura", "Fantasía épica (de héroes)", "Fantasía histórica", "Realismo mágico", "Chicas mágicas", "Fantasía tecnológica (ciencia ficción)", "Fantasía oscura", "Steampunk", "Terror", "Fantasía infantil", "Otros"];
+//Generos base de Silma
+var genres = ["Sobrenatural (paranormal)", "Romance", "Aventura", "Fantasía épica (de héroes)", "Fantasía histórica", "Realismo mágico", "Chicas mágicas", "Fantasía tecnológica (ciencia ficción)", "Fantasía oscura", "Steampunk", "Terror", "Fantasía infantil", "Otros"]; //Funcion que regresa todo los usuarios de tipo administrador
+
 exports.genres = genres;
 
 var getAdmins = (request, response) => {
@@ -43,7 +45,8 @@ var getAdmins = (request, response) => {
     var admins = yield _admin.AdminModel.find().populate("user");
     return admins;
   }));
-};
+}; //Funcion que regresa el administrador que coincide con el id recibido
+
 
 exports.getAdmins = getAdmins;
 
@@ -55,14 +58,16 @@ var getAdmin = (request, response) => {
     var admin = yield _admin.AdminModel.findById(id).populate("user");
     return admin;
   }));
-};
+}; //Funcion que crea un administrador
+
 
 exports.getAdmin = getAdmin;
 
 var createAdmin = (request, response) => {
   (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
     var newUser = yield (0, _user2.createUser)(request, response, "admin");
-    var data = request.body;
+    var data = request.body; //Autenticar que no existe ya alguien registrado con el correo
+
     var lookUserAdmin = yield _admin.AdminModel.findOne({
       user: newUser._id
     });
@@ -82,7 +87,8 @@ var createAdmin = (request, response) => {
       };
     }
   }));
-};
+}; //Funcion que crea un nuevo genero por parte de un administrador
+
 
 exports.createAdmin = createAdmin;
 
@@ -92,7 +98,8 @@ var createGenre = (request, response) => {
     var genre = yield _genre.GenreModel.create(data);
     return genre;
   }));
-};
+}; //Funcion que en caso de no tener generos en la base de datos, los crea
+
 
 exports.createGenre = createGenre;
 
@@ -109,7 +116,8 @@ var fillGenres = (request, response) => {
 
     return yield _genre.GenreModel.find({});
   }));
-};
+}; //Funcion que regresa la retroalimentacion de un lector de un texto
+
 
 exports.fillGenres = fillGenres;
 
@@ -121,7 +129,8 @@ var getFeedback = (request, response) => {
     var feedback = yield _feedback.FeedbackModel.findById(id);
     return feedback;
   }));
-};
+}; //Funcion que avanza la fase del texto del cual recibe su ID
+
 
 exports.getFeedback = getFeedback;
 
@@ -143,7 +152,7 @@ var movePhase = (request, response) => {
     });
     var phaseInfo = _emails.phases[newPhase - 1];
     var writer = yield _writer.WriterModel.findById(text.writer);
-    var user = yield _user.UserModel.findById(writer.user);
+    var user = yield _user.UserModel.findById(writer.user); //Enviar correo al autor del avance de su texto
 
     if (newPhase === 2) {
       // La fase es la de aceptacion
@@ -166,7 +175,8 @@ var movePhase = (request, response) => {
       });
     }
   }));
-};
+}; //Funcion que obtiene la retroalimentacion ligada a la sugerencia recibida por su id
+
 
 exports.movePhase = movePhase;
 

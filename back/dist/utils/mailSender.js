@@ -17,10 +17,13 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-var templatesDir = _path.default.resolve(__dirname, '../email-templates');
+var templatesDir = _path.default.resolve(__dirname, '../email-templates'); // Sends an email from a specified template and some data.
+// At request provide both the email and the subject.
+
 
 var sendEmail = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator(function* (request, htmlFile, data) {
+    // Gets html template and fills it with the provided data.
     var email = new _emailTemplates.default({
       views: {
         root: templatesDir,
@@ -29,7 +32,7 @@ var sendEmail = /*#__PURE__*/function () {
         }
       }
     });
-    var html = yield email.render(htmlFile, data);
+    var html = yield email.render(htmlFile, data); // Sends the email.
 
     var transporter = _nodemailer.default.createTransport({
       host: process.env.EMAIL_HOST,

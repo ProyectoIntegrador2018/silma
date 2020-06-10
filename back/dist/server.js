@@ -12,10 +12,9 @@ var _routes = require("./routes");
 
 var _expressFileupload = _interopRequireDefault(require("express-fileupload"));
 
-var _mailSender = require("./utils/mailSender");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// In development use .env.local for environment variables
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config({
     path: '.env.local'
@@ -34,7 +33,7 @@ app.use((0, _cors.default)({
 app.use(_bodyParser.default.urlencoded({
   extended: true
 }));
-app.use(_bodyParser.default.json());
+app.use(_bodyParser.default.json()); // When in production redirect everything not starting with 'api/*' to the static website
 
 if (process.env.NODE_ENV === 'production') {
   app.use(_express.default.static(__dirname + '/public'));

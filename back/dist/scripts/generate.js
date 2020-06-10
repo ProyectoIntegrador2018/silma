@@ -26,6 +26,7 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+// Deletes all data from local.
 var deleteEverything = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator(function* () {
     yield _user.UserModel.deleteMany({});
@@ -40,7 +41,8 @@ var deleteEverything = /*#__PURE__*/function () {
   return function deleteEverything() {
     return _ref.apply(this, arguments);
   };
-}();
+}(); // Creates the first admin from mongo, skiping security check.
+
 
 var createFirstAdmin = () => {
   return new Promise( /*#__PURE__*/function () {
@@ -68,16 +70,21 @@ var createFirstAdmin = () => {
 
 var runAll = /*#__PURE__*/function () {
   var _ref3 = _asyncToGenerator(function* () {
-    yield deleteEverything();
-    var genres = yield _axios.default.post("http://localhost:3000/api/admins/fillGenres");
+    yield deleteEverything(); // Fills out genres with a preset.
+
+    var genres = yield _axios.default.post("http://localhost:3000/api/admins/fillGenres"); // Gets only the first 3 genres-
+
     var genreIds = genres.data.splice(0, 3).map(x => x._id);
     var admin1 = yield createFirstAdmin();
-    console.log('Admin 1: ', admin1._id);
+    console.log('Admin 1: ', admin1._id); // Authenticates the first admin
+    // This is done so the admin can create new admin users.
+
     var authAdmin = yield _axios.default.post("http://localhost:3000/api/user/authentication", {
       email: "admin1@gmail.com",
       password: "prueba12345"
     });
-    var tokenAdmin = authAdmin.data.token;
+    var tokenAdmin = authAdmin.data.token; // Creates second admin.
+
     var admin2 = yield _axios.default.post("http://localhost:3000/api/admins/register", {
       name: "Admin 2",
       password: "prueba12345",
@@ -90,7 +97,8 @@ var runAll = /*#__PURE__*/function () {
         "Authorization": 'Bearer ' + tokenAdmin
       }
     });
-    console.log('Admin 2: ', admin2.data._id);
+    console.log('Admin 2: ', admin2.data._id); // Creates first reader.
+
     var reader1 = yield _axios.default.post("http://localhost:3000/api/register/readers", {
       name: "Reader 1",
       password: "prueba12345",
@@ -104,7 +112,8 @@ var runAll = /*#__PURE__*/function () {
       readTill: "12-01-2020",
       preferences: genreIds
     });
-    console.log('Reader 1: ', reader1.data._id);
+    console.log('Reader 1: ', reader1.data._id); // Creates second reader.
+
     var reader2 = yield _axios.default.post("http://localhost:3000/api/register/readers", {
       name: "Reader 2",
       password: "prueba12345",
@@ -118,7 +127,8 @@ var runAll = /*#__PURE__*/function () {
       readTill: "12-01-2020",
       preferences: genreIds
     });
-    console.log('Reader 2: ', reader2.data._id);
+    console.log('Reader 2: ', reader2.data._id); // Creates first writer.
+
     var writer1 = yield _axios.default.post("http://localhost:3000/api/register/writers", {
       name: "Writer 1",
       password: "prueba12345",
@@ -128,7 +138,8 @@ var runAll = /*#__PURE__*/function () {
       nationality: "Mexico",
       pseudonym: "writer1"
     });
-    console.log('Writer 1: ', writer1.data._id);
+    console.log('Writer 1: ', writer1.data._id); // Creates second writer.
+
     var writer2 = yield _axios.default.post("http://localhost:3000/api/register/writers", {
       name: "Writer 2",
       password: "prueba12345",
@@ -138,14 +149,16 @@ var runAll = /*#__PURE__*/function () {
       nationality: "Mexico",
       pseudonym: "writer2"
     });
-    console.log('Writer 2: ', writer2.data._id);
+    console.log('Writer 2: ', writer2.data._id); // Autheticates first writer to create texts.
+
     var auth = yield _axios.default.post("http://localhost:3000/api/user/authentication", {
       email: "writer1@gmail.com",
       password: "prueba12345"
     });
     var {
       token
-    } = auth.data;
+    } = auth.data; // Writer1 creates first text.
+
     var text1 = yield _axios.default.post("http://localhost:3000/api/texts", {
       writer: writer1.data._id,
       genres: genreIds,
@@ -160,7 +173,8 @@ var runAll = /*#__PURE__*/function () {
         "Authorization": 'Bearer ' + token
       }
     });
-    console.log('Text 1: ', text1.data._id);
+    console.log('Text 1: ', text1.data._id); // Writer1 creates second text.
+
     var text2 = yield _axios.default.post("http://localhost:3000/api/texts", {
       writer: writer1.data._id,
       genres: genreIds,

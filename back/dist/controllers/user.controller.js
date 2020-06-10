@@ -27,6 +27,8 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+// Authenticates a user with correct email and password.
+// Response with a user with the token.
 var authUser = (request, response) => {
   (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
     var {
@@ -35,9 +37,10 @@ var authUser = (request, response) => {
     } = request.body;
     var user = yield _user.UserModel.findOne({
       email
-    }).select(['+password']);
+    }).select(['+password']); // Checks if user with email exists and the password is correct.
 
     if (user && _bcrypt.default.compareSync(password, user.password)) {
+      // Returns user info with token.
       var userWithoutHash = yield _user.UserModel.findOne({
         _id: user._id
       });
@@ -55,7 +58,8 @@ var authUser = (request, response) => {
       };
     }
   }));
-};
+}; // Response with info of a particular user
+
 
 exports.authUser = authUser;
 
@@ -66,7 +70,8 @@ var getUser = (request, response) => {
     } = request.params;
     return yield _user.UserModel.findById(id);
   }));
-};
+}; // Creates a new user with an assigned role.
+
 
 exports.getUser = getUser;
 
@@ -82,7 +87,8 @@ var createUser = /*#__PURE__*/function () {
         return {
           status: "Password needs to be at least 8 characters long"
         };
-      }
+      } // Assigns a role to the user.
+
 
       data.roles = [role];
       data.password = _bcrypt.default.hashSync(data.password, 10);
@@ -91,7 +97,8 @@ var createUser = /*#__PURE__*/function () {
         _id: user._id
       });
       return foundUser;
-    }
+    } // Send error when user is already registered.
+
 
     throw {
       error: "User already registered"
@@ -101,7 +108,8 @@ var createUser = /*#__PURE__*/function () {
   return function createUser(_x, _x2, _x3) {
     return _ref3.apply(this, arguments);
   };
-}();
+}(); // Response with all the genres.
+
 
 exports.createUser = createUser;
 

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createFeedback = exports.addReaderRegister = exports.createReader = exports.getReader = exports.getReaders = void 0;
+exports.updateLastReview = exports.createFeedback = exports.addReaderRegister = exports.createReader = exports.getReader = exports.getReaders = void 0;
 
 var _reader = require("../models/reader.model");
 
@@ -15,10 +15,6 @@ var _errors = require("../utils/errors");
 
 var _user2 = require("./user.controller");
 
-var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -29,12 +25,14 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+//Obtiene todos los lectores
 var getReaders = (request, response) => {
   (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
     var readers = yield _reader.ReaderModel.find().populate("user");
     return readers;
   }));
-};
+}; // Obtiene un lector a través de su ID
+
 
 exports.getReaders = getReaders;
 
@@ -46,7 +44,8 @@ var getReader = (request, response) => {
     var reader = yield _reader.ReaderModel.findById(id).populate("user");
     return reader;
   }));
-};
+}; // Función que crea un lector que no tiene una cuenta
+
 
 exports.getReader = getReader;
 
@@ -73,7 +72,8 @@ var createReader = (request, response) => {
       };
     }
   }));
-};
+}; //Funcion que registra un lector que ya tiene una cuenta activa
+
 
 exports.createReader = createReader;
 
@@ -104,7 +104,8 @@ var addReaderRegister = (request, response) => {
       };
     }
   }));
-};
+}; //Funcion que crea un feedback para una sugerencia
+
 
 exports.addReaderRegister = addReaderRegister;
 
@@ -117,3 +118,23 @@ var createFeedback = (request, response) => {
 };
 
 exports.createFeedback = createFeedback;
+
+var updateLastReview = (request, response) => {
+  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
+    var {
+      id
+    } = request.params;
+    var newReview = Date.now;
+    var reader = yield _reader.ReaderModel.updateOne({
+      _id: id
+    }, {
+      $set: {
+        lastReview: Date(newReview)
+      }
+    }, function (err, res) {
+      if (err) throw err;
+    });
+  }));
+};
+
+exports.updateLastReview = updateLastReview;

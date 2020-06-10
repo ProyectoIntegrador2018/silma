@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <div class="display-3 font-weight-medium" align="center">Retroalimentación de</div>
+    <div class="display-3 font-weight-medium" align="center">Retroalimentación de {{textTitle}}</div>
     <br>
     <v-form ref="form">
       <h2 class="primary--text">¿Debería publicarse el libro?</h2>
@@ -88,7 +88,7 @@
         <v-col cols="12" sm="8">
           <v-radio-group :rules="[requiredRule]" v-model="feedback.grade" row>
             <v-radio v-for="index in 10" :key="index"
-              :label="index" 
+              :label="String(index)" 
               :value="index"
               color="success"
             ></v-radio>
@@ -155,24 +155,33 @@ export default {
       dialogSuccess: false,
       dialogError: false,
       genres: [],
+      textTitle: '',
       requiredRule,
       numericRule,
       errorServerRegister, 
       errorPreferencesMinimun
     }
   },
+  //Funciones que se llaman al inicio de la vista
   asyncComputed: {
+      //Obtener todos los generos
       async getGenres(){
         const token = this.$cookies.get('token');
         const responseDuplicate = await getRequest('/user/genres', token);
         return this.genres = responseDuplicate
       },
+      //Obtener la sugerencia a la cual pertenece esta retroalimentacion
       async getSuggestion(){
+        const token = this.$cookies.get('token');
         const reference = this.$route.params
         this.feedback.suggestion = reference.id
+        const suggestion = await getRequest('/suggestions/feedback/'+this.feedback.suggestion, token);
+        const text = await getRequest('/texts/'+suggestion.text, token)
+        this.textTitle = text.title
       }
   },
   methods: {
+    //Funcion que traduce el nombre de un genero por su id
     preferenceId(preference){
         for(const genre of this.genres){
           if(preference == genre.name){
@@ -180,22 +189,27 @@ export default {
           }
         }
     },
+    //Funcion que crea la retroalimentacion
     async create() {
       if (!this.$refs.form.validate()) {
         return;
       }
       try {
+        //Se necesita seleccionar 3 generos
         if(this.genresNames.length < 3){
           this.errorMessage = this.errorPreferencesMinimun
           this.dialogError = true
           return
         }
+        //Se necesita cambiar el nombre de los generos por su id
         for (const genre of this.genresNames){
             this.feedback.selectedGenres.push(this.preferenceId(genre))
         }
         const token = this.$cookies.get('token');
         await postRequest("/register/feedback", this.feedback, token);
         await postRequest("/suggestions/"+this.feedback.suggestion+"/complete", {} ,token);
+        const suggestion = await getRequest('/suggestions/feedback/'+this.feedback.suggestion, token);
+        await postRequest("/readers/review/"+suggestion.reader, {}, token);
         this.dialogSuccess = true
       } catch (error) {
         this.errorMessage = this.errorServerRegister
