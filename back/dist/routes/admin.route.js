@@ -14,7 +14,7 @@ var _jwt = require("../utils/jwt");
 var addAdminRoutes = router => {
   router.get("/admins", (0, _jwt.verifyToken)(["admin"]), _admin.getAdmins);
   router.get("/admins/:id", (0, _jwt.verifyToken)(["admin"]), _admin.getAdmin);
-  router.post("/admins/register", (0, _jwt.verifyToken)(["admin"]), _admin.createAdmin);
+  router.post("/admins/register", _admin.createAdmin);
   router.post("/admins/register/genres", (0, _jwt.verifyToken)(["admin"]), _admin.createGenre);
   router.post("/admins/fillGenres", _admin.fillGenres);
   router.get("/admins/feedback/:id", (0, _jwt.verifyToken)(["admin", "reader"]), _admin.getFeedback);

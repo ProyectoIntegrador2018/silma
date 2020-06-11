@@ -19,7 +19,7 @@ import { verifyToken } from "@/utils/jwt";
 export const addAdminRoutes = (router) => {
   router.get("/admins", verifyToken(["admin"]), getAdmins);
   router.get("/admins/:id", verifyToken(["admin"]), getAdmin);
-  router.post("/admins/register", verifyToken(["admin"]), createAdmin);
+  router.post("/admins/register", createAdmin);
   router.post("/admins/register/genres", verifyToken(["admin"]), createGenre);
   router.post("/admins/fillGenres", fillGenres);
   router.get("/admins/feedback/:id", verifyToken(["admin", "reader"]), getFeedback);
