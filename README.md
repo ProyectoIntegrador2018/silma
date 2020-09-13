@@ -26,7 +26,7 @@ Silma Web is a platform that facilitates the process for the acceptance of texts
 * **Production** - [Silma Heroku App](https://silma.herokuapp.com/)
 
 
-### Antlers
+### Antlers (Febrero - Junio 2020)
 
 | Name           | Email                         | Role                    | 
 | -------------- | ----------------------------- | ------------------------|
@@ -34,6 +34,16 @@ Silma Web is a platform that facilitates the process for the acceptance of texts
 | Iván Ramírez   | ivanrmzmtz@gmail.com          | Admin. de Proyecto      |
 | Uriel Salazar  | usurquidi.96@gmail.com        | Admin. de Configuración |
 | Alfredo Ávila  | a00818666@itesm.mx            | Product Owner Proxy     |
+
+
+### Zelda Labs (Agosto - Diciembre 2020)
+
+| Name             | Email                          | Role                                 | 
+| ---------------- | ------------------------------ | -------------------------------------|
+| Jorge Iribe      | A00820365@itesm.mx             | Scrum Master                         |
+| Francisco Castro | a01281649@itesm.mx             | Product Owner Proxy                  |
+| Renato Sánche    | renatosancheznevarez@gmail.com | Admin. de Configuración y deProyecto |
+
 
 ### Technologies
 Front end:
@@ -56,6 +66,7 @@ Back-end:
 | jsonwebtoken  | 8.5.1        |
 | bcrypt        | 4.0.1        |
 |email-templates| 7.0.5        |
+
 ### Management tools
 
 You should ask for access to this tools if you don't have it already:
