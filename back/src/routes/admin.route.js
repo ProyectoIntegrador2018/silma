@@ -22,10 +22,30 @@ export const addAdminRoutes = (router) => {
   router.post("/admins/register", verifyToken(["admin"]), createAdmin);
   router.post("/admins/register/genres", verifyToken(["admin"]), createGenre);
   router.post("/admins/fillGenres", fillGenres);
-  router.get("/admins/feedback/:id", verifyToken(["admin", "reader"]), getFeedback);
+  router.get(
+    "/admins/feedback/:id",
+    verifyToken(["admin", "reader"]),
+    getFeedback
+  );
   router.post("/admins/texts/movePhase/:id", verifyToken(["admin"]), movePhase);
-  router.get("/admins/suggestions/getTextSuggestions/:id", verifyToken(["admin", "reader"]), getTextSuggestions);
-  router.post("/admins/suggestions/createSuggestions/", verifyToken(["admin"]), createSuggestionAdmin);
-  router.delete("/admins/suggestions/deleteSuggestion/:id", verifyToken(["admin"]), deleteSuggestionAdmin)
-  router.get("/admins/feedbacks/:id", verifyToken(["admin"]), getFeedbackIdBySuggestion)
+  router.get(
+    "/admins/suggestions/getTextSuggestions/:id",
+    verifyToken(["admin", "reader"]),
+    getTextSuggestions
+  );
+  router.post(
+    "/admins/suggestions/createSuggestions/",
+    verifyToken(["admin"]),
+    createSuggestionAdmin
+  );
+  router.delete(
+    "/admins/suggestions/deleteSuggestion/:id",
+    verifyToken(["admin"]),
+    deleteSuggestionAdmin
+  );
+  router.get(
+    "/admins/feedbacks/:id",
+    verifyToken(["admin"]),
+    getFeedbackIdBySuggestion
+  );
 };

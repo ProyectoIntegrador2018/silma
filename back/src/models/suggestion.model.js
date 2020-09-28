@@ -1,13 +1,14 @@
 import { Schema, model } from "mongoose";
 import beautifyUnique from "mongoose-beautiful-unique-validation";
 
-
 export const SuggestionSchema = new Schema({
   reader: {
-    type: Schema.Types.ObjectId, ref: 'Reader'
+    type: Schema.Types.ObjectId,
+    ref: "Reader"
   },
   text: {
-    type: Schema.Types.ObjectId, ref: 'Text'
+    type: Schema.Types.ObjectId,
+    ref: "Text"
   },
   sentDate: {
     type: Date
@@ -19,7 +20,7 @@ export const SuggestionSchema = new Schema({
   score: {
     type: Number
   },
-  readingChapters:{
+  readingChapters: {
     type: Number,
     default: 5
   }

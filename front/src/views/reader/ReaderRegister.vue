@@ -204,7 +204,7 @@ import {
   countries,
   errorServerRegister,
   errorPreferencesMinimun,
-  termsAndConditionsReader,
+  termsAndConditionsReader
 } from "@/utils/constants.js";
 import {
   requiredRule,
@@ -213,14 +213,14 @@ import {
   facebookRule,
   passwordMinRule,
   phoneRule,
-  letterRule,
+  letterRule
 } from "@/utils/rules";
 import { getRequest, postRequest } from "@/utils/requests";
 import { setAuthCookies } from "@/utils/cookies";
 
 export default {
   components: {
-    TimestampDateField,
+    TimestampDateField
   },
   data() {
     return {
@@ -237,12 +237,12 @@ export default {
         readingProficiency: "",
         nationality: "",
         readFrom: "",
-        readTill: "",
+        readTill: ""
         //lastReview:''
       },
       errorMessage: {
         title: "",
-        message: "",
+        message: ""
       },
       preferencesNames: [],
       dialogSuccess: false,
@@ -261,7 +261,7 @@ export default {
       errorPreferencesMinimun,
       showPassword: false,
       termsAndConditionsDialog: false,
-      termsAndConditionsContent: termsAndConditionsReader,
+      termsAndConditionsContent: termsAndConditionsReader
     };
   },
   asyncComputed: {
@@ -269,7 +269,7 @@ export default {
     async getGenres() {
       this.genres = await getRequest("user/genres");
       return this.genres;
-    },
+    }
   },
   //Funcion para saber si ya se encuentra una sesion activa
   created: function() {
@@ -306,7 +306,7 @@ export default {
         }
         var authUser = {
           email: "",
-          password: "",
+          password: ""
         };
         //Validar si existe una sesion activa para agregar funcionalidad nueva
         if (this.logedIn === false) {
@@ -321,7 +321,7 @@ export default {
             token: this.$cookies.get("token"),
             user_type: "reader",
             user_id: this.$cookies.get("user_id"),
-            user_name: this.$cookies.get("user_name"),
+            user_name: this.$cookies.get("user_name")
           };
           setAuthCookies(user);
         } else {
@@ -338,8 +338,8 @@ export default {
         this.errorMessage = this.errorServerRegister;
         this.dialogError = true;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

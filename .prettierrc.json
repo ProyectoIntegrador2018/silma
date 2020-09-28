@@ -1,0 +1,14 @@
+{
+  "semi": true,
+  "useTabs": false,
+  "singleQuote": false,
+  "parser": "typescript",
+  "trailingComma": "none",
+  "arrowParens": "always",
+  "overrides": [
+    {
+      "files": "*.vue",
+      "options": { "parser": "vue" }
+    }
+  ]
+}

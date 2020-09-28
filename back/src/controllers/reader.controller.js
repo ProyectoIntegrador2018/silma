@@ -3,7 +3,7 @@ import { UserModel } from "@/models/user.model";
 
 import { FeedbackModel } from "@/models/feedback.model";
 import { send } from "@/utils/errors";
-import { createUser } from "@/controllers/user.controller"
+import { createUser } from "@/controllers/user.controller";
 
 //Obtiene todos los lectores
 export const getReaders = (request, response) => {
@@ -33,7 +33,7 @@ export const createReader = (request, response) => {
         ...data,
         _id: UserNew._id,
         user: UserNew._id
-      }
+      };
       const newReader = await ReaderModel.create(readerData);
       newReader.user = UserNew;
       return newReader;
@@ -44,29 +44,28 @@ export const createReader = (request, response) => {
 };
 
 //Funcion que registra un lector que ya tiene una cuenta activa
-export const addReaderRegister = (request,response) => {
+export const addReaderRegister = (request, response) => {
   send(response, async () => {
     const data = request.body;
-    try{
+    try {
       const readerData = {
         ...data,
         _id: data.userid,
         user: data.userid
-      }
+      };
       const newReader = await ReaderModel.create(readerData);
       await UserModel.updateOne(
         { _id: data.userid },
         { $addToSet: { roles: "reader" } }
       );
-       return {
+      return {
         reader: newReader
       };
-    }catch{
+    } catch {
       throw { error: "Register Error" };
     }
   });
-
-}
+};
 
 //Funcion que crea un feedback para una sugerencia
 export const createFeedback = (request, response) => {
@@ -80,13 +79,13 @@ export const createFeedback = (request, response) => {
 export const updateLastReview = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
-    const newReview = Date.now
+    const newReview = Date.now;
     const reader = await ReaderModel.updateOne(
       { _id: id },
       { $set: { lastReview: Date(newReview) } },
-      function (err, res) {
+      function(err, res) {
         if (err) throw err;
       }
-    )
+    );
   });
 };

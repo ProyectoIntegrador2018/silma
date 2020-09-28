@@ -3,7 +3,7 @@ import commonmark from "commonmark";
 //Funcion que recibe un string de un escrito completo con formato markdown y devuelve un arreglo con el texto dividido en capitulos
 export const readChapters = (document) => {
   //Regex para identificar si una línea es un nuevo capitulo, es decir, es un Heading 1
-  var titleChapterRegex = (entry) => /^ {0,3}# [\s\S]*$/.test(entry) || false; 
+  var titleChapterRegex = (entry) => /^ {0,3}# [\s\S]*$/.test(entry) || false;
   var counter = 0;
   var chapters = [];
   var tempChaps = "";

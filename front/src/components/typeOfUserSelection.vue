@@ -54,18 +54,18 @@ export default {
   },
   created() {
     const role = this.$cookies.get("user_type");
-    this.currentRole = this.items.find(x => x.type === role);
+    this.currentRole = this.items.find((x) => x.type === role);
     this.updateRoles();
   },
   computed: {
     // All roles that the user has.
     shownRoles() {
-      return this.items.filter(x => this.roles.includes(x.type));
+      return this.items.filter((x) => this.roles.includes(x.type));
     },
     // All roles that the user doesn't has and can register.
     shownNoRoles() {
       return this.items.filter(
-        x => !this.roles.includes(x.type) && x.type !== "admin"
+        (x) => !this.roles.includes(x.type) && x.type !== "admin"
       );
     }
   },
@@ -80,7 +80,7 @@ export default {
     // Changes to another role and reloads page.
     async changeRole(newRole) {
       this.$cookies.set("user_type", newRole);
-      this.currentRole = this.items.find(x => x.type === newRole);
+      this.currentRole = this.items.find((x) => x.type === newRole);
       this.$router.go();
     },
     // Navigates to register page (writer or reader).

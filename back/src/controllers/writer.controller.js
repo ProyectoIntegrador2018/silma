@@ -31,7 +31,7 @@ export const createWriter = (request, response) => {
         ...data,
         _id: UserNew._id,
         user: UserNew._id
-      }
+      };
       const newWriter = await WriterModel.create(writerData);
       newWriter.user = UserNew;
       return newWriter;
@@ -45,12 +45,12 @@ export const createWriter = (request, response) => {
 export const addWriterRegister = (request, response) => {
   send(response, async () => {
     const data = request.body;
-    try{
+    try {
       const writerData = {
         ...data,
         _id: data.userid,
         user: data.userid
-      }
+      };
       const newWriter = await WriterModel.create(writerData);
       await UserModel.updateOne(
         { _id: data.userid },
@@ -59,8 +59,8 @@ export const addWriterRegister = (request, response) => {
       return {
         writer: newWriter
       };
-    }catch{
+    } catch {
       throw { error: "Register Error" };
     }
   });
-}
+};

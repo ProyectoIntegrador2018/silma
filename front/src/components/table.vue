@@ -38,14 +38,14 @@ export default {
     headers: { type: Array },
     items: { type: Array },
     withPagination: { type: Boolean, default: false },
-    expand: { type: Boolean, default: false },
+    expand: { type: Boolean, default: false }
   },
   data() {
     return {
       pagination: {
         rowsPerPage: 300,
-        totalItems: 20,
-      },
+        totalItems: 20
+      }
     };
   },
   computed: {
@@ -68,13 +68,13 @@ export default {
               value: "expand",
               sortable: false,
               align: "left",
-              width: "10px",
-            },
+              width: "10px"
+            }
           ]
         : [];
       return [...expandColumn, ...this.headers];
-    },
-  },
+    }
+  }
 };
 </script>
 

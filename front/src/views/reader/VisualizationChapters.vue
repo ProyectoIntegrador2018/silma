@@ -62,8 +62,8 @@ export default {
       dialogUpdate: false,
       errorMessage: {
         title: "",
-        text: "",
-      },
+        text: ""
+      }
     };
   },
   asyncComputed: {
@@ -85,7 +85,7 @@ export default {
       this.chaptersRequired = this.suggestion.readingChapters;
       this.chaptersTotal = this.text.numberOfChapters;
       this.cropChapters();
-    },
+    }
   },
   methods: {
     //Funcion para pedir 5 capitulos mas a los previamente registrados
@@ -127,8 +127,8 @@ export default {
         currentChapters = this.allChapters;
       }
       this.data = markdownToHTML(currentChapters);
-    },
-  },
+    }
+  }
 };
 </script>
 

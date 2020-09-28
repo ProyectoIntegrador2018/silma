@@ -5,8 +5,8 @@ export const GenreSchema = new Schema({
   name: {
     type: String,
     unique: true,
-    required: "Name is required",
-  },
+    required: "Name is required"
+  }
 });
 GenreSchema.plugin(beautifyUnique);
 
