@@ -43,7 +43,7 @@ import DialogComponent from "./components/dialogComponent";
 export default {
   components: {
     typeOfUserSelection,
-    DialogComponent,
+    DialogComponent
   },
   data() {
     return {
@@ -51,7 +51,7 @@ export default {
       role: undefined,
       name: undefined,
       showSnackbar: false,
-      snackbarMessage: "",
+      snackbarMessage: ""
     };
   },
   created() {
@@ -61,7 +61,7 @@ export default {
     // Based on when the route changes, update cookies to see if changes need to be made.
     $route(to, from) {
       this.updateCookies();
-    },
+    }
   },
   methods: {
     navigate() {
@@ -86,7 +86,7 @@ export default {
     snackbar(message) {
       this.snackbarMessage = message;
       this.showSnackbar = true;
-    },
+    }
   },
   mounted() {
     events.$on("snackbar", (message) => {
@@ -95,7 +95,7 @@ export default {
     events.$on("dialog", (options) => {
       this.$refs.warningDialog.open(options);
     });
-  },
+  }
 };
 </script>
 <style></style>

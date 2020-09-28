@@ -43,7 +43,7 @@ import { getRequest } from "@/utils/requests";
 
 export default {
   components: {
-    Table,
+    Table
   },
   props: ["tripId", "ticketId"],
   data() {
@@ -54,14 +54,14 @@ export default {
           text: "Título",
           align: "start",
           sortable: true,
-          value: "title",
+          value: "title"
         },
         { text: "Número de páginas", value: "numberOfPages" },
-        { text: "Fase", value: "phase", color: "red" },
+        { text: "Fase", value: "phase", color: "red" }
       ],
       data: [],
       writer: this.$cookies.get("user_id"),
-      role: this.$cookies.get("user_type"),
+      role: this.$cookies.get("user_type")
     };
   },
   asyncComputed: {
@@ -69,7 +69,7 @@ export default {
     async getTexts() {
       const token = this.$cookies.get("token");
       this.data = await getRequest(`texts/writer/${this.writer}`, token);
-    },
-  },
+    }
+  }
 };
 </script>

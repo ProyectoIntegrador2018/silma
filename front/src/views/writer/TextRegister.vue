@@ -164,7 +164,7 @@ import {
   errorDescriptionRange,
   ageRanges,
   errorNumberOfChapters,
-  errorNumberOfChaptersEqualsZero,
+  errorNumberOfChaptersEqualsZero
 } from "@/utils/constants";
 import { getRequest, postRequest } from "@/utils/requests";
 import { markdownToHTML, readChapters } from "@/utils/functions";
@@ -184,11 +184,11 @@ export default {
         ageRange: "",
         phase: 1,
         documentPath: "",
-        numberOfChapters: "",
+        numberOfChapters: ""
       },
       errorMessage: {
         title: "",
-        text: "",
+        text: ""
       },
       isDisabled: false,
       dialogSuccess: false,
@@ -199,7 +199,7 @@ export default {
       ageRanges,
       numericRule,
       data: null,
-      dialog: false,
+      dialog: false
     };
   },
   asyncComputed: {
@@ -208,7 +208,7 @@ export default {
       const token = this.$cookies.get("token");
       this.genres = await getRequest(`user/genres`, token);
       return this.genres;
-    },
+    }
   },
   methods: {
     //Funcion que lee un archivo en el registro
@@ -287,8 +287,8 @@ export default {
           this.data = markdownToHTML(reader.result);
         };
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

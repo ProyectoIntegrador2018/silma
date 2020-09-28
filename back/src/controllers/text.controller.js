@@ -44,7 +44,7 @@ export const createText = (request, response) => {
       await sendEmail(
         {
           subject: "Enviaste tu texto para que sea dictaminado.",
-          email: email,
+          email: email
         },
         "received",
         { title: text.title, name: user.user.name }
@@ -101,9 +101,9 @@ export const rejectText = (request, response) => {
         attachments: [
           {
             filename: document.name,
-            content: document.data,
-          },
-        ],
+            content: document.data
+          }
+        ]
       },
       "rejected",
       { title: text.title, name: user.name }

@@ -11,7 +11,7 @@ const config = Object.freeze({
   EMAIL_USER: process.env.EMAIL_USER,
   EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
   EMAIL_USER: process.env.EMAIL_USER,
-  AWS_BUCKET: process.env.AWS_BUCKET,
+  AWS_BUCKET: process.env.AWS_BUCKET
 });
 
 export default config;

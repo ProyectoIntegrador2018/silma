@@ -13,9 +13,9 @@ export const sendEmail = async (request, htmlFile, data) => {
     views: {
       root: templatesDir,
       options: {
-        extension: "hbs",
-      },
-    },
+        extension: "hbs"
+      }
+    }
   });
   const html = await email.render(htmlFile, data);
   // Sends the email.
@@ -25,15 +25,15 @@ export const sendEmail = async (request, htmlFile, data) => {
     secure: true,
     auth: {
       user: config.EMAIL_USER,
-      pass: config.EMAIL_PASSWORD,
+      pass: config.EMAIL_PASSWORD
     },
-    tls: { rejectUnauthorized: false },
+    tls: { rejectUnauthorized: false }
   });
   await transporter.sendMail({
     from: config.EMAIL_USER,
     to: request.email,
     subject: request.subject,
     html: html,
-    attachments: request.attachments,
+    attachments: request.attachments
   });
 };

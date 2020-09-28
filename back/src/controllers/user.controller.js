@@ -18,7 +18,7 @@ export const authUser = (request, response) => {
       const token = jwt.sign({ sub: user.id }, config.SECRET_JWT);
       return {
         ...userWithoutHash._doc,
-        token,
+        token
       };
     } else {
       return { status: "Authentication Failed" };
@@ -38,7 +38,7 @@ export const getUser = (request, response) => {
 export const createUser = async (request, response, role) => {
   let data = request.body;
   let user = await UserModel.findOne({ email: data.email }).select([
-    "+password",
+    "+password"
   ]);
   if (!user) {
     if (data.password.length < 8) {

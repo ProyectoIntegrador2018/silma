@@ -77,7 +77,7 @@ import { events } from "../../main";
 export default {
   components: {
     Table,
-    DialogComponent,
+    DialogComponent
   },
   data() {
     return {
@@ -88,22 +88,22 @@ export default {
           text: "Fecha de Envío",
           align: "start",
           sortable: false,
-          value: "sentDate",
+          value: "sentDate"
         },
         {
           text: "Estatus",
           align: "start",
           sortable: false,
-          value: "status",
+          value: "status"
         },
         {
           text: "# Capitulos Pedidos",
           align: "start",
           sortable: false,
-          value: "readingChapters",
+          value: "readingChapters"
         },
         { text: "Puntaje", align: "start", sortable: false, value: "score" },
-        { text: "Acciones", actions: true, sortable: false },
+        { text: "Acciones", actions: true, sortable: false }
       ],
       dataSuggestions: [],
       readersNoSuggestion: [],
@@ -114,35 +114,35 @@ export default {
           text: "Fecha ultima Sugerencia",
           align: "start",
           sortable: false,
-          value: "lastReview",
+          value: "lastReview"
         },
         {
           text: "Disponibilidad Desde",
           align: "start",
           sortable: false,
-          value: "readFrom",
+          value: "readFrom"
         },
         {
           text: "Disponibilidad Hasta",
           align: "start",
           sortable: false,
-          value: "readTill",
+          value: "readTill"
         },
         {
           text: "Preferencias",
           align: "start",
           sortable: false,
-          value: "genres",
+          value: "genres"
         },
         {
           text: "Velocidad de Lectura",
           align: "start",
           sortable: false,
-          value: "readingProficiency",
-        },
+          value: "readingProficiency"
+        }
       ],
       dialog: false,
-      textData: {},
+      textData: {}
     };
   },
   created() {
@@ -167,7 +167,7 @@ export default {
           this.getSuggestions();
           this.getReadersWithoutSuggestion();
         },
-        onReject: () => {},
+        onReject: () => {}
       };
       events.$emit("dialog", options);
     },
@@ -202,7 +202,7 @@ export default {
           reader_id: dataReader.reader,
           text_id: suggestion.reader,
           suggestion_id: suggestion._id,
-          feedback_url: url,
+          feedback_url: url
         };
         final.push(temp);
       });
@@ -239,7 +239,7 @@ export default {
           readFrom: moment(new Date(reader.readFrom)).format("DD/MM/YYYY"),
           readTill: moment(new Date(reader.readTill)).format("DD/MM/YYYY"),
           genres: genreNames,
-          readingProficiency: reader.readingProficiency,
+          readingProficiency: reader.readingProficiency
         };
         readersData.push(tempReaderData);
       });
@@ -253,7 +253,7 @@ export default {
         {
           reader_id: reader.id,
           book_id: this.textData._id,
-          numberOfPages: this.textData.numberOfPages,
+          numberOfPages: this.textData.numberOfPages
         },
         token
       );
@@ -261,7 +261,7 @@ export default {
       this.getSuggestions();
       this.getReadersWithoutSuggestion();
       this.dialog = false;
-    },
-  },
+    }
+  }
 };
 </script>

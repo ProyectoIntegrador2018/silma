@@ -52,14 +52,14 @@ import { events } from "../main";
 export default {
   components: {
     Table,
-    DialogComponent,
+    DialogComponent
   },
   data() {
     return {
       headers: [
         { text: "Título", align: "start", value: "title" },
         { text: "Fecha en que se recibio sugerencia:", value: "sentDate" },
-        { text: "Estado", value: "suggestionStatus" },
+        { text: "Estado", value: "suggestionStatus" }
       ],
       data: [],
       history: "",
@@ -71,7 +71,7 @@ export default {
       status: true,
       errorMessage: "",
       errorServerRegister,
-      token: "",
+      token: ""
     };
   },
   async created() {
@@ -95,7 +95,7 @@ export default {
           await this.getInfo();
           await this.getHistory();
         },
-        onReject: () => {},
+        onReject: () => {}
       };
       events.$emit("dialog", options);
     },
@@ -115,7 +115,7 @@ export default {
           await this.getInfo();
           await this.getHistory();
         },
-        onReject: () => {},
+        onReject: () => {}
       };
       events.$emit("dialog", options);
     },
@@ -148,7 +148,7 @@ export default {
           sentDate: moment(new Date(this.history[i].sentDate)).format(
             "DD/MM/YYYY"
           ),
-          suggestionStatus: translateStatus(this.history[i].suggestionStatus),
+          suggestionStatus: translateStatus(this.history[i].suggestionStatus)
         });
       }
       this.data = data;
@@ -161,7 +161,7 @@ export default {
         this.token
       );
       await this.composeHistory();
-    },
-  },
+    }
+  }
 };
 </script>

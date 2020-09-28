@@ -16,7 +16,7 @@ export const getRequest = async (
       : {};
     const headerToken = token ? { Authorization: `Bearer ${token}` } : {};
     const response = await axios.get(`${apiHost}/${endpoint}`, {
-      headers: { ...headerFile, ...headerToken },
+      headers: { ...headerFile, ...headerToken }
     });
     return response.data;
   } catch (error) {
@@ -38,7 +38,7 @@ export const postRequest = async (
       : {};
     const headerToken = token ? { Authorization: `Bearer ${token}` } : {};
     const response = await axios.post(`${apiHost}/${endpoint}`, data, {
-      headers: { ...headerFile, ...headerToken },
+      headers: { ...headerFile, ...headerToken }
     });
     return response.data;
   } catch (error) {

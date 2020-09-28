@@ -23,7 +23,7 @@ export const genres = [
   "Steampunk",
   "Terror",
   "Fantasía infantil",
-  "Otros",
+  "Otros"
 ];
 
 //Funcion que regresa todo los usuarios de tipo administrador
@@ -54,7 +54,7 @@ export const createAdmin = (request, response) => {
       const adminData = {
         ...data,
         _id: newUser._id,
-        user: newUser._id,
+        user: newUser._id
       };
       const newAdmin = await AdminModel.create(adminData);
       newAdmin.user = newUser;
@@ -105,7 +105,7 @@ export const movePhase = (request, response) => {
       { _id: id },
       { $set: { phase: newPhase } },
       { session },
-      function (err, res) {
+      function(err, res) {
         if (err) throw err;
       }
     );
@@ -118,26 +118,26 @@ export const movePhase = (request, response) => {
       await sendEmail(
         {
           email: user.email,
-          subject: "¡Tu novela fue aprobada!",
+          subject: "¡Tu novela fue aprobada!"
         },
         "accepted",
         {
           name: user.name,
-          title: text.title,
+          title: text.title
         }
       );
     } else {
       await sendEmail(
         {
           email: user.email,
-          subject: "Tu novela avanzó de Fase",
+          subject: "Tu novela avanzó de Fase"
         },
         "next_phase",
         {
           name: user.name,
           title: text.title,
           phase: newPhase + "-" + phaseInfo.name,
-          description: phaseInfo.description,
+          description: phaseInfo.description
         }
       );
     }

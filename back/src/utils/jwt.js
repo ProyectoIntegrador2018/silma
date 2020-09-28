@@ -8,7 +8,7 @@ export function verifyToken(authorizedRoles = undefined) {
   return expressJwt({
     secret,
     isRevoked: (req, payload, done) =>
-      isRevoked(req, payload, done, authorizedRoles),
+      isRevoked(req, payload, done, authorizedRoles)
   });
 }
 

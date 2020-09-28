@@ -25,7 +25,7 @@ const deleteEverything = async () => {
     promiseFour,
     promiseFive,
     promiseSix,
-    promiseSeven,
+    promiseSeven
   ]);
 };
 
@@ -41,8 +41,8 @@ const createFirstAdmin = () => {
           birthdate: "12/12/2000",
           phone: "8116690319",
           nationality: "Mexico",
-          isSuperAdmin: true,
-        },
+          isSuperAdmin: true
+        }
       },
       { send: (data) => resolve(data) }
     );
@@ -65,7 +65,7 @@ const runAll = async () => {
     "http://localhost:3000/api/user/authentication",
     {
       email: "admin1@gmail.com",
-      password: "prueba12345",
+      password: "prueba12345"
     }
   );
   const tokenAdmin = authAdmin.data.token;
@@ -78,7 +78,7 @@ const runAll = async () => {
       email: "admin2@gmail.com",
       birthdate: "12/12/1996",
       phone: "8116690318",
-      nationality: "Mexico",
+      nationality: "Mexico"
     },
     { headers: { Authorization: "Bearer " + tokenAdmin } }
   );
@@ -97,7 +97,7 @@ const runAll = async () => {
       facebookLink: "https://www.facebook.com/reader1",
       readFrom: "12-01-2019",
       readTill: "12-01-2020",
-      preferences: genreIds,
+      preferences: genreIds
     }
   );
   console.log("Reader 1: ", reader1.data._id);
@@ -115,7 +115,7 @@ const runAll = async () => {
       facebookLink: "https://www.facebook.com/reader2",
       readFrom: "12-01-2019",
       readTill: "12-01-2020",
-      preferences: genreIds,
+      preferences: genreIds
     }
   );
   console.log("Reader 2: ", reader2.data._id);
@@ -129,7 +129,7 @@ const runAll = async () => {
       birthdate: "12/12/2000",
       phone: "8116690319",
       nationality: "Mexico",
-      pseudonym: "writer1",
+      pseudonym: "writer1"
     }
   );
   console.log("Writer 1: ", writer1.data._id);
@@ -143,7 +143,7 @@ const runAll = async () => {
       birthdate: "12/12/1996",
       phone: "8116690319",
       nationality: "Mexico",
-      pseudonym: "writer2",
+      pseudonym: "writer2"
     }
   );
   console.log("Writer 2: ", writer2.data._id);
@@ -152,7 +152,7 @@ const runAll = async () => {
     "http://localhost:3000/api/user/authentication",
     {
       email: "writer1@gmail.com",
-      password: "prueba12345",
+      password: "prueba12345"
     }
   );
   console.log("Writer 1 authenticated succesfully");
@@ -168,7 +168,7 @@ const runAll = async () => {
       registerNumber: "123asd",
       description: "asd zxc qwe asd zxc asd zxc qwe asd zxc",
       numberOfPages: 120,
-      numberOfChapters: 50,
+      numberOfChapters: 50
     },
     { headers: { Authorization: "Bearer " + token } }
   );
@@ -184,7 +184,7 @@ const runAll = async () => {
       registerNumber: "123asd",
       description: "asd zxc qwe asd zxc asd zxc qwe asd zxc",
       numberOfPages: 120,
-      numberOfChapters: 30,
+      numberOfChapters: 30
     },
     { headers: { Authorization: "Bearer " + token } }
   );

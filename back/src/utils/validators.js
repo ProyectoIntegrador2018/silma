@@ -17,13 +17,13 @@ export const validateURL = (url) => {
 };
 
 export const rangeRule = (min, max) => {
-  return (entry) => (entry.length >= min && entry.length <= max);
+  return (entry) => entry.length >= min && entry.length <= max;
 };
 
-export const minLengthRule = min => {
+export const minLengthRule = (min) => {
   return (entry) => entry.length >= min;
 };
 
-export const maxLengthRule = max => {
+export const maxLengthRule = (max) => {
   return (entry) => entry.length <= max;
 };

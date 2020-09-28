@@ -7,7 +7,7 @@ export const getDocument = async (id) => {
   const params = { Bucket: config.AWS_BUCKET + "/Texts", Key: id + ".md" };
   var s3 = new AWS.S3();
   return new Promise((resolve, reject) => {
-    s3.getObject(params, function (err, data) {
+    s3.getObject(params, function(err, data) {
       if (err) {
         console.log(err);
         reject(err);
@@ -20,13 +20,13 @@ export const getDocument = async (id) => {
 //Funcion que sube un documento a AWS S3
 export const uploadDocument = async (id, data) => {
   var s3 = new AWS.S3({
-    params: { Bucket: config.AWS_BUCKET + "/Texts", Key: "", Body: "" },
+    params: { Bucket: config.AWS_BUCKET + "/Texts", Key: "", Body: "" }
   });
   var params = {
     Key: id,
-    Body: data,
+    Body: data
   };
-  s3.upload(params, function (err, data) {
+  s3.upload(params, function(err, data) {
     if (err) {
       throw err;
     }

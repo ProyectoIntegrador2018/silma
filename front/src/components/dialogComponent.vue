@@ -30,8 +30,8 @@ export default {
     styleOptions: {
       color: "primary",
       width: 290,
-      zIndex: 200,
-    },
+      zIndex: 200
+    }
   }),
   methods: {
     //Activa el dialogo de confirmación con los parametros enviados.
@@ -55,7 +55,7 @@ export default {
       if (typeof this.onReject === "function") this.onReject();
       this.dialog = false;
       this.onReject = null;
-    },
-  },
+    }
+  }
 };
 </script>

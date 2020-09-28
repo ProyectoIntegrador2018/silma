@@ -95,7 +95,7 @@ import { events } from "../main";
 
 export default {
   components: {
-    Table,
+    Table
   },
   data() {
     return {
@@ -107,46 +107,46 @@ export default {
           text: "Número de Registro",
           align: "start",
           sortable: false,
-          value: "registerNumber",
+          value: "registerNumber"
         },
         {
           text: "Descripción",
           align: "start",
           sortable: false,
-          value: "description",
+          value: "description"
         },
         { text: "Generos", align: "start", sortable: false, value: "genres" },
         {
           text: "Rango de Edades",
           align: "start",
           sortable: false,
-          value: "ageRange",
+          value: "ageRange"
         },
         {
           text: "Número de Páginas",
           align: "start",
           sortable: false,
-          value: "numberOfPages",
+          value: "numberOfPages"
         },
         {
           text: "Número de Capitulos",
           align: "start",
           sortable: false,
-          value: "numberOfChapters",
+          value: "numberOfChapters"
         },
         { text: "Fase", align: "start", sortable: false, value: "phase" },
-        { text: "Acciones", actions: true, sortable: false },
+        { text: "Acciones", actions: true, sortable: false }
       ],
       userHeaders: [
         { text: "Nombre", align: "start", sortable: false, value: "name" },
-        { text: "Correo", sortable: false, value: "email" },
+        { text: "Correo", sortable: false, value: "email" }
       ],
       dataTexts: [],
       dataReaders: [],
       dataWriters: [],
       dialogReject: false,
       rejectingText: undefined,
-      rejectDocument: undefined,
+      rejectDocument: undefined
     };
   },
   async created() {
@@ -188,7 +188,7 @@ export default {
           await postRequest("admins/texts/movePhase/" + item._id, {}, token);
           this.getTexts();
         },
-        onReject: () => {},
+        onReject: () => {}
       };
       events.$emit("dialog", options);
     },
@@ -228,7 +228,7 @@ export default {
         user = await getRequest("users/" + readers[i].user._id, token);
         data.push({
           name: user.name,
-          email: user.email,
+          email: user.email
         });
       }
       this.dataReaders = data;
@@ -244,11 +244,11 @@ export default {
         user = await getRequest("users/" + writers[i].user._id, token);
         data.push({
           name: user.name,
-          email: user.email,
+          email: user.email
         });
       }
       this.dataWriters = data;
-    },
-  },
+    }
+  }
 };
 </script>

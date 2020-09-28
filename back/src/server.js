@@ -17,12 +17,12 @@ app.use(fileupload());
 
 app.use(
   cors({
-    origin: config.CROSS_ORIGIN,
+    origin: config.CROSS_ORIGIN
   })
 );
 app.use(
   bodyParser.urlencoded({
-    extended: true,
+    extended: true
   })
 );
 app.use(bodyParser.json());
@@ -40,7 +40,7 @@ if (config.ENV === "production") {
 mongoose.connect(config.MONGO_URL, {
   useCreateIndex: true,
   useNewUrlParser: true,
-  useUnifiedTopology: true,
+  useUnifiedTopology: true
 });
 const db = mongoose.connection;
 // Added check for DB connection
