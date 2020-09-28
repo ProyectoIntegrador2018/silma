@@ -14,7 +14,10 @@
             <v-card-text>
               <v-container>
                 <!-- Here goes fields --->
-                <Table :headers="headersReadersNoSuggestion" :items="readersNoSuggestion">
+                <Table
+                  :headers="headersReadersNoSuggestion"
+                  :items="readersNoSuggestion"
+                >
                   <!-- Actions -->
                   <template #actions="{ props }">
                     <div style="padding-top: 5px">
@@ -23,7 +26,8 @@
                         color="primary"
                         depressed
                         @click="sendSuggestion(props)"
-                      >Seleccionar Lector</v-btn>
+                        >Seleccionar Lector</v-btn
+                      >
                     </div>
                   </template>
                 </Table>
@@ -31,7 +35,9 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="dialog = false">Cerrar</v-btn>
+              <v-btn color="blue darken-1" text @click="dialog = false"
+                >Cerrar</v-btn
+              >
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -41,7 +47,9 @@
       <!-- Actions -->
       <template #actions="{ props }">
         <div style="padding-top: 5px">
-          <v-btn small color="error" depressed @click="deleteSuggestion(props)">Eliminar</v-btn>
+          <v-btn small color="error" depressed @click="deleteSuggestion(props)"
+            >Eliminar</v-btn
+          >
         </div>
         <div style="padding-top: 5px">
           <v-btn
@@ -49,7 +57,8 @@
             color="success"
             v-show="props.status == 'Completado'"
             :href="props.feedback_url"
-          >Retroalimentacion</v-btn>
+            >Retroalimentacion</v-btn
+          >
         </div>
       </template>
     </Table>
@@ -57,18 +66,18 @@
   </div>
 </template>
 
-
 <script>
 import Table from "@/components/table.vue";
 import { getRequest, postRequest, deleteRequest } from "@/utils/requests";
 import { translateStatus } from "@/utils/functions";
 import moment from "moment";
 import DialogComponent from "@/components/dialogComponent.vue";
+import { events } from "../../main";
 
 export default {
   components: {
     Table,
-    DialogComponent
+    DialogComponent,
   },
   data() {
     return {
@@ -79,22 +88,22 @@ export default {
           text: "Fecha de Envío",
           align: "start",
           sortable: false,
-          value: "sentDate"
+          value: "sentDate",
         },
         {
           text: "Estatus",
           align: "start",
           sortable: false,
-          value: "status"
+          value: "status",
         },
         {
           text: "# Capitulos Pedidos",
           align: "start",
           sortable: false,
-          value: "readingChapters"
+          value: "readingChapters",
         },
         { text: "Puntaje", align: "start", sortable: false, value: "score" },
-        { text: "Acciones", actions: true, sortable: false }
+        { text: "Acciones", actions: true, sortable: false },
       ],
       dataSuggestions: [],
       readersNoSuggestion: [],
@@ -105,35 +114,35 @@ export default {
           text: "Fecha ultima Sugerencia",
           align: "start",
           sortable: false,
-          value: "lastReview"
+          value: "lastReview",
         },
         {
           text: "Disponibilidad Desde",
           align: "start",
           sortable: false,
-          value: "readFrom"
+          value: "readFrom",
         },
         {
           text: "Disponibilidad Hasta",
           align: "start",
           sortable: false,
-          value: "readTill"
+          value: "readTill",
         },
         {
           text: "Preferencias",
           align: "start",
           sortable: false,
-          value: "genres"
+          value: "genres",
         },
         {
           text: "Velocidad de Lectura",
           align: "start",
           sortable: false,
-          value: "readingProficiency"
-        }
+          value: "readingProficiency",
+        },
       ],
       dialog: false,
-      textData: {}
+      textData: {},
     };
   },
   created() {
@@ -145,21 +154,22 @@ export default {
     //Elimina una sugerencia para un libro
     async deleteSuggestion(item) {
       const token = this.$cookies.get("token");
-      if (
-        await this.$refs.confirm.open(
-          "Eliminar",
-          "Seguro que quieres eliminar?",
-          { color: "primary" }
-        )
-      ) {
-        await deleteRequest(
-          "admins/suggestions/deleteSuggestion/" + item.suggestion_id,
-          token
-        );
-        this.getTextInfo();
-        this.getSuggestions();
-        this.getReadersWithoutSuggestion();
-      }
+      const options = {
+        title: "Eliminar",
+        message: "Seguro que quieres eliminar?",
+        styleOptions: { color: "primary" },
+        onAccept: async () => {
+          await deleteRequest(
+            "admins/suggestions/deleteSuggestion/" + item.suggestion_id,
+            token
+          );
+          this.getTextInfo();
+          this.getSuggestions();
+          this.getReadersWithoutSuggestion();
+        },
+        onReject: () => {},
+      };
+      events.$emit("dialog", options);
     },
     // Obtiene las sugerencias de un libro
     async getSuggestions() {
@@ -169,7 +179,7 @@ export default {
         token
       );
       var final = [];
-      suggestions.forEach(async suggestion => {
+      suggestions.forEach(async (suggestion) => {
         var dataReader = await getRequest(
           "readers/" + suggestion.reader,
           token
@@ -192,7 +202,7 @@ export default {
           reader_id: dataReader.reader,
           text_id: suggestion.reader,
           suggestion_id: suggestion._id,
-          feedback_url: url
+          feedback_url: url,
         };
         final.push(temp);
       });
@@ -212,9 +222,9 @@ export default {
         token
       );
       var readersData = [];
-      readersWithoutSuggestion.forEach(reader => {
+      readersWithoutSuggestion.forEach((reader) => {
         var genreNames = "";
-        reader.preferences.forEach(element => {
+        reader.preferences.forEach((element) => {
           if (genreNames == "") {
             genreNames = element.name;
           } else {
@@ -229,7 +239,7 @@ export default {
           readFrom: moment(new Date(reader.readFrom)).format("DD/MM/YYYY"),
           readTill: moment(new Date(reader.readTill)).format("DD/MM/YYYY"),
           genres: genreNames,
-          readingProficiency: reader.readingProficiency
+          readingProficiency: reader.readingProficiency,
         };
         readersData.push(tempReaderData);
       });
@@ -243,7 +253,7 @@ export default {
         {
           reader_id: reader.id,
           book_id: this.textData._id,
-          numberOfPages: this.textData.numberOfPages
+          numberOfPages: this.textData.numberOfPages,
         },
         token
       );
@@ -251,7 +261,7 @@ export default {
       this.getSuggestions();
       this.getReadersWithoutSuggestion();
       this.dialog = false;
-    }
-  }
+    },
+  },
 };
 </script>

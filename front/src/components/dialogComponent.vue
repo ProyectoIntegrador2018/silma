@@ -1,7 +1,12 @@
 <template>
-  <v-dialog v-model="dialog" :max-width="options.width" :style="{ zIndex: options.zIndex }" @keydown.esc="cancel">
+  <v-dialog
+    v-model="dialog"
+    :max-width="styleOptions.width"
+    :style="{ zIndex: styleOptions.zIndex }"
+    @keydown.esc="cancel"
+  >
     <v-card>
-      <v-toolbar dark :color="options.color" dense flat>
+      <v-toolbar dark :color="styleOptions.color" dense flat>
         <v-toolbar-title class="white--text">{{ title }}</v-toolbar-title>
       </v-toolbar>
       <v-card-text v-show="!!message" class="pa-4">{{ message }}</v-card-text>
@@ -15,42 +20,42 @@
 </template>
 
 <script>
-
 export default {
   data: () => ({
     dialog: false,
-    resolve: null,
-    reject: null,
+    onAccept: null,
+    onReject: null,
     message: null,
     title: null,
-    options: {
-      color: 'primary',
+    styleOptions: {
+      color: "primary",
       width: 290,
-      zIndex: 200
-    }
+      zIndex: 200,
+    },
   }),
   methods: {
     //Activa el dialogo de confirmación con los parametros enviados.
-    open(title, message, options) {
-      this.dialog = true
-      this.title = title
-      this.message = message
-      this.options = Object.assign(this.options, options)
-      return new Promise((resolve, reject) => {
-        this.resolve = resolve
-        this.reject = reject
-      })
+    open(options) {
+      const { title, message, styleOptions, onAccept, onReject } = options;
+      this.dialog = true;
+      this.title = title;
+      this.message = message;
+      this.styleOptions = Object.assign(this.styleOptions, styleOptions);
+      this.onAccept = onAccept;
+      this.onReject = onReject;
     },
-    //Regresa el resultado True para confirmar la acción 
+    //Regresa el resultado True para confirmar la acción
     agree() {
-      this.resolve(true)
-      this.dialog = false
+      if (typeof this.onAccept === "function") this.onAccept();
+      this.dialog = false;
+      this.onAccept = null;
     },
-    //Regresa el resultado False para cancelar la acción 
+    //Regresa el resultado False para cancelar la acción
     cancel() {
-      this.resolve(false)
-      this.dialog = false
-    }
-  }
-}
+      if (typeof this.onReject === "function") this.onReject();
+      this.dialog = false;
+      this.onReject = null;
+    },
+  },
+};
 </script>

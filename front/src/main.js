@@ -4,14 +4,16 @@ import router from "./router";
 import "vuetify/dist/vuetify.min.css";
 import vuetify from "@/plugins/vuetify";
 import vueCookies from "vue-cookies";
-import AsyncComputed from 'vue-async-computed'
+import AsyncComputed from "vue-async-computed";
 
 Vue.config.productionTip = false;
 Vue.use(vueCookies);
-Vue.use(AsyncComputed)
+Vue.use(AsyncComputed);
+
+export const events = new Vue();
 
 new Vue({
   vuetify,
   router,
-  render: h => h(App)
+  render: (h) => h(App),
 }).$mount("#app");

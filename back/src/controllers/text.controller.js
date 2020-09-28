@@ -4,7 +4,7 @@ import { TextModel } from "@/models/text.model";
 import { assignReaders } from "@/controllers/suggestion.controller";
 import { sendEmail } from "@/utils/mailSender";
 import { uploadDocument, getDocument } from "@/controllers/aws.controller";
-import { UserModel } from '@/models/user.model';
+import { UserModel } from "@/models/user.model";
 
 // Response with all texts with their genres.
 export const getAllTexts = (request, response) => {
@@ -38,13 +38,17 @@ export const createText = (request, response) => {
     const data = request.body;
     const text = await TextModel.create(data);
     const user = await WriterModel.findById(text.writer).populate("user");
-    var email = user.user.email
+    var email = user.user.email;
     if (text._id) {
       await assignReaders(text, 3);
-      await sendEmail({
-        subject: "Enviaste tu texto para que sea dictaminado.",
-        email: email
-      }, 'received', { title: text.title, name: user.user.name });
+      await sendEmail(
+        {
+          subject: "Enviaste tu texto para que sea dictaminado.",
+          email: email,
+        },
+        "received",
+        { title: text.title, name: user.user.name }
+      );
     }
     return text;
   });
@@ -55,7 +59,7 @@ export const uploadTextDocument = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
     const document = request.files.document;
-    uploadDocument(id + ".md", document.data)
+    uploadDocument(id + ".md", document.data);
   });
 };
 
@@ -64,10 +68,10 @@ export const retrieveTextDocument = (request, response) => {
   send(response, async () => {
     try {
       const { id } = request.params;
-      var book = await getDocument(id)
-      return { "message": book.Body.toString() }
+      var book = await getDocument(id);
+      return { message: book.Body.toString() };
     } catch (err) {
-      response.status(404).send({ message: 'File does not exist' });
+      response.status(404).send({ message: "File does not exist" });
     }
   });
 };
@@ -90,16 +94,20 @@ export const rejectText = (request, response) => {
     const user = await UserModel.findById(text.writer.user);
     const document = request.files.document;
     // Email with pdf file
-    await sendEmail({
-      email: user.email,
-      subject: "No se aprobó tu texto",
-      attachments: [
-        {
-          filename: document.name,
-          content: document.data
-        }
-      ]
-    }, 'rejected', { title: text.title, name: user.name });
+    await sendEmail(
+      {
+        email: user.email,
+        subject: "No se aprobó tu texto",
+        attachments: [
+          {
+            filename: document.name,
+            content: document.data,
+          },
+        ],
+      },
+      "rejected",
+      { title: text.title, name: user.name }
+    );
     return text;
   });
 };
