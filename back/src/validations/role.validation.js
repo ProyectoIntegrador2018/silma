@@ -22,9 +22,15 @@ function isFormComplete(role) {
 }
 
 async function allFieldsUnique(role) {
-  const { _id, name } = role;
-  const roleModel = await RoleModel.findOne({ _id: { $ne: _id }, name });
-  if (roleModel) throw new SilmaError(406, Messages.DuplicatedValue("Nombre"));
+  const { _id, name, code } = role;
+  const roleModel = await RoleModel.findOne({
+    _id: { $ne: _id },
+    $or: [{ code }, { name }]
+  });
+  if (roleModel) {
+    const repeatedField = roleModel.code === code ? "Código" : "Nombre";
+    throw new SilmaError(406, Messages.DuplicatedValue(repeatedField));
+  }
 }
 
 /**

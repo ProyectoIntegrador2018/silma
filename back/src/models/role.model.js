@@ -2,10 +2,18 @@ import { Schema, model } from "mongoose";
 import { onSaveValidation } from "../validations/role.validation";
 
 export const RoleSchema = new Schema({
+  code: {
+    type: String,
+    required: "Code is required"
+  },
   name: {
     type: String,
     unique: true,
     required: "Name is required"
+  },
+  isBaseRole: {
+    type: Boolean,
+    default: false
   },
   readingRead: {
     type: Boolean,

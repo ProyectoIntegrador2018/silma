@@ -23,6 +23,7 @@
               >Ver</v-btn
             >
             <v-btn
+              v-if="!props.isBaseRole"
               small
               color="primary"
               :disabled="false"
@@ -35,6 +36,7 @@
               >Editar</v-btn
             >
             <v-btn
+              v-if="!props.isBaseRole"
               small
               color="error"
               :disabled="false"
@@ -76,6 +78,7 @@ export default {
   data() {
     return {
       headers: [
+        { text: "Código", value: "code" },
         { text: "Nombre", value: "name" },
         { text: "Acciones", sortable: false, actions: true }
       ],

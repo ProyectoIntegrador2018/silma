@@ -3,6 +3,15 @@
     <h1>Rol</h1>
     <v-form v-model="valid" ref="form">
       <v-text-field
+        v-model="form.code"
+        :rules="[(x) => !!x || Messages.RequiredField()]"
+        :disabled="viewMode"
+      >
+        ><template slot="prepend"
+          >Código<span style="color: red">*</span></template
+        ></v-text-field
+      >
+      <v-text-field
         v-model="form.name"
         :rules="[(x) => !!x || Messages.RequiredField()]"
         :disabled="viewMode"
