@@ -23,7 +23,9 @@
         >Cerrar Sesión</v-btn
       >
     </v-toolbar>
-    <router-view />
+    <div class="main-container">
+      <router-view />
+    </div>
     <v-snackbar v-model="showSnackbar">
       {{ snackbarMessage }}
       <v-btn color="pink" text @click="showSnackbar = false">
@@ -98,4 +100,24 @@ export default {
   }
 };
 </script>
-<style></style>
+<style>
+.main-container {
+  margin: 16px;
+}
+
+.add-btn-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.bottom-buttons-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 16px;
+}
+
+.bottom-buttons-wrapper > button:first-child {
+  margin-right: 16px;
+}
+</style>

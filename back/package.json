@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "serve": "nodemon --exec babel-node src/server",
+    "serve": "nodemon --inspect --exec babel-node src/server",
     "build": "npm run clean && babel src -d dist --copy-files",
     "clean": "rimraf dist",
     "generate": "babel-node src/scripts/generate"
