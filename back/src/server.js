@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import { createRoutes } from "./routes";
 import fileupload from "express-fileupload";
 import config from "./config/config";
+import routesErrorHandler from "./middlewares/errorHandler";
 
 // In development use .env.local for environment variables
 if (config.ENV !== "production") {
@@ -49,7 +50,9 @@ else console.log("Db connected successfully");
 
 // API Routes
 const router = createRoutes();
+// Attach error handlers to Express app
 app.use("/api", router);
+routesErrorHandler(app);
 
 // Launch app to listen to specified port
 app.listen(config.PORT, () => {

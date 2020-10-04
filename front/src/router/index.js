@@ -10,6 +10,8 @@ import TextRegister from "@/views/writer/TextRegister.vue";
 import Questionnarie from "@/views/reader/Questionnarie.vue";
 import SuggestionsAdmin from "@/views/admins/SuggestionsAdmin.vue";
 import ChaptersVisualization from "@/views/reader/VisualizationChapters.vue";
+import RoleList from "@/views/admins/RoleList.vue";
+import RoleForm from "@/views/admins/RoleForm.vue";
 import Feedback from "@/views/admins/Feedbacks.vue";
 
 Vue.use(VueRouter);
@@ -92,6 +94,45 @@ const routes = [
       requiresAuth: true,
       withAccess: ["admin"]
     }
+  },
+  {
+    path: "/roleList",
+    name: "RoleList",
+    component: RoleList,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"]
+    }
+  },
+  {
+    path: "/roleFormCreate",
+    name: "RoleFormCreate",
+    component: RoleForm,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"]
+    },
+    props: { viewMode: false }
+  },
+  {
+    path: "/roleFormView/:id",
+    name: "RoleFormView",
+    component: RoleForm,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"]
+    },
+    props: { viewMode: true }
+  },
+  {
+    path: "/roleForm/:id",
+    name: "RoleFormEdit",
+    component: RoleForm,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"]
+    },
+    props: { viewMode: false }
   },
   {
     path: "*",

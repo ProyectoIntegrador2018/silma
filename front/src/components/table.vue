@@ -4,9 +4,8 @@
       :headers="formattedHeaders"
       :items="items"
       :options.sync="pagination"
-      :expand="false"
       item-key="_id"
-      class="elevation-0"
+      class="elevation-1"
     >
       <template #body="props">
         <tr v-for="item in props.items" :key="item._id">

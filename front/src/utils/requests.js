@@ -48,6 +48,28 @@ export const postRequest = async (
   }
 };
 
+export const patchRequest = async (
+  endpoint,
+  data,
+  token = undefined,
+  withFiles = false
+) => {
+  try {
+    const headerFile = withFiles
+      ? { "Content-Type": "multipart/form-data" }
+      : {};
+    const headerToken = token ? { Authorization: `Bearer ${token}` } : {};
+    const response = await axios.patch(`${apiHost}/${endpoint}`, data, {
+      headers: { ...headerFile, ...headerToken }
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error.response.data);
+    const message = error.response.data.message || "Algo salió mal.";
+    events.$emit("snackbar", message);
+  }
+};
+
 export const deleteRequest = async (
   endpoint,
   token = undefined,
