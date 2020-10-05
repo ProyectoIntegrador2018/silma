@@ -2,7 +2,7 @@
   <v-data-table
     :headers="headers"
     :items="permissionsMatrix"
-    :items-per-page="5"
+    :items-per-page="10"
     class="elevation-1"
   >
     <template v-slot:body="{ items }">
@@ -130,6 +130,12 @@ export default {
         {
           display: "Reportes",
           name: "report",
+          hasCrudPermissions: true,
+          specialPermissions: []
+        },
+        {
+          display: "Roles",
+          name: "role",
           hasCrudPermissions: true,
           specialPermissions: []
         }

@@ -32,6 +32,7 @@ export const UserSchema = new Schema({
     type: String,
     required: "Nationality is required"
   },
+  // This roles define the type of user
   roles: [
     {
       type: String,

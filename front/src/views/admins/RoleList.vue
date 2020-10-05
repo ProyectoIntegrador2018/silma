@@ -11,6 +11,7 @@
         <template #actions="{ props }">
           <div class="actions-wrapper">
             <v-btn
+              v-if="hasPermission('roleRead')"
               small
               color="success"
               :disabled="false"
@@ -23,7 +24,7 @@
               >Ver</v-btn
             >
             <v-btn
-              v-if="!props.isBaseRole"
+              v-if="!props.isBaseRole && hasPermission('roleEdit')"
               small
               color="primary"
               :disabled="false"
@@ -36,7 +37,7 @@
               >Editar</v-btn
             >
             <v-btn
-              v-if="!props.isBaseRole"
+              v-if="!props.isBaseRole && hasPermission('roleDelete')"
               small
               color="error"
               :disabled="false"
@@ -68,7 +69,7 @@
 <script>
 import Table from "../../components/table";
 import { deleteRequest, getRequest } from "../../utils/requestsNoErr";
-import { getErrorMessage } from "../../utils/utils";
+import { getErrorMessage, hasPermission } from "../../utils/utils";
 import { snackbar } from "../../utils/events";
 import Messages from "../../utils/messages";
 
@@ -77,12 +78,13 @@ export default {
   components: { Table },
   data() {
     return {
+      hasPermission,
       headers: [
         { text: "Código", value: "code" },
         { text: "Nombre", value: "name" },
         { text: "Acciones", sortable: false, actions: true }
       ],
-      roles: [{ name: "Admin" }, { name: "Escritor" }, { name: "Usuario" }]
+      roles: []
     };
   },
   methods: {
@@ -90,6 +92,7 @@ export default {
       try {
         this.roles = await getRequest("role", false);
       } catch (error) {
+        console.error(error);
         const message = getErrorMessage(error, Messages.SomethingWentWrong());
         snackbar(message);
       }
@@ -100,6 +103,7 @@ export default {
         await this.dataInit();
         snackbar(Messages.CRUDOperationSuccess("eliminado"));
       } catch (error) {
+        console.error(error);
         const message = getErrorMessage(error, Messages.SomethingWentWrong());
         snackbar(message);
       }

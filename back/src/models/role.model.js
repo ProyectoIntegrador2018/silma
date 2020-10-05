@@ -110,6 +110,22 @@ export const RoleSchema = new Schema({
   reportDelete: {
     type: Boolean,
     default: false
+  },
+  roleRead: {
+    type: Boolean,
+    default: false
+  },
+  roleCreate: {
+    type: Boolean,
+    default: false
+  },
+  roleEdit: {
+    type: Boolean,
+    default: false
+  },
+  roleDelete: {
+    type: Boolean,
+    default: false
   }
 });
 

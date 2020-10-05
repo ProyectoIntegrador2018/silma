@@ -95,7 +95,11 @@ export default {
         reportRead: false,
         reportCreate: false,
         reportEdit: false,
-        reportDelete: false
+        reportDelete: false,
+        roleRead: false,
+        roleCreate: false,
+        roleEdit: false,
+        roleDelete: false
       },
       id: ""
     };
