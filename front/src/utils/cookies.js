@@ -13,6 +13,9 @@ export const setAuthCookies = (user) => {
       Vue.$cookies.set("user_type", role);
       Vue.$cookies.set("user_id", user._id);
       Vue.$cookies.set("user_name", user.name);
+      Vue.$cookies.set("admin", user.admin);
+      Vue.$cookies.set("writer", user.admin);
+      Vue.$cookies.set("reader", user.admin);
     }
     return true;
   }

@@ -6,7 +6,8 @@ const Messages = {
   IncompleteForm: () => "Favor de llenar todos los valores requeridos.",
   SomethingWentWrong: () => "Algo salió mal.",
   CRUDOperationSuccess: (operation) =>
-    formatMessage("Registro {0} con éxito.", operation)
+    formatMessage("Registro {0} con éxito.", operation),
+  Unauthorized: () => "No Autorizado."
 };
 
 export default Messages;
