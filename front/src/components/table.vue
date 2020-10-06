@@ -10,13 +10,26 @@
       <template #body="props">
         <tr v-for="item in props.items" :key="item._id">
           <td v-for="header in displayedHeaders" :key="header.value">
-            <div class="text-truncate" :style="{ width: header.width }">
+            <div v-if="header.text == 'Fase'">
+              <select v-model="item.phase" @change="onChange(item, $event)">
+                <option value="1">Enviar Texto</option>
+                <option value="2">Lectura Editorial</option>
+                <option value="3">Entrevista con el autor</option>
+                <option value="4">Contrato</option>
+                <option value="5">Tallereo</option>
+                <option value="6">Correcciones</option>
+                <option value="7">Portada</option>
+                <option value="8">Maquetado</option>
+                <option value="9">Impresion</option>
+              </select>
+            </div>  
+            <div  v-if="header.text != 'Fase'" class="text-truncate" :style="{ width: header.width }">
               <slot
                 :name="header.value"
                 :value="item[header.value]"
                 :props="item"
-                >{{ item[header.value] }}</slot
-              >
+                >{{ item[header.value] }}
+                </slot>
             </div>
           </td>
           <td class="text-xs-center">
@@ -72,6 +85,11 @@ export default {
           ]
         : [];
       return [...expandColumn, ...this.headers];
+    }
+  },
+  methods:{
+    onChange(item, event) {
+      this.$emit("changePhase",item._id, event.target.value)
     }
   }
 };

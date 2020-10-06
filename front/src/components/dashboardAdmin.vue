@@ -9,20 +9,9 @@
       </div>
     </div>
     <h1 align="left">Textos Recibidos</h1>
-    <Table :headers="headers" :items="dataTexts">
+    <Table :headers="headers" :items="dataTexts" @changePhase="advancePhase">
       <!-- Actions -->
       <template #actions="{ props }">
-        <div style="padding-top: 5px">
-          <!-- avanzar fase -->
-          <v-btn
-            small
-            color="success"
-            :disabled="props.isRejected || props.phase == 4"
-            depressed
-            @click="advancePhase(props)"
-            >Avanzar Fase</v-btn
-          >
-        </div>
         <div style="padding-top: 5px">
           <!-- Accesar a las sugerencias pertenecientes a este texto -->
           <v-btn small color="primary" depressed @click="seeSuggestions(props)"
@@ -187,14 +176,14 @@ export default {
       this.$router.push("/Sugerencias_Texto/" + id);
     },
     //Funcion que avanza la fase del texto, primero confirmando el avance de fase
-    async advancePhase(item) {
+    async advancePhase(id, value) {
       const options = {
         title: "Avanzar",
         message: "¿Seguro que quieres avanzar el texto de fase?",
         styleOptions: { color: "primary" },
         onAccept: async () => {
           const token = this.$cookies.get("token");
-          await postRequest("admins/texts/movePhase/" + item._id, {}, token);
+          await postRequest("admins/texts/movePhase/" + id, {phase: value}, token);
           this.getTexts();
         },
         onReject: () => {}
