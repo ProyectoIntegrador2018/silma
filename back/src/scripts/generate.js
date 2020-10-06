@@ -8,6 +8,7 @@ import { SuggestionModel } from "@/models/suggestion.model";
 import { GenreModel } from "@/models/genre.model";
 import axios from "axios";
 import { createAdmin } from "@/controllers/admin.controller";
+import RoleModel from "@/models/role.model";
 
 // Deletes all data from local.
 const deleteEverything = async () => {
@@ -18,6 +19,7 @@ const deleteEverything = async () => {
   const promiseFive = TextModel.deleteMany({});
   const promiseSix = SuggestionModel.deleteMany({});
   const promiseSeven = GenreModel.deleteMany({});
+  const promiseEight = RoleModel.deleteMany({});
   await Promise.all([
     promiseOne,
     promiseTwo,
@@ -25,7 +27,8 @@ const deleteEverything = async () => {
     promiseFour,
     promiseFive,
     promiseSix,
-    promiseSeven
+    promiseSeven,
+    promiseEight
   ]);
 };
 
@@ -40,14 +43,52 @@ const createFirstAdmin = () => {
           email: "admin1@gmail.com",
           birthdate: "12/12/2000",
           phone: "8116690319",
-          nationality: "Mexico",
-          isSuperAdmin: true
+          nationality: "Mexico"
         }
       },
       { send: (data) => resolve(data) }
     );
   });
 };
+
+async function createSuperAdminRole(token) {
+  const form = {
+    code: "superAdmin",
+    name: "Super Administrador",
+    isBaseRole: true,
+    readingRead: true,
+    readingCreate: true,
+    readingEdit: true,
+    readingDelete: true,
+    bookRead: true,
+    bookCreate: true,
+    bookEdit: true,
+    bookDelete: true,
+    phaseRead: true,
+    phaseCreate: true,
+    phaseEdit: true,
+    phaseDelete: true,
+    userRead: true,
+    userCreate: true,
+    userEdit: true,
+    userDelete: true,
+    eventRead: true,
+    eventCreate: true,
+    eventEdit: true,
+    eventDelete: true,
+    reportRead: true,
+    reportCreate: true,
+    reportEdit: true,
+    reportDelete: true,
+    roleRead: true,
+    roleCreate: true,
+    roleEdit: true,
+    roleDelete: true
+  };
+  await axios.post("http://localhost:3000/api/role", form, {
+    headers: { Authorization: "Bearer " + token }
+  });
+}
 
 const runAll = async () => {
   await deleteEverything();
@@ -83,6 +124,11 @@ const runAll = async () => {
     { headers: { Authorization: "Bearer " + tokenAdmin } }
   );
   console.log("Admin 2: ", admin2.data._id);
+
+  // Create Default Roles
+  await createSuperAdminRole(tokenAdmin);
+  console.log("Rol Superadministrador creado");
+
   // Creates first reader.
   const reader1 = await axios.post(
     "http://localhost:3000/api/register/readers",

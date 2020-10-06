@@ -1,6 +1,18 @@
 import PrettyError from "pretty-error";
 import mongoose from "mongoose";
 
+export class SilmaError extends Error {
+  /**
+   *
+   * @param {number} status
+   * @param {string} message
+   */
+  constructor(status, message) {
+    super(message);
+    this.status = status;
+  }
+}
+
 // Sends a successful or failed response to an http request.
 export const send = async (response, callback) => {
   const session = await mongoose.connection.startSession();
@@ -20,3 +32,13 @@ export const send = async (response, callback) => {
   }
   session.endSession();
 };
+
+export function handleSyncRequest(callback, next) {
+  try {
+    callback();
+    next();
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+}
