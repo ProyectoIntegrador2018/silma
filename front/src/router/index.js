@@ -5,6 +5,7 @@ import RegisterWriter from "@/views/writer/WriterRegister.vue";
 import LogIn from "@/views/login/LogIn.vue";
 import Dashboard from "@/views/dashboards/Dashboard.vue";
 import PageNotFound from "@/views/PageNotFound.vue";
+import Users from "@/views/admins/Users.vue";
 import Genres from "@/views/admins/Genres.vue";
 import TextRegister from "@/views/writer/TextRegister.vue";
 import Questionnarie from "@/views/reader/Questionnarie.vue";
@@ -45,6 +46,15 @@ const routes = [
     path: "/Generos",
     name: "Genres",
     component: Genres,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"]
+    }
+  },
+  {
+    path: "/Usuarios", 
+    name: "Users",
+    component: Users,
     meta: {
       requiresAuth: true,
       withAccess: ["admin"]
