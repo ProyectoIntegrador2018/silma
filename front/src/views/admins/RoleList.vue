@@ -11,7 +11,6 @@
         <template #actions="{ props }">
           <div class="actions-wrapper">
             <v-btn
-              v-if="hasPermission('roleRead')"
               small
               color="success"
               :disabled="false"
@@ -24,7 +23,7 @@
               >Ver</v-btn
             >
             <v-btn
-              v-if="!props.isBaseRole && hasPermission('roleEdit')"
+              v-if="!props.isBaseRole"
               small
               color="primary"
               :disabled="false"
@@ -37,7 +36,7 @@
               >Editar</v-btn
             >
             <v-btn
-              v-if="!props.isBaseRole && hasPermission('roleDelete')"
+              v-if="!props.isBaseRole"
               small
               color="error"
               :disabled="false"
@@ -69,7 +68,7 @@
 <script>
 import Table from "../../components/table";
 import { deleteRequest, getRequest } from "../../utils/requestsNoErr";
-import { getErrorMessage, hasPermission } from "../../utils/utils";
+import { getErrorMessage } from "../../utils/utils";
 import { snackbar } from "../../utils/events";
 import Messages from "../../utils/messages";
 
@@ -78,7 +77,6 @@ export default {
   components: { Table },
   data() {
     return {
-      hasPermission,
       headers: [
         { text: "Código", value: "code" },
         { text: "Nombre", value: "name" },
