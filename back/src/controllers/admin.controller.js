@@ -99,8 +99,9 @@ export const getFeedback = (request, response) => {
 export const movePhase = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
+
     const text = await TextModel.findById(id);
-    const newPhase = text.phase + 1;
+    const newPhase = request.body.phase;
     const phase = await TextModel.updateOne(
       { _id: id },
       { $set: { phase: newPhase } },
@@ -108,7 +109,8 @@ export const movePhase = (request, response) => {
         if (err) throw err;
       }
     );
-    const phaseInfo = phases[newPhase - 1];
+    /*
+    const phaseInfo = phases[newPhase];
     const writer = await WriterModel.findById(text.writer);
     const user = await UserModel.findById(writer.user);
     //Enviar correo al autor del avance de su texto
@@ -139,7 +141,7 @@ export const movePhase = (request, response) => {
           description: phaseInfo.description
         }
       );
-    }
+    }*/
   });
 };
 
