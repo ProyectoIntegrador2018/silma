@@ -5,6 +5,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.uploadDocument = exports.getDocument = void 0;
 
+var _config = _interopRequireDefault(require("../config/config"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -15,7 +19,7 @@ var AWS = require("aws-sdk"); //Funcion que obtiene un documento de AWS S3
 var getDocument = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator(function* (id) {
     var params = {
-      Bucket: process.env.AWS_BUCKET + '/Texts',
+      Bucket: _config.default.AWS_BUCKET + "/Texts",
       Key: id + ".md"
     };
     var s3 = new AWS.S3();
@@ -34,7 +38,7 @@ var getDocument = /*#__PURE__*/function () {
   return function getDocument(_x) {
     return _ref.apply(this, arguments);
   };
-}(); //Funcion que sube un documento a AWS S3 
+}(); //Funcion que sube un documento a AWS S3
 
 
 exports.getDocument = getDocument;
@@ -43,9 +47,9 @@ var uploadDocument = /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator(function* (id, data) {
     var s3 = new AWS.S3({
       params: {
-        Bucket: process.env.AWS_BUCKET + '/Texts',
-        Key: '',
-        Body: ''
+        Bucket: _config.default.AWS_BUCKET + "/Texts",
+        Key: "",
+        Body: ""
       }
     });
     var params = {

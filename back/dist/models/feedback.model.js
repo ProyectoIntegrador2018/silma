@@ -16,11 +16,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var FeedbackSchema = new _mongoose.Schema({
   suggestion: {
     type: _mongoose.Schema.Types.ObjectId,
-    ref: 'Suggestion'
+    ref: "Suggestion"
   },
   reader: {
     type: _mongoose.Schema.Types.ObjectId,
-    ref: 'Reader'
+    ref: "Reader"
   },
   selectedGenres: {
     type: [{

@@ -14,11 +14,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var SuggestionSchema = new _mongoose.Schema({
   reader: {
     type: _mongoose.Schema.Types.ObjectId,
-    ref: 'Reader'
+    ref: "Reader"
   },
   text: {
     type: _mongoose.Schema.Types.ObjectId,
-    ref: 'Text'
+    ref: "Text"
   },
   sentDate: {
     type: Date

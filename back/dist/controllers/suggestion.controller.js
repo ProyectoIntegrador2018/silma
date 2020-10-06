@@ -68,7 +68,7 @@ var addSuggestionSendEmail = /*#__PURE__*/function () {
         email: readerInfo.user.email,
         subject: "New Silma Reading Suggestion!"
       };
-      yield (0, _mailSender.sendEmail)(email, 'new_suggestion', {
+      yield (0, _mailSender.sendEmail)(email, "new_suggestion", {
         numberOfPages: text.numberOfPages,
         genres: listGenre.join(" ,")
       });

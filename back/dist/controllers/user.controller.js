@@ -15,6 +15,8 @@ var _bcrypt = _interopRequireDefault(require("bcrypt"));
 
 var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
 
+var _config = _interopRequireDefault(require("../config/config"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -37,7 +39,7 @@ var authUser = (request, response) => {
     } = request.body;
     var user = yield _user.UserModel.findOne({
       email
-    }).select(['+password']); // Checks if user with email exists and the password is correct.
+    }).select(["+password"]); // Checks if user with email exists and the password is correct.
 
     if (user && _bcrypt.default.compareSync(password, user.password)) {
       // Returns user info with token.
@@ -47,7 +49,7 @@ var authUser = (request, response) => {
 
       var token = _jsonwebtoken.default.sign({
         sub: user.id
-      }, process.env.SECRET_JWT);
+      }, _config.default.SECRET_JWT);
 
       return _objectSpread({}, userWithoutHash._doc, {
         token
@@ -80,7 +82,7 @@ var createUser = /*#__PURE__*/function () {
     var data = request.body;
     var user = yield _user.UserModel.findOne({
       email: data.email
-    }).select(['+password']);
+    }).select(["+password"]);
 
     if (!user) {
       if (data.password.length < 8) {

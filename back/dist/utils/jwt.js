@@ -9,6 +9,8 @@ var _expressJwt = _interopRequireDefault(require("express-jwt"));
 
 var _user = require("../models/user.model");
 
+var _config = _interopRequireDefault(require("../config/config"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -18,7 +20,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 function verifyToken() {
   var authorizedRoles = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
   if (!authorizedRoles) authorizedRoles = ["admin", "writer", "reader"];
-  var secret = process.env.SECRET_JWT;
+  var secret = _config.default.SECRET_JWT;
   return (0, _expressJwt.default)({
     secret,
     isRevoked: (req, payload, done) => _isRevoked(req, payload, done, authorizedRoles)
@@ -46,5 +48,3 @@ function _isRevoked2() {
   });
   return _isRevoked2.apply(this, arguments);
 }
-
-;

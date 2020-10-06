@@ -135,46 +135,54 @@ var getFeedback = (request, response) => {
 exports.getFeedback = getFeedback;
 
 var movePhase = (request, response) => {
-  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
-    var {
-      id
-    } = request.params;
-    var text = yield _text.TextModel.findById(id);
-    var newPhase = text.phase + 1;
-    var phase = yield _text.TextModel.updateOne({
-      _id: id
-    }, {
-      $set: {
-        phase: newPhase
-      }
-    }, function (err, res) {
-      if (err) throw err;
-    });
-    var phaseInfo = _emails.phases[newPhase - 1];
-    var writer = yield _writer.WriterModel.findById(text.writer);
-    var user = yield _user.UserModel.findById(writer.user); //Enviar correo al autor del avance de su texto
+  (0, _errors.send)(response, /*#__PURE__*/function () {
+    var _ref7 = _asyncToGenerator(function* (session) {
+      var {
+        id
+      } = request.params;
+      var text = yield _text.TextModel.findById(id);
+      var newPhase = text.phase + 1;
+      var phase = yield _text.TextModel.updateOne({
+        _id: id
+      }, {
+        $set: {
+          phase: newPhase
+        }
+      }, {
+        session
+      }, function (err, res) {
+        if (err) throw err;
+      });
+      var phaseInfo = _emails.phases[newPhase - 1];
+      var writer = yield _writer.WriterModel.findById(text.writer);
+      var user = yield _user.UserModel.findById(writer.user); //Enviar correo al autor del avance de su texto
 
-    if (newPhase === 2) {
-      // La fase es la de aceptacion
-      yield (0, _mailSender.sendEmail)({
-        email: user.email,
-        subject: "¡Tu novela fue aprobada!"
-      }, 'accepted', {
-        name: user.name,
-        title: text.title
-      });
-    } else {
-      yield (0, _mailSender.sendEmail)({
-        email: user.email,
-        subject: "Tu novela avanzó de Fase"
-      }, 'next_phase', {
-        name: user.name,
-        title: text.title,
-        phase: newPhase + '-' + phaseInfo.name,
-        description: phaseInfo.description
-      });
-    }
-  }));
+      if (newPhase === 2) {
+        // La fase es la de aceptacion
+        yield (0, _mailSender.sendEmail)({
+          email: user.email,
+          subject: "¡Tu novela fue aprobada!"
+        }, "accepted", {
+          name: user.name,
+          title: text.title
+        });
+      } else {
+        yield (0, _mailSender.sendEmail)({
+          email: user.email,
+          subject: "Tu novela avanzó de Fase"
+        }, "next_phase", {
+          name: user.name,
+          title: text.title,
+          phase: newPhase + "-" + phaseInfo.name,
+          description: phaseInfo.description
+        });
+      }
+    });
+
+    return function (_x) {
+      return _ref7.apply(this, arguments);
+    };
+  }());
 }; //Funcion que obtiene la retroalimentacion ligada a la sugerencia recibida por su id
 
 
@@ -186,7 +194,7 @@ var getFeedbackIdBySuggestion = (request, response) => {
       id
     } = request.params;
     var feedback = yield _feedback.FeedbackModel.find({
-      "suggestion": id
+      suggestion: id
     });
     return feedback[0]._id;
   }));

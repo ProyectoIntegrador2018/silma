@@ -16,7 +16,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var ReaderSchema = new _mongoose.Schema({
   user: {
     type: _mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: "User"
   },
   facebookLink: {
     type: String //validate: [validateURL, "Invalid URL"],

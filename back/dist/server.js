@@ -12,38 +12,37 @@ var _routes = require("./routes");
 
 var _expressFileupload = _interopRequireDefault(require("express-fileupload"));
 
+var _config = _interopRequireDefault(require("./config/config"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // In development use .env.local for environment variables
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config({
-    path: '.env.local'
+if (_config.default.ENV !== "production") {
+  require("dotenv").config({
+    path: ".env.local"
   });
-}
+} // Api app configuration
 
-var mongoUrl = process.env.MONGODB_URI;
-var enabledCorsOrigins = process.env.CROSS_ORIGIN;
-var port = process.env.PORT || 3000; // Api app configuration
 
 var app = (0, _express.default)();
 app.use((0, _expressFileupload.default)());
 app.use((0, _cors.default)({
-  origin: enabledCorsOrigins
+  origin: _config.default.CROSS_ORIGIN
 }));
 app.use(_bodyParser.default.urlencoded({
   extended: true
 }));
 app.use(_bodyParser.default.json()); // When in production redirect everything not starting with 'api/*' to the static website
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(_express.default.static(__dirname + '/public'));
-  app.get(/^(?!.*(\/api\/)).*$/, (req, res) => res.sendFile(__dirname + '/public/index.html'));
+if (_config.default.ENV === "production") {
+  app.use(_express.default.static(__dirname + "/public"));
+  app.get(/^(?!.*(\/api\/)).*$/, (req, res) => res.sendFile(__dirname + "/public/index.html"));
 } else {
-  app.use(_express.default.static('public'));
+  app.use(_express.default.static("public"));
 } // Connect to Mongoose and set connection variable
 
 
-_mongoose.default.connect(mongoUrl, {
+_mongoose.default.connect(_config.default.MONGO_URL, {
   useCreateIndex: true,
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -56,6 +55,6 @@ if (!db) console.log("Error connecting db");else console.log("Db connected succe
 var router = (0, _routes.createRoutes)();
 app.use("/api", router); // Launch app to listen to specified port
 
-app.listen(port, () => {
-  console.log("Running Silma backend on port ".concat(port));
+app.listen(_config.default.PORT, () => {
+  console.log("Running Silma backend on port ".concat(_config.default.PORT));
 });

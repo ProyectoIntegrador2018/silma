@@ -14,7 +14,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var WriterSchema = new _mongoose.Schema({
   user: {
     type: _mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: "User"
   },
   pseudonym: {
     type: String,

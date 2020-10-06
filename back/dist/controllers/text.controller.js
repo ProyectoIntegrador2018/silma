@@ -74,7 +74,7 @@ var createText = (request, response) => {
       yield (0, _mailSender.sendEmail)({
         subject: "Enviaste tu texto para que sea dictaminado.",
         email: email
-      }, 'received', {
+      }, "received", {
         title: text.title,
         name: user.user.name
       });
@@ -108,11 +108,11 @@ var retrieveTextDocument = (request, response) => {
       } = request.params;
       var book = yield (0, _aws.getDocument)(id);
       return {
-        "message": book.Body.toString()
+        message: book.Body.toString()
       };
     } catch (err) {
       response.status(404).send({
-        message: 'File does not exist'
+        message: "File does not exist"
       });
     }
   }));
@@ -157,7 +157,7 @@ var rejectText = (request, response) => {
         filename: document.name,
         content: document.data
       }]
-    }, 'rejected', {
+    }, "rejected", {
       title: text.title,
       name: user.name
     });

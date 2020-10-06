@@ -7,6 +7,8 @@ exports.send = void 0;
 
 var _prettyError = _interopRequireDefault(require("pretty-error"));
 
+var _mongoose = _interopRequireDefault(require("mongoose"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -22,18 +24,27 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 // Sends a successful or failed response to an http request.
 var send = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator(function* (response, callback) {
+    var session = yield _mongoose.default.connection.startSession();
+
     try {
-      var data = yield callback();
-      response.send(data);
+      yield session.withTransaction( /*#__PURE__*/_asyncToGenerator(function* () {
+        var data = yield callback(session);
+        response.send(data);
+      }));
     } catch (error) {
       console.log(error);
       var pe = new _prettyError.default();
       var renderedError = pe.render(error);
       console.log(renderedError);
-      response.status(404).send(_objectSpread({
-        status: "fail"
+      var message = error.message || "Internal server error";
+      var status = error.status || 500;
+      response.status(status).send(_objectSpread({
+        status: "fail",
+        message
       }, error));
     }
+
+    session.endSession();
   });
 
   return function send(_x, _x2) {
