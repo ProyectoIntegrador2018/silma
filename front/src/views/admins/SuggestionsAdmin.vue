@@ -14,7 +14,10 @@
             <v-card-text>
               <v-container>
                 <!-- Here goes fields --->
-                <Table :headers="headersReadersNoSuggestion" :items="readersNoSuggestion">
+                <Table
+                  :headers="headersReadersNoSuggestion"
+                  :items="readersNoSuggestion"
+                >
                   <!-- Actions -->
                   <template #actions="{ props }">
                     <div style="padding-top: 5px">
@@ -23,7 +26,8 @@
                         color="primary"
                         depressed
                         @click="sendSuggestion(props)"
-                      >Seleccionar Lector</v-btn>
+                        >Seleccionar Lector</v-btn
+                      >
                     </div>
                   </template>
                 </Table>
@@ -31,7 +35,9 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="dialog = false">Cerrar</v-btn>
+              <v-btn color="blue darken-1" text @click="dialog = false"
+                >Cerrar</v-btn
+              >
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -41,7 +47,9 @@
       <!-- Actions -->
       <template #actions="{ props }">
         <div style="padding-top: 5px">
-          <v-btn small color="error" depressed @click="deleteSuggestion(props)">Eliminar</v-btn>
+          <v-btn small color="error" depressed @click="deleteSuggestion(props)"
+            >Eliminar</v-btn
+          >
         </div>
         <div style="padding-top: 5px">
           <v-btn
@@ -49,7 +57,8 @@
             color="success"
             v-show="props.status == 'Completado'"
             :href="props.feedback_url"
-          >Retroalimentacion</v-btn>
+            >Retroalimentacion</v-btn
+          >
         </div>
       </template>
     </Table>
@@ -57,13 +66,13 @@
   </div>
 </template>
 
-
 <script>
 import Table from "@/components/table.vue";
 import { getRequest, postRequest, deleteRequest } from "@/utils/requests";
 import { translateStatus } from "@/utils/functions";
 import moment from "moment";
 import DialogComponent from "@/components/dialogComponent.vue";
+import { events } from "../../main";
 
 export default {
   components: {
@@ -145,21 +154,22 @@ export default {
     //Elimina una sugerencia para un libro
     async deleteSuggestion(item) {
       const token = this.$cookies.get("token");
-      if (
-        await this.$refs.confirm.open(
-          "Eliminar",
-          "Seguro que quieres eliminar?",
-          { color: "primary" }
-        )
-      ) {
-        await deleteRequest(
-          "admins/suggestions/deleteSuggestion/" + item.suggestion_id,
-          token
-        );
-        this.getTextInfo();
-        this.getSuggestions();
-        this.getReadersWithoutSuggestion();
-      }
+      const options = {
+        title: "Eliminar",
+        message: "Seguro que quieres eliminar?",
+        styleOptions: { color: "primary" },
+        onAccept: async () => {
+          await deleteRequest(
+            "admins/suggestions/deleteSuggestion/" + item.suggestion_id,
+            token
+          );
+          this.getTextInfo();
+          this.getSuggestions();
+          this.getReadersWithoutSuggestion();
+        },
+        onReject: () => {}
+      };
+      events.$emit("dialog", options);
     },
     // Obtiene las sugerencias de un libro
     async getSuggestions() {
@@ -169,7 +179,7 @@ export default {
         token
       );
       var final = [];
-      suggestions.forEach(async suggestion => {
+      suggestions.forEach(async (suggestion) => {
         var dataReader = await getRequest(
           "readers/" + suggestion.reader,
           token
@@ -212,9 +222,9 @@ export default {
         token
       );
       var readersData = [];
-      readersWithoutSuggestion.forEach(reader => {
+      readersWithoutSuggestion.forEach((reader) => {
         var genreNames = "";
-        reader.preferences.forEach(element => {
+        reader.preferences.forEach((element) => {
           if (genreNames == "") {
             genreNames = element.name;
           } else {

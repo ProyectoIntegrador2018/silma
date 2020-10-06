@@ -11,7 +11,7 @@ export const genres = [
   "Steampunk",
   "Terror",
   "Fantasía infantil",
-  "Otros",
+  "Otros"
 ];
 
 export const administrators = [
@@ -19,7 +19,7 @@ export const administrators = [
   "Aurora Carranza",
   "Anagaby Saban",
   "Lorena Martinez",
-  "Nadie / Otra persona",
+  "Nadie / Otra persona"
 ];
 
 export const ageRanges = ["10-12", "13-15", "16-18", "18+"];
@@ -215,51 +215,50 @@ export const countries = [
   "Vietnam",
   "Yemen",
   "Zambia",
-  "Zimbabwe",
+  "Zimbabwe"
 ];
 
 export const errorServerRegister = {
   title: "Error en el registro",
-  message: "Por favor inténtelo nuevamente más tarde.",
+  message: "Por favor inténtelo nuevamente más tarde."
 };
 
 export const errorPreferencesMinimun = {
   title: "Al menos 3 preferencias",
   message:
-    "Por favor seleccione al menos 3 géneros de lectura de su preferencia.",
+    "Por favor seleccione al menos 3 géneros de lectura de su preferencia."
 };
 
 export const errorGenresRange = {
   title: "Número incorrecto de géneros marcados",
-  message:
-    "Por favor, seleccione de 1 a 3 géneros correspondientes a su texto.",
+  message: "Por favor, seleccione de 1 a 3 géneros correspondientes a su texto."
 };
 
 export const errorDescriptionRange = {
   title: "Tamaño de la descripción no válido",
   message:
-    "Por favor, ingrese una descripción que tenga entre 20 y 200 carácteres.",
+    "Por favor, ingrese una descripción que tenga entre 20 y 200 carácteres."
 };
 
 export const errorNumberOfChapters = {
   title: "Número de capítulos incorrecto",
   message:
-    "El número de capítulos ingresado no corresponde al número de capítulos con los que el archivo cuenta.",
+    "El número de capítulos ingresado no corresponde al número de capítulos con los que el archivo cuenta."
 };
 
 export const errorNumberOfChaptersEqualsZero = {
   title: "Número de capítulos igual a cero",
-  message: "El número de capítulos tiene que ser mayor a cero.",
+  message: "El número de capítulos tiene que ser mayor a cero."
 };
 
 export const updateChaptersMax = {
   title: "Número de capítulos máximos alcanzados",
-  message: "Usted ya cuenta con todos los capítulos del libro",
+  message: "Usted ya cuenta con todos los capítulos del libro"
 };
 
 export const updateChapters = {
   title: "Capítulos extra agregados",
-  message: "Se han agregado más capítulos exitosamente",
+  message: "Se han agregado más capítulos exitosamente"
 };
 
 export const termsAndConditionsReader = `
@@ -276,7 +275,7 @@ compartimos nuestras políticas de protección de datos. Te informamos que:
   <li>Tus datos son tuyos para verificarlos, rectificarlos y cancelarlos. En caso de desear la
   cancelación, comunícate con la editorial.</li>
 </ol>
-`
+`;
 export const termsAndConditionsWriter = `Silma se preocupa por la protección de los datos de los escritores, es por eso que te compartimos
 nuestras políticas de protección de datos. Te informamos que:
 <ol>
@@ -292,4 +291,4 @@ manera. </li>
 <li>Tus datos son tuyos para verificarlos, rectificarlos y cancelarlos. En caso de desear la
 cancelación, comunícate con la editorial. </li>
 </ol>
-`
+`;

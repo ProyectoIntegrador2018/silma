@@ -3,11 +3,13 @@
     <v-toolbar v-if="userId" color="blue darken-3" dark max-height="65">
       <!-- Home button -->
       <v-btn icon @click="navigate()">
-        <v-icon>{{$router.currentRoute.path === '/' ? 'mdi-home' : 'mdi-arrow-left'}}</v-icon>
+        <v-icon>{{
+          $router.currentRoute.path === "/" ? "mdi-home" : "mdi-arrow-left"
+        }}</v-icon>
       </v-btn>
       <!-- User name -->
       <v-toolbar-title style="width: 300px" class="ml-0 pl-4">
-        <span class="hidden-sm-and-down">{{this.name}}</span>
+        <span class="hidden-sm-and-down">{{ this.name }}</span>
       </v-toolbar-title>
       <v-spacer />
       <typeOfUserSelection />
@@ -18,25 +20,38 @@
         text
         @click="logOut()"
         style="margin-left: 16px; height: 48px;"
-      >Cerrar Sesión</v-btn>
+        >Cerrar Sesión</v-btn
+      >
     </v-toolbar>
     <router-view />
+    <v-snackbar v-model="showSnackbar">
+      {{ snackbarMessage }}
+      <v-btn color="pink" text @click="showSnackbar = false">
+        Cerrar
+      </v-btn>
+    </v-snackbar>
+    <DialogComponent ref="warningDialog"></DialogComponent>
   </v-app>
 </template>
 
 <script>
 import typeOfUserSelection from "@/components/typeOfUserSelection.vue";
 import { cleanAuthCookies } from "@/utils/cookies";
+import { events } from "./main";
+import DialogComponent from "./components/dialogComponent";
 
 export default {
   components: {
-    typeOfUserSelection
+    typeOfUserSelection,
+    DialogComponent
   },
   data() {
     return {
       userId: undefined,
       role: undefined,
-      name: undefined
+      name: undefined,
+      showSnackbar: false,
+      snackbarMessage: ""
     };
   },
   created() {
@@ -67,9 +82,20 @@ export default {
       cleanAuthCookies();
       // Reload page for redirect.
       this.$router.go();
+    },
+    snackbar(message) {
+      this.snackbarMessage = message;
+      this.showSnackbar = true;
     }
+  },
+  mounted() {
+    events.$on("snackbar", (message) => {
+      this.snackbar(message);
+    });
+    events.$on("dialog", (options) => {
+      this.$refs.warningDialog.open(options);
+    });
   }
 };
 </script>
-<style>
-</style>
+<style></style>

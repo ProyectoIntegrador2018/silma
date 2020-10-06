@@ -22,13 +22,13 @@ export default {
   components: {
     writerDashboard,
     readerDashboard,
-    adminDashbaord,
+    adminDashbaord
   },
   data() {
     return {
-      role: this.$cookies.get("user_type"),
+      role: this.$cookies.get("user_type")
     };
   },
-  methods: {},
+  methods: {}
 };
 </script>

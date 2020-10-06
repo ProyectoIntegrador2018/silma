@@ -1,6 +1,8 @@
 <template>
   <v-container>
-    <div class="display-3 font-weight-medium" align="center">Registro de Escritor</div>
+    <div class="display-3 font-weight-medium" align="center">
+      Registro de Escritor
+    </div>
     <br />
     <v-form ref="form">
       <h2 class="primary--text">Datos personales</h2>
@@ -82,7 +84,13 @@
           <v-card-text>Serás reenviado a tu dashboard</v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="green darken-1" text @click="dialogSuccess = false" href="/">Entendido</v-btn>
+            <v-btn
+              color="green darken-1"
+              text
+              @click="dialogSuccess = false"
+              href="/"
+              >Entendido</v-btn
+            >
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -92,7 +100,9 @@
           <v-card-text>Por favor inténtelo más tarde</v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="red darken-1" text @click="dialogError = false">Entendido</v-btn>
+            <v-btn color="red darken-1" text @click="dialogError = false"
+              >Entendido</v-btn
+            >
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -125,7 +135,6 @@
     </v-layout>
   </v-container>
 </template>
-
 
 <script>
 import TimestampDateField from "@/components/timestampDate.vue";
@@ -168,7 +177,7 @@ export default {
       countries,
       showPassword: false,
       termsAndConditionsDialog: false,
-      termsAndConditionsContent: termsAndConditionsWriter,
+      termsAndConditionsContent: termsAndConditionsWriter
     };
   },
   created: function() {

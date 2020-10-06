@@ -4,15 +4,12 @@ import cors from "cors";
 import mongoose from "mongoose";
 import { createRoutes } from "./routes";
 import fileupload from "express-fileupload";
+import config from "./config/config";
 
 // In development use .env.local for environment variables
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config({ path: '.env.local' });
+if (config.ENV !== "production") {
+  require("dotenv").config({ path: ".env.local" });
 }
-
-const mongoUrl = process.env.MONGODB_URI;
-const enabledCorsOrigins = process.env.CROSS_ORIGIN;
-const port = process.env.PORT || 3000;
 
 // Api app configuration
 const app = express();
@@ -20,7 +17,7 @@ app.use(fileupload());
 
 app.use(
   cors({
-    origin: enabledCorsOrigins
+    origin: config.CROSS_ORIGIN
   })
 );
 app.use(
@@ -30,15 +27,17 @@ app.use(
 );
 app.use(bodyParser.json());
 // When in production redirect everything not starting with 'api/*' to the static website
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(__dirname + '/public'));
-  app.get(/^(?!.*(\/api\/)).*$/, (req, res) => res.sendFile(__dirname + '/public/index.html'));
+if (config.ENV === "production") {
+  app.use(express.static(__dirname + "/public"));
+  app.get(/^(?!.*(\/api\/)).*$/, (req, res) =>
+    res.sendFile(__dirname + "/public/index.html")
+  );
 } else {
-  app.use(express.static('public'));
+  app.use(express.static("public"));
 }
 
 // Connect to Mongoose and set connection variable
-mongoose.connect(mongoUrl, {
+mongoose.connect(config.MONGO_URL, {
   useCreateIndex: true,
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -53,6 +52,6 @@ const router = createRoutes();
 app.use("/api", router);
 
 // Launch app to listen to specified port
-app.listen(port, () => {
-  console.log(`Running Silma backend on port ${port}`);
+app.listen(config.PORT, () => {
+  console.log(`Running Silma backend on port ${config.PORT}`);
 });

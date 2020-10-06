@@ -18,14 +18,22 @@ export const TextSchema = new Schema({
   description: {
     type: String,
     required: true,
-    minlength: [20, "Description is too short. It has to be at least 20 characters."],
-    maxlength: [200, "Description is too large. It has to be at most 200 characters."],
+    minlength: [
+      20,
+      "Description is too short. It has to be at least 20 characters."
+    ],
+    maxlength: [
+      200,
+      "Description is too large. It has to be at most 200 characters."
+    ]
   },
   genres: {
-    type: [{
-      type: Schema.Types.ObjectId,
-      ref: "Genre"
-    }],
+    type: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Genre"
+      }
+    ],
     validate: [rangeRule(1, 3), "Genres length is not inside its boundries."]
   },
   ageRange: {

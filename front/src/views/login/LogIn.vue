@@ -101,13 +101,13 @@ export default {
     return {
       user: {
         email: "",
-        password: "",
+        password: ""
       },
       showPassword: false,
       emailRule,
       dialogSuccess: false,
       dialogError: false,
-      dialogIncorrectInfo: false,
+      dialogIncorrectInfo: false
     };
   },
   methods: {
@@ -116,7 +116,7 @@ export default {
       try {
         const authUser = {
           email: this.user.email,
-          password: this.user.password,
+          password: this.user.password
         };
         const user = await postRequest("user/authentication", authUser);
         const isSet = setAuthCookies(user);
@@ -128,7 +128,7 @@ export default {
       } catch (error) {
         this.dialogError = true;
       }
-    },
-  },
+    }
+  }
 };
 </script>

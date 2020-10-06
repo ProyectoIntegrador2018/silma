@@ -18,17 +18,17 @@ const routes = [
   {
     path: "/Registro_Lector",
     name: "RegisterReader",
-    component: RegisterReader,
+    component: RegisterReader
   },
   {
     path: "/Registro_Escritor",
     name: "RegisterWriter",
-    component: RegisterWriter,
+    component: RegisterWriter
   },
   {
     path: "/Iniciar_Sesion",
     name: "LogIn",
-    component: LogIn,
+    component: LogIn
   },
   {
     path: "/Agregar_Escrito",
@@ -36,8 +36,8 @@ const routes = [
     component: TextRegister,
     meta: {
       requiresAuth: true,
-      withAccess: ["writer"],
-    },
+      withAccess: ["writer"]
+    }
   },
   {
     path: "/Generos",
@@ -45,8 +45,8 @@ const routes = [
     component: Genres,
     meta: {
       requiresAuth: true,
-      withAccess: ["admin"],
-    },
+      withAccess: ["admin"]
+    }
   },
   {
     path: "/",
@@ -54,8 +54,8 @@ const routes = [
     component: Dashboard,
     meta: {
       requiresAuth: true,
-      withAccess: ["admin", "reader", "writer"],
-    },
+      withAccess: ["admin", "reader", "writer"]
+    }
   },
   {
     path: "/Cuestionario_de_lectura/:id",
@@ -63,8 +63,8 @@ const routes = [
     component: Questionnarie,
     meta: {
       requiresAuth: true,
-      withAccess: ["reader"],
-    },
+      withAccess: ["reader"]
+    }
   },
   {
     path: "/Sugerencias_Texto/:id",
@@ -72,8 +72,8 @@ const routes = [
     component: SuggestionsAdmin,
     meta: {
       requiresAuth: true,
-      withAccess: ["admin"],
-    },
+      withAccess: ["admin"]
+    }
   },
   {
     path: "/Mis_Lecturas/:id",
@@ -81,8 +81,8 @@ const routes = [
     component: ChaptersVisualization,
     meta: {
       requiresAuth: true,
-      withAccess: ["reader"],
-    },
+      withAccess: ["reader"]
+    }
   },
   {
     path: "/Retroalimentacion/:id",
@@ -90,19 +90,19 @@ const routes = [
     component: Feedback,
     meta: {
       requiresAuth: true,
-      withAccess: ["admin"],
-    },
+      withAccess: ["admin"]
+    }
   },
   {
     path: "*",
-    component: PageNotFound,
-  },
+    component: PageNotFound
+  }
 ];
 
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
-  routes,
+  routes
 });
 
 router.beforeEach((to, from, next) => {

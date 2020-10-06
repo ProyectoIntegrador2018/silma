@@ -4,13 +4,8 @@ import { addAdminRoutes } from "./admin.route";
 import { addReaderRoutes } from "./reader.route";
 import { addTextRoutes } from "./text.route";
 import { addSuggestionRoutes } from "./suggestion.route";
-import {
-  authUser,
-  getAllGenres,
-  getUser
-} from "@/controllers/user.controller";
+import { authUser, getAllGenres, getUser } from "@/controllers/user.controller";
 import { verifyToken } from "@/utils/jwt";
-
 
 export const createRoutes = () => {
   const router = new Router();

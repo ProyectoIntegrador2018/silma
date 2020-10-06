@@ -22,7 +22,7 @@ export const addSuggestionSendEmail = async (selectedReaders, text) => {
       text: text._id,
       sentDate: new Date(),
       suggestionStatus: "Pending",
-      score: reader.points,
+      score: reader.points
     };
     await SuggestionModel.create(suggetionObj);
     var readerInfo = await ReaderModel.findById(reader.id).populate("user");
@@ -37,9 +37,9 @@ export const addSuggestionSendEmail = async (selectedReaders, text) => {
 
     var email = {
       email: readerInfo.user.email,
-      subject: "New Silma Reading Suggestion!",
+      subject: "New Silma Reading Suggestion!"
     };
-    await sendEmail(email, 'new_suggestion', {
+    await sendEmail(email, "new_suggestion", {
       numberOfPages: text.numberOfPages,
       genres: listGenre.join(" ,")
     });
@@ -75,11 +75,11 @@ export const runAlgorithm = async (text) => {
       betweenDatesPoints;
     var acceptedRequest = await SuggestionModel.find({
       reader: reader._id,
-      suggestionStatus: "Accepted",
+      suggestionStatus: "Accepted"
     });
     var pendingRequest = await SuggestionModel.find({
       reader: reader._id,
-      suggestionStatus: "Pending",
+      suggestionStatus: "Pending"
     });
     var completedRequest = await SuggestionModel.find({
       reader: reader._id,
@@ -95,7 +95,7 @@ export const runAlgorithm = async (text) => {
     ) {
       var resultReader = {
         id: reader._id,
-        points: finalPoints,
+        points: finalPoints
       };
       resultantReaders.push(resultReader);
     }
@@ -204,7 +204,7 @@ export const changeSuggestionStatus = async (id, newStatus, previousStatus) => {
     return suggestion;
   } else {
     throw {
-      error: `Suggestion status can't be updated to ${newStatus} when in ${suggestion.suggestionStatus} status`,
+      error: `Suggestion status can't be updated to ${newStatus} when in ${suggestion.suggestionStatus} status`
     };
   }
 };
@@ -262,7 +262,7 @@ export const getSuggestionFromReader = (request, response) => {
     const { id } = request.params;
     const suggestion = await SuggestionModel.find({
       reader: id,
-      suggestionStatus: "Pending",
+      suggestionStatus: "Pending"
     });
     return suggestion;
   });
@@ -286,13 +286,13 @@ export const getSuggestionFromReaderDashboard = (request, response) => {
       $or: [
         {
           reader: reader,
-          suggestionStatus: "Accepted",
+          suggestionStatus: "Accepted"
         },
         {
           reader: reader,
-          suggestionStatus: "Pending",
-        },
-      ],
+          suggestionStatus: "Pending"
+        }
+      ]
     });
     if (suggestion === undefined) return false;
     else return suggestion[0];
@@ -327,7 +327,7 @@ export const createSuggestionAdmin = (request, response) => {
       var reader = [{ id: request.body.reader_id, points: 25 }];
       var text = {
         _id: request.body.book_id,
-        numberOfPages: request.body.numberOfPages,
+        numberOfPages: request.body.numberOfPages
       };
       await addSuggestionSendEmail(reader, text);
       return { status: "success" };
@@ -342,28 +342,44 @@ export const getReadersWithoutSuggestion = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
     var text = await TextModel.findById(id);
-    var textWriter = [{ reader: text.writer }]
-    var completedBooks = await SuggestionModel.find({ suggestionStatus: "Completed", text: id })
-    var acceptedRequest = await SuggestionModel.find({ suggestionStatus: "Accepted" })
-    var pendingRequest = await SuggestionModel.find({ suggestionStatus: "Pending" })
-    var readers = await ReaderModel.find().populate("user").populate("preferences");
-    var occupiedReaders = [...acceptedRequest, ...pendingRequest, ...completedBooks, ...textWriter]
-    var idOccupied = []
-    occupiedReaders.forEach(element => {
-      idOccupied.push(element.reader.toString())
+    var textWriter = [{ reader: text.writer }];
+    var completedBooks = await SuggestionModel.find({
+      suggestionStatus: "Completed",
+      text: id
     });
-    var finalArr = readers.filter(function (item) {
+    var acceptedRequest = await SuggestionModel.find({
+      suggestionStatus: "Accepted"
+    });
+    var pendingRequest = await SuggestionModel.find({
+      suggestionStatus: "Pending"
+    });
+    var readers = await ReaderModel.find()
+      .populate("user")
+      .populate("preferences");
+    var occupiedReaders = [
+      ...acceptedRequest,
+      ...pendingRequest,
+      ...completedBooks,
+      ...textWriter
+    ];
+    var idOccupied = [];
+    occupiedReaders.forEach((element) => {
+      idOccupied.push(element.reader.toString());
+    });
+    var finalArr = readers.filter(function(item) {
       return idOccupied.indexOf(item._id.toString()) === -1;
     });
-    return finalArr
+    return finalArr;
   });
-}
+};
 
 //Elimina una sugerencia para un libro si el admin lo desea
 export const deleteSuggestionAdmin = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
-    SuggestionModel.findOne({ _id: id }).deleteOne().exec();
+    SuggestionModel.findOne({ _id: id })
+      .deleteOne()
+      .exec();
   });
 };
 

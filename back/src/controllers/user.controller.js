@@ -3,18 +3,19 @@ import { GenreModel } from "@/models/genre.model";
 import { send } from "@/utils/errors";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import config from "../config/config";
 
 // Authenticates a user with correct email and password.
 // Response with a user with the token.
 export const authUser = (request, response) => {
   send(response, async () => {
     const { email, password } = request.body;
-    const user = await UserModel.findOne({ email }).select(['+password']);
+    const user = await UserModel.findOne({ email }).select(["+password"]);
     // Checks if user with email exists and the password is correct.
     if (user && bcrypt.compareSync(password, user.password)) {
       // Returns user info with token.
       const userWithoutHash = await UserModel.findOne({ _id: user._id });
-      const token = jwt.sign({ sub: user.id }, process.env.SECRET_JWT);
+      const token = jwt.sign({ sub: user.id }, config.SECRET_JWT);
       return {
         ...userWithoutHash._doc,
         token
@@ -36,7 +37,9 @@ export const getUser = (request, response) => {
 // Creates a new user with an assigned role.
 export const createUser = async (request, response, role) => {
   let data = request.body;
-  let user = await UserModel.findOne({ email: data.email }).select(['+password']);
+  let user = await UserModel.findOne({ email: data.email }).select([
+    "+password"
+  ]);
   if (!user) {
     if (data.password.length < 8) {
       return { status: "Password needs to be at least 8 characters long" };

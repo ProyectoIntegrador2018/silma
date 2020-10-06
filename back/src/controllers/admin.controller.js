@@ -55,7 +55,7 @@ export const createAdmin = (request, response) => {
         ...data,
         _id: newUser._id,
         user: newUser._id
-      }
+      };
       const newAdmin = await AdminModel.create(adminData);
       newAdmin.user = newUser;
       return newAdmin;
@@ -79,12 +79,12 @@ export const fillGenres = (request, response) => {
   send(response, async () => {
     await GenreModel.deleteMany({});
     for (const genre of genres) {
-      const obj = { name: genre }
+      const obj = { name: genre };
       await GenreModel.create(obj);
     }
     return await GenreModel.find({});
-  })
-}
+  });
+};
 
 //Funcion que regresa la retroalimentacion de un lector de un texto
 export const getFeedback = (request, response) => {
@@ -97,39 +97,49 @@ export const getFeedback = (request, response) => {
 
 //Funcion que avanza la fase del texto del cual recibe su ID
 export const movePhase = (request, response) => {
-  send(response, async () => {
+  send(response, async (session) => {
     const { id } = request.params;
     const text = await TextModel.findById(id);
-    const newPhase = text.phase + 1
+    const newPhase = text.phase + 1;
     const phase = await TextModel.updateOne(
       { _id: id },
       { $set: { phase: newPhase } },
-      function (err, res) {
+      { session },
+      function(err, res) {
         if (err) throw err;
       }
-    )
+    );
     const phaseInfo = phases[newPhase - 1];
     const writer = await WriterModel.findById(text.writer);
     const user = await UserModel.findById(writer.user);
     //Enviar correo al autor del avance de su texto
-    if (newPhase === 2) { // La fase es la de aceptacion
-      await sendEmail({
-        email: user.email,
-        subject: "¡Tu novela fue aprobada!",
-      }, 'accepted', {
-        name: user.name,
-        title: text.title
-      });
+    if (newPhase === 2) {
+      // La fase es la de aceptacion
+      await sendEmail(
+        {
+          email: user.email,
+          subject: "¡Tu novela fue aprobada!"
+        },
+        "accepted",
+        {
+          name: user.name,
+          title: text.title
+        }
+      );
     } else {
-      await sendEmail({
-        email: user.email,
-        subject: "Tu novela avanzó de Fase",
-      }, 'next_phase', {
-        name: user.name,
-        title: text.title,
-        phase: newPhase + '-' + phaseInfo.name,
-        description: phaseInfo.description
-      });
+      await sendEmail(
+        {
+          email: user.email,
+          subject: "Tu novela avanzó de Fase"
+        },
+        "next_phase",
+        {
+          name: user.name,
+          title: text.title,
+          phase: newPhase + "-" + phaseInfo.name,
+          description: phaseInfo.description
+        }
+      );
     }
   });
 };
@@ -138,7 +148,7 @@ export const movePhase = (request, response) => {
 export const getFeedbackIdBySuggestion = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
-    const feedback = await FeedbackModel.find({ "suggestion": id });
+    const feedback = await FeedbackModel.find({ suggestion: id });
     return feedback[0]._id;
   });
 };
