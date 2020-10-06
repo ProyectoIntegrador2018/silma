@@ -17,6 +17,8 @@ var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
 
 var _config = _interopRequireDefault(require("../config/config"));
 
+var _user2 = require("../logics/user.logic");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -42,16 +44,20 @@ var authUser = (request, response) => {
     }).select(["+password"]); // Checks if user with email exists and the password is correct.
 
     if (user && _bcrypt.default.compareSync(password, user.password)) {
-      // Returns user info with token.
+      // Returns user info with token and user type.
       var userWithoutHash = yield _user.UserModel.findOne({
         _id: user._id
       });
+      var [admin, writer, reader] = yield (0, _user2.getUserTypes)(userWithoutHash._id);
 
       var token = _jsonwebtoken.default.sign({
         sub: user.id
       }, _config.default.SECRET_JWT);
 
       return _objectSpread({}, userWithoutHash._doc, {
+        admin,
+        writer,
+        reader,
         token
       });
     } else {
@@ -70,7 +76,16 @@ var getUser = (request, response) => {
     var {
       id
     } = request.params;
-    return yield _user.UserModel.findById(id);
+    var userModel = yield _user.UserModel.findById(id);
+    var [admin, writer, reader] = yield (0, _user2.getUserTypes)(userModel._id);
+
+    var user = _objectSpread({}, userModel.toJSON(), {
+      admin,
+      writer,
+      reader
+    });
+
+    return user;
   }));
 }; // Creates a new user with an assigned role.
 

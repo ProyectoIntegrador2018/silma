@@ -43,6 +43,7 @@ var UserSchema = new _mongoose.Schema({
     type: String,
     required: "Nationality is required"
   },
+  // This roles define the type of user
   roles: [{
     type: String,
     enums: ["admin", "writer", "reader"],

@@ -3,7 +3,8 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.send = void 0;
+exports.handleSyncRequest = handleSyncRequest;
+exports.send = exports.SilmaError = void 0;
 
 var _prettyError = _interopRequireDefault(require("pretty-error"));
 
@@ -21,7 +22,22 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-// Sends a successful or failed response to an http request.
+class SilmaError extends Error {
+  /**
+   *
+   * @param {number} status
+   * @param {string} message
+   */
+  constructor(status, message) {
+    super(message);
+    this.status = status;
+  }
+
+} // Sends a successful or failed response to an http request.
+
+
+exports.SilmaError = SilmaError;
+
 var send = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator(function* (response, callback) {
     var session = yield _mongoose.default.connection.startSession();
@@ -53,3 +69,13 @@ var send = /*#__PURE__*/function () {
 }();
 
 exports.send = send;
+
+function handleSyncRequest(callback, next) {
+  try {
+    callback();
+    next();
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+}

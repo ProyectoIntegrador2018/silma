@@ -16,9 +16,10 @@ var AdminSchema = new _mongoose.Schema({
     type: _mongoose.Schema.Types.ObjectId,
     ref: "User"
   },
-  isSuperAdmin: {
-    type: Boolean,
-    default: false
+  // This role defines the access level of the admin
+  role: {
+    type: _mongoose.Schema.Types.ObjectId,
+    ref: "Role"
   }
 });
 exports.AdminSchema = AdminSchema;

@@ -20,6 +20,8 @@ var _axios = _interopRequireDefault(require("axios"));
 
 var _admin2 = require("../controllers/admin.controller");
 
+var _role = _interopRequireDefault(require("../models/role.model"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -43,7 +45,9 @@ var deleteEverything = /*#__PURE__*/function () {
 
     var promiseSeven = _genre.GenreModel.deleteMany({});
 
-    yield Promise.all([promiseOne, promiseTwo, promiseThree, promiseFour, promiseFive, promiseSix, promiseSeven]);
+    var promiseEight = _role.default.deleteMany({});
+
+    yield Promise.all([promiseOne, promiseTwo, promiseThree, promiseFour, promiseFive, promiseSix, promiseSeven, promiseEight]);
   });
 
   return function deleteEverything() {
@@ -62,8 +66,7 @@ var createFirstAdmin = () => {
           email: "admin1@gmail.com",
           birthdate: "12/12/2000",
           phone: "8116690319",
-          nationality: "Mexico",
-          isSuperAdmin: true
+          nationality: "Mexico"
         }
       }, {
         send: data => resolve(data)
@@ -75,6 +78,54 @@ var createFirstAdmin = () => {
     };
   }());
 };
+
+function createSuperAdminRole(_x3) {
+  return _createSuperAdminRole.apply(this, arguments);
+}
+
+function _createSuperAdminRole() {
+  _createSuperAdminRole = _asyncToGenerator(function* (token) {
+    var form = {
+      code: "superAdmin",
+      name: "Super Administrador",
+      isBaseRole: true,
+      readingRead: true,
+      readingCreate: true,
+      readingEdit: true,
+      readingDelete: true,
+      bookRead: true,
+      bookCreate: true,
+      bookEdit: true,
+      bookDelete: true,
+      phaseRead: true,
+      phaseCreate: true,
+      phaseEdit: true,
+      phaseDelete: true,
+      userRead: true,
+      userCreate: true,
+      userEdit: true,
+      userDelete: true,
+      eventRead: true,
+      eventCreate: true,
+      eventEdit: true,
+      eventDelete: true,
+      reportRead: true,
+      reportCreate: true,
+      reportEdit: true,
+      reportDelete: true,
+      roleRead: true,
+      roleCreate: true,
+      roleEdit: true,
+      roleDelete: true
+    };
+    yield _axios.default.post("http://localhost:3000/api/role", form, {
+      headers: {
+        Authorization: "Bearer " + token
+      }
+    });
+  });
+  return _createSuperAdminRole.apply(this, arguments);
+}
 
 var runAll = /*#__PURE__*/function () {
   var _ref3 = _asyncToGenerator(function* () {
@@ -105,7 +156,10 @@ var runAll = /*#__PURE__*/function () {
         Authorization: "Bearer " + tokenAdmin
       }
     });
-    console.log("Admin 2: ", admin2.data._id); // Creates first reader.
+    console.log("Admin 2: ", admin2.data._id); // Create Default Roles
+
+    yield createSuperAdminRole(tokenAdmin);
+    console.log("Rol Superadministrador creado"); // Creates first reader.
 
     var reader1 = yield _axios.default.post("http://localhost:3000/api/register/readers", {
       name: "Reader 1",
