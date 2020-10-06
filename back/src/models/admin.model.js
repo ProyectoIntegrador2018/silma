@@ -3,7 +3,8 @@ import beautifyUnique from "mongoose-beautiful-unique-validation";
 
 export const AdminSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: "User" },
-  isSuperAdmin: { type: Boolean, default: false }
+  // This role defines the access level of the admin
+  role: { type: Schema.Types.ObjectId, ref: "Role" }
 });
 AdminSchema.plugin(beautifyUnique);
 

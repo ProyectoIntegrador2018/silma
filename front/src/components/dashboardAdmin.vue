@@ -1,9 +1,12 @@
 <template>
   <div>
     <div class="my-2" align="right">
-      <v-btn color="primary" dark href="/Generos"
-        >Administración de Géneros</v-btn
-      >
+      <div class="btns-wrapper">
+        <v-btn color="primary" dark href="/Generos"
+          >Administración de Géneros</v-btn
+        >
+        <v-btn color="primary" dark href="/roleList">Roles</v-btn>
+      </div>
     </div>
     <h1 align="left">Textos Recibidos</h1>
     <Table :headers="headers" :items="dataTexts">
@@ -86,6 +89,12 @@
     </v-layout>
   </div>
 </template>
+
+<style scoped>
+.btns-wrapper >>> :not(:last-child) {
+  margin-right: 8px;
+}
+</style>
 
 <script>
 import Table from "@/components/table.vue";
