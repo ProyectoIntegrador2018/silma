@@ -34,6 +34,14 @@ export const getUser = (request, response) => {
   });
 };
 
+// Response with info of every user
+export const getUsers = (req, res) => {
+  send(res, async() => {
+    const users = await UserModel.find();
+    return users
+  });
+}
+
 // Creates a new user with an assigned role.
 export const createUser = async (request, response, role) => {
   let data = request.body;
