@@ -2,10 +2,23 @@
   <div>
     <div class="my-2" align="right">
       <div class="btns-wrapper">
-        <v-btn color="primary" dark href="/Generos"
-          >Administración de Géneros</v-btn
-        >
-        <v-btn color="primary" dark href="/roleList">Roles</v-btn>
+        <v-menu offset-y open-on-hover>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn color="primary" v-bind="attrs" v-on="on">
+              <v-icon left>mdi-account-cog</v-icon>
+              Administrar
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="(item, index) in adminTask"
+              :key="index"
+              :href="`${item.route}`"
+            >
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
       </div>
     </div>
     <h1 align="left">Textos Recibidos</h1>
@@ -16,6 +29,7 @@
           <!-- avanzar fase -->
           <v-btn
             small
+            block
             color="success"
             :disabled="props.isRejected || props.phase == 4"
             depressed
@@ -25,14 +39,21 @@
         </div>
         <div style="padding-top: 5px">
           <!-- Accesar a las sugerencias pertenecientes a este texto -->
-          <v-btn small color="primary" depressed @click="seeSuggestions(props)"
-            >Sugerencias</v-btn
+          <v-btn
+            small
+            block
+            color="primary"
+            depressed
+            @click="seeSuggestions(props)"
           >
+            Sugerencias
+          </v-btn>
         </div>
         <div style="padding-top: 5px">
           <!-- Rechazar texto -->
           <v-btn
             small
+            block
             color="error"
             :disabled="props.isRejected"
             depressed
@@ -56,8 +77,9 @@
     <!-- Tablas de usuarios registrados -->
     <h1 align="left">Escritores</h1>
     <Table :headers="userHeaders" :items="dataWriters"> </Table>
-    <h1 align="left">Lectores Beta</h1>
-    <Table :headers="userHeaders" :items="dataReaders"> </Table>
+    <!-- <h1 align="left">Lectores Beta</h1>
+    <Table :headers="userHeaders" :items="dataReaders"> </Table> -->
+    <!-- Modal de rechazo de texto -->
     <v-layout row wrap>
       <v-dialog v-model="dialogReject" persistent max-width="450">
         <v-card>
@@ -155,7 +177,12 @@ export default {
       dataWriters: [],
       dialogReject: false,
       rejectingText: undefined,
-      rejectDocument: undefined
+      rejectDocument: undefined,
+      adminTask: [
+        { title: "Géneros", route: "/Generos" },
+        { title: "Usuarios", route: "/Usuarios" },
+        { title: "Roles", route: "/roleList" }
+      ]
     };
   },
   async created() {
