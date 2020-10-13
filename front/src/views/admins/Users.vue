@@ -8,9 +8,20 @@
           <v-row>
             <div style="margin: 5px 2.5px">
               <!-- Permisos de usuario -->
-              <v-btn small color="purple" @click="userPermisions(props)">
-                <v-icon color="white">mdi-account-multiple</v-icon>
-              </v-btn>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-bind="attrs"
+                    v-on="on"
+                    small
+                    color="purple"
+                    @click="userPermisions(props)"
+                  >
+                    <v-icon color="white">mdi-account-multiple</v-icon>
+                  </v-btn>
+                </template>
+                <span>Permisos de usuario</span>
+              </v-tooltip>
             </div>
             <!-- 
               Botones listos para editar y eliminar usuarios
