@@ -1,5 +1,4 @@
 import { AdminModel } from "@/models/admin.model";
-import { GenreModel } from "@/models/genre.model";
 import { FeedbackModel } from "@/models/feedback.model";
 import { TextModel } from "@/models/text.model";
 import { WriterModel } from "@/models/writer.model";
@@ -62,27 +61,6 @@ export const createAdmin = (request, response) => {
     } else {
       throw { error: "The e-mail already has a admin account" };
     }
-  });
-};
-
-//Funcion que crea un nuevo genero por parte de un administrador
-export const createGenre = (request, response) => {
-  send(response, async () => {
-    const data = request.body;
-    const genre = await GenreModel.create(data);
-    return genre;
-  });
-};
-
-//Funcion que en caso de no tener generos en la base de datos, los crea
-export const fillGenres = (request, response) => {
-  send(response, async () => {
-    await GenreModel.deleteMany({});
-    for (const genre of genres) {
-      const obj = { name: genre };
-      await GenreModel.create(obj);
-    }
-    return await GenreModel.find({});
   });
 };
 

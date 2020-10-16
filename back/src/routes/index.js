@@ -5,6 +5,7 @@ import { addReaderRoutes } from "./reader.route";
 import { addRoleRoutes } from "./role.route";
 import { addTextRoutes } from "./text.route";
 import { addSuggestionRoutes } from "./suggestion.route";
+import { addGenreRoutes } from "./genre.route";
 import { authUser, getAllGenres, getUser } from "@/controllers/user.controller";
 import { verifyToken } from "@/utils/jwt";
 
@@ -19,6 +20,7 @@ export const createRoutes = () => {
   addRoleRoutes(router);
   addTextRoutes(router);
   addSuggestionRoutes(router);
+  addGenreRoutes(router);
 
   return router;
 };

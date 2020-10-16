@@ -5,7 +5,8 @@ import RegisterWriter from "@/views/writer/WriterRegister.vue";
 import LogIn from "@/views/login/LogIn.vue";
 import Dashboard from "@/views/dashboards/Dashboard.vue";
 import PageNotFound from "@/views/PageNotFound.vue";
-import Genres from "@/views/admins/Genres.vue";
+import GenreList from "@/views/admins/GenreList.vue";
+import GenreForm from "@/views/admins/GenreForm.vue";
 import TextRegister from "@/views/writer/TextRegister.vue";
 import Questionnarie from "@/views/reader/Questionnarie.vue";
 import SuggestionsAdmin from "@/views/admins/SuggestionsAdmin.vue";
@@ -39,15 +40,6 @@ const routes = [
     meta: {
       requiresAuth: true,
       withAccess: ["writer"]
-    }
-  },
-  {
-    path: "/Generos",
-    name: "Genres",
-    component: Genres,
-    meta: {
-      requiresAuth: true,
-      withAccess: ["admin"]
     }
   },
   {
@@ -128,6 +120,45 @@ const routes = [
     path: "/roleForm/:id",
     name: "RoleFormEdit",
     component: RoleForm,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"]
+    },
+    props: { viewMode: false }
+  },
+  {
+    path: "/genres",
+    name: "GenreList",
+    component: GenreList,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"]
+    }
+  },
+  {
+    path: "/genre/create",
+    name: "GenreFormCreate",
+    component: GenreForm,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"]
+    },
+    props: { viewMode: false }
+  },
+  {
+    path: "/genre/view/:id",
+    name: "GenreFormView",
+    component: GenreForm,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"]
+    },
+    props: { viewMode: true }
+  },
+  {
+    path: "/genre/edit/:id",
+    name: "GenreFormEdit",
+    component: GenreForm,
     meta: {
       requiresAuth: true,
       withAccess: ["admin"]

@@ -9,6 +9,7 @@ export const getRequest = async (endpoint, withFiles = false) => {
   const response = await axios.get(`${apiHost}/${endpoint}`, {
     headers: { ...headerFile }
   });
+  if (response instanceof Error) throw response;
   return response.data;
 };
 
@@ -17,6 +18,7 @@ export const postRequest = async (endpoint, data, withFiles = false) => {
   const response = await axios.post(`${apiHost}/${endpoint}`, data, {
     headers: { ...headerFile }
   });
+  if (response instanceof Error) throw response;
   return response.data;
 };
 
@@ -25,6 +27,7 @@ export const patchRequest = async (endpoint, data, withFiles = false) => {
   const response = await axios.patch(`${apiHost}/${endpoint}`, data, {
     headers: { ...headerFile }
   });
+  if (response instanceof Error) throw response;
   return response.data;
 };
 
@@ -35,5 +38,6 @@ export const deleteRequest = async (endpoint, data, withFiles = false) => {
     { headers: { ...headerFile } },
     data
   );
+  if (response instanceof Error) throw response;
   return response.data;
 };
