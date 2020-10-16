@@ -25,42 +25,61 @@
     <Table :headers="headers" :items="dataTexts">
       <!-- Actions -->
       <template #actions="{ props }">
-        <div style="padding-top: 5px">
-          <!-- avanzar fase -->
-          <v-btn
-            small
-            block
-            color="success"
-            :disabled="props.isRejected || props.phase == 4"
-            depressed
-            @click="advancePhase(props)"
-            >Avanzar Fase</v-btn
-          >
-        </div>
-        <div style="padding-top: 5px">
-          <!-- Accesar a las sugerencias pertenecientes a este texto -->
-          <v-btn
-            small
-            block
-            color="primary"
-            depressed
-            @click="seeSuggestions(props)"
-          >
-            Sugerencias
-          </v-btn>
-        </div>
-        <div style="padding-top: 5px">
+        <v-row>
+          <!-- Boton avanzar fase -->
+          <div style="margin: 2.5px 2.5px">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  v-bind="attrs"
+                  v-on="on"
+                  small
+                  color="success"
+                  :disabled="props.isRejected || props.phase == 4"
+                  @click="advancePhase(props)"
+                >
+                  <v-icon>mdi-file-move</v-icon>
+                </v-btn>
+              </template>
+              <span>Avanzar fase</span>
+            </v-tooltip>
+          </div>
+          <!-- Boton para accesar a las sugerencias pertenecientes a este texto -->
+          <div style="margin: 2.5px 2.5px">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  v-bind="attrs"
+                  v-on="on"
+                  small
+                  color="primary"
+                  @click="seeSuggestions(props)"
+                >
+                  <v-icon color="white">mdi-file-document-edit</v-icon>
+                </v-btn>
+              </template>
+              <span>Sugerencias</span>
+            </v-tooltip>
+          </div>
           <!-- Rechazar texto -->
-          <v-btn
-            small
-            block
-            color="error"
-            :disabled="props.isRejected"
-            depressed
-            @click="openRejectDialog(props)"
-            >Rechazar</v-btn
-          >
-        </div>
+          <div style="margin: 2.5px 2.5px">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  v-bind="attrs"
+                  v-on="on"
+                  small
+                  color="error"
+                  :disabled="props.isRejected"
+                  @click="openRejectDialog(props)"
+                >
+                  <v-icon>mdi-file-cancel</v-icon>
+                </v-btn>
+              </template>
+              <span>Rechazar texto</span>
+            </v-tooltip>
+          </div>
+        </v-row>
       </template>
       <template #phase="{ props }">
         <v-chip
@@ -74,11 +93,6 @@
         </v-chip>
       </template>
     </Table>
-    <!-- Tablas de usuarios registrados -->
-    <h1 align="left">Escritores</h1>
-    <Table :headers="userHeaders" :items="dataWriters"> </Table>
-    <!-- <h1 align="left">Lectores Beta</h1>
-    <Table :headers="userHeaders" :items="dataReaders"> </Table> -->
     <!-- Modal de rechazo de texto -->
     <v-layout row wrap>
       <v-dialog v-model="dialogReject" persistent max-width="450">
