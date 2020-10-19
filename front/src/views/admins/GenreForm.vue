@@ -36,7 +36,7 @@
             <v-btn
               small
               color="primary"
-              :disabled="false"
+              :disabled="viewMode"
               depressed
               @click="() => openSubgenre(props, false)"
               >Editar</v-btn
@@ -44,7 +44,7 @@
             <v-btn
               small
               color="error"
-              :disabled="false"
+              :disabled="viewMode"
               depressed
               @click="() => deleteSubgenre(props)"
               >Eliminar</v-btn

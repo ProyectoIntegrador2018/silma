@@ -1,5 +1,6 @@
 import { GenreModel } from "@/models/genre.model";
 import { SubgenreModel } from "@/models/subgenre.model";
+import * as GenreValidation from "../validations/genre.validation";
 
 export async function searchGenres(query) {
   const genres = await GenreModel.find();
@@ -21,10 +22,12 @@ export async function getGenreById(genreId) {
 
 export async function createGenre(genre) {
   const { subgenres } = genre;
-  const newGenre = await GenreModel.create(genre);
+  const newGenreModel = new GenreModel(genre);
+  const newGenre = await newGenreModel.save();
   const subgenresPromises = subgenres.map((subgenre) => {
     const subgenreWithId = { ...subgenre, genre: newGenre._id };
-    return SubgenreModel.create(subgenreWithId);
+    const subgenreModel = new SubgenreModel(subgenreWithId);
+    return subgenreModel.save();
   });
   const newSubgenres = await Promise.all(subgenresPromises);
   return {
@@ -35,16 +38,20 @@ export async function createGenre(genre) {
 
 export async function updateGenre(id, genre) {
   const { subgenres, subgenresToDelete } = genre;
-  const updatedGenre = await GenreModel.findByIdAndUpdate(id, genre, {
-    useFindAndModify: false
-  });
-  const subgenresPromises = subgenres.map((subgenre) => {
-    if (subgenre._id)
-      return SubgenreModel.findByIdAndUpdate(subgenre._id, subgenre, {
-        useFindAndModify: false
-      });
+  const genreModel = await GenreModel.findById(id);
+  const updatedGenreModel = Object.assign(genreModel, genre);
+  const updatedGenre = await updatedGenreModel.save();
+
+  const subgenresPromises = subgenres.map(async (subgenre) => {
+    if (subgenre._id) {
+      const subgenreModel = await SubgenreModel.findById(subgenre._id);
+      const updatedSubgenre = Object.assign(subgenreModel, subgenre);
+      return updatedSubgenre.save();
+    }
+
     const subgenreWithId = { ...subgenre, genre: updatedGenre._id };
-    return SubgenreModel.create(subgenreWithId);
+    const newSubgenre = new SubgenreModel(subgenreWithId);
+    return newSubgenre.save();
   });
   const subgenresToDeletePromises = subgenresToDelete
     .filter((x) => !!x._id)
@@ -62,11 +69,21 @@ export async function updateGenre(id, genre) {
 }
 
 export async function deleteGenre(genreId) {
-  const deletedSubgenresPromise = SubgenreModel.deleteMany({ genre: genreId });
-  const deletedGenrePromise = GenreModel.deleteOne({ _id: genreId });
-  const [deletedSubgenres, deletedGenre] = await Promise.all([
-    deletedSubgenresPromise,
-    deletedGenrePromise
+  const subgenresToDeletePromise = SubgenreModel.find({ genre: genreId });
+  const genreToDeletePromise = GenreModel.findById(genreId);
+  const [subgenresToDelete, genreToDelete] = await Promise.all([
+    subgenresToDeletePromise,
+    genreToDeletePromise
   ]);
+  // TODO - Validate subgenres to delete
+
+  // Validate genre delete
+  await GenreValidation.onDeleteValidations(genreToDelete);
+
+  const deletedSubgenres = await Promise.all(
+    subgenresToDelete.map((subgenre) => subgenre.deleteOne())
+  );
+  const deletedGenre = await genreToDelete.deleteOne();
+
   return { deletedSubgenres, deletedGenre };
 }

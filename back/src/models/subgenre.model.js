@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 import beautifyUnique from "mongoose-beautiful-unique-validation";
+import { onSaveValidations } from "../validations/subgenre.validation";
 
 export const SubgenreSchema = new Schema({
   name: {
@@ -17,5 +18,10 @@ export const SubgenreSchema = new Schema({
   }
 });
 SubgenreSchema.plugin(beautifyUnique);
+
+SubgenreSchema.pre("save", async function (next) {
+  onSaveValidations(this);
+  next();
+});
 
 export const SubgenreModel = model("Subgenre", SubgenreSchema);
