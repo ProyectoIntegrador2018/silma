@@ -1,10 +1,11 @@
 <template>
   <v-container>
     <div class="display-3 font-weight-medium" align="center">Usuarios</div>
-    <div>
+    <div style="margin-top: 25px">
+      <h2 align="left">Administradores</h2>
       <!-- Tablas de usuarios registrados -->
-      <Table :headers="userHeaders" :items="dataWriters">
-        <template #actions="{ props }">
+      <Table :headers="userHeaders" :items="admins">
+        <template #actions="{ }">
           <v-row>
             <div style="margin: 5px 2.5px">
               <!-- Permisos de usuario -->
@@ -14,8 +15,8 @@
                     v-bind="attrs"
                     v-on="on"
                     small
-                    color="purple"
-                    @click="userPermisions(props)"
+                    color="primary"
+                    :href="`/RoleSet`"
                   >
                     <v-icon color="white">mdi-account-multiple</v-icon>
                   </v-btn>
@@ -24,19 +25,39 @@
               </v-tooltip>
             </div>
             <!-- 
-              Botones listos para editar y eliminar usuarios
-            <div style="margin: 5px 2.5px">
-              Editar Usuario
-              <v-btn small color="primary">
-                <v-icon>mdi-account-edit</v-icon>
-              </v-btn>
-            </div>
             <div style="margin: 5px 2.5px">
               Eliminar Usuario
               <v-btn small color="error">
                 <v-icon>mdi-account-remove</v-icon>
               </v-btn>
             </div> -->
+          </v-row>
+        </template>
+      </Table>
+    </div>
+    <div style="margin-top: 25px">
+      <h2 align="left">Lectores y Escritores</h2>
+      <!-- Tablas de usuarios registrados -->
+      <Table :headers="userHeaders" :items="readersWriters">
+        <template #actions="{ }">
+          <v-row>
+            <div style="margin: 5px 2.5px">
+              <!-- Permisos de usuario -->
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-bind="attrs"
+                    v-on="on"
+                    small
+                    color="error"
+                    :href="``"
+                  >
+                    <v-icon color="white">mdi-account-remove</v-icon>
+                  </v-btn>
+                </template>
+                <span>Revocar acceso</span>
+              </v-tooltip>
+            </div>
           </v-row>
         </template>
       </Table>
@@ -62,7 +83,8 @@ export default {
         { text: "Roles", sortable: false, value: "roles" },
         { text: "Acciones", actions: true, sortable: false }
       ],
-      dataWriters: []
+      readersWriters: [],
+      admins: [],
     };
   },
   async created() {
@@ -70,29 +92,39 @@ export default {
     await this.composeUsers();
   },
   methods: {
-    //Funcion que se encarga de formatear los usuarios con sus datos
     async composeUsers() {
       const users = await getRequest("users");
+      
+      // Formateando los usuarios los usuarios con sus datos
       users.forEach((user) => {
         let userRoles = "";
         user.roles.forEach((role) => {
-          userRoles += `${role}, `;
+          userRoles += `${this.formatRole(role)}, `;
         });
         user.roles = userRoles.slice(0, -2);
       });
-      this.dataWriters = users;
+
+      // Dividiendo los usuarios en administradores y usuarios ordinarios
+      const readersWriters = []
+      const admins = users.filter( user => {
+        let isAdmin = user.roles.includes("Administrador")
+        if (isAdmin) {
+          return isAdmin;
+        }
+        else {
+          readersWriters.push(user)
+        }
+      });
+      this.admins = admins;
+      this.readersWriters = readersWriters;
     },
-    userPermisions(item) {
-      const options = {
-        title: "Permisos",
-        message: "Configuraciones d epermisso de usuarios",
-        styleOptions: { color: "primary" },
-        onAccept: () => {
-          console.log("Permisos de usuarios");
-        },
-        onReject: () => {}
-      };
-      events.$emit("dialog", options);
+    formatRole(role) {
+      switch (role) {
+        case "admin" : return "Administrador";
+        case "reader" : return "Lector"
+        case "writer" : return "Escritor"
+        default: return role
+      }
     }
   }
 };
