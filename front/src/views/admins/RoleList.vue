@@ -23,6 +23,7 @@
               >Ver</v-btn
             >
             <v-btn
+              v-if="!props.isBaseRole"
               small
               color="primary"
               :disabled="false"
@@ -35,6 +36,7 @@
               >Editar</v-btn
             >
             <v-btn
+              v-if="!props.isBaseRole"
               small
               color="error"
               :disabled="false"
@@ -76,10 +78,11 @@ export default {
   data() {
     return {
       headers: [
+        { text: "Código", value: "code" },
         { text: "Nombre", value: "name" },
         { text: "Acciones", sortable: false, actions: true }
       ],
-      roles: [{ name: "Admin" }, { name: "Escritor" }, { name: "Usuario" }]
+      roles: []
     };
   },
   methods: {
@@ -87,6 +90,7 @@ export default {
       try {
         this.roles = await getRequest("role", false);
       } catch (error) {
+        console.error(error);
         const message = getErrorMessage(error, Messages.SomethingWentWrong());
         snackbar(message);
       }
@@ -97,6 +101,7 @@ export default {
         await this.dataInit();
         snackbar(Messages.CRUDOperationSuccess("eliminado"));
       } catch (error) {
+        console.error(error);
         const message = getErrorMessage(error, Messages.SomethingWentWrong());
         snackbar(message);
       }

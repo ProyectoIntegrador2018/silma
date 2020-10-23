@@ -4,6 +4,7 @@ import { send } from "@/utils/errors";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import config from "../config/config";
+import { getUserTypes } from "../logics/user.logic";
 
 // Authenticates a user with correct email and password.
 // Response with a user with the token.
@@ -13,11 +14,16 @@ export const authUser = (request, response) => {
     const user = await UserModel.findOne({ email }).select(["+password"]);
     // Checks if user with email exists and the password is correct.
     if (user && bcrypt.compareSync(password, user.password)) {
-      // Returns user info with token.
+      // Returns user info with token and user type.
       const userWithoutHash = await UserModel.findOne({ _id: user._id });
+      const [admin, writer, reader] = await getUserTypes(userWithoutHash._id);
+
       const token = jwt.sign({ sub: user.id }, config.SECRET_JWT);
       return {
         ...userWithoutHash._doc,
+        admin,
+        writer,
+        reader,
         token
       };
     } else {
@@ -30,7 +36,10 @@ export const authUser = (request, response) => {
 export const getUser = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
-    return await UserModel.findById(id);
+    const userModel = await UserModel.findById(id);
+    const [admin, writer, reader] = await getUserTypes(userModel._id);
+    const user = { ...userModel.toJSON(), admin, writer, reader };
+    return user;
   });
 };
 
