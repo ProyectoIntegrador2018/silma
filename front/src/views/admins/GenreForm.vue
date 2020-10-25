@@ -71,7 +71,9 @@
         "
         >Cancelar</v-btn
       >
-      <v-btn color="primary" :disabled="viewMode" @click="save">Guardar</v-btn>
+      <v-btn color="primary" :disabled="loading || viewMode" @click="save"
+        >Guardar</v-btn
+      >
     </div>
   </v-container>
 </template>
@@ -93,6 +95,7 @@ import Messages from "../../utils/messages";
 import { snackbar } from "../../utils/events";
 import Table from "../../components/table";
 import SubgenreFormModal from "../../components/SubgenreFormModal";
+import form from "../../mixins/form";
 
 export default {
   props: {
@@ -101,6 +104,7 @@ export default {
       required: true
     }
   },
+  mixins: [form],
   components: {
     Table,
     SubgenreFormModal
@@ -132,8 +136,12 @@ export default {
     this.dataInit();
   },
   methods: {
-    dataInit() {
-      if (this.id) this.getById();
+    async dataInit() {
+      if (this.id) {
+        this.updateLoading(true);
+        await this.getById();
+        this.updateLoading(false);
+      }
     },
     async getById() {
       try {
@@ -151,6 +159,7 @@ export default {
         return;
       }
       try {
+        this.updateLoading(true);
         if (this.id) {
           await this.update();
           snackbar(Messages.CRUDOperationSuccess("actualizado"));
@@ -164,6 +173,7 @@ export default {
         const message = getErrorMessage(error, Messages.SomethingWentWrong());
         snackbar(message);
       }
+      this.updateLoading(false);
     },
     async create() {
       await postRequest("genre", this.genre, false);

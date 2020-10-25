@@ -37,7 +37,9 @@
         "
         >Cancelar</v-btn
       >
-      <v-btn color="success" :disabled="viewMode" @click="save">Guardar</v-btn>
+      <v-btn color="success" :disabled="loading || viewMode" @click="save"
+        >Guardar</v-btn
+      >
     </div>
   </div>
 </template>
@@ -54,12 +56,14 @@ import {
 } from "../../utils/requestsNoErr";
 import { getErrorMessage } from "../../utils/utils";
 import { snackbar } from "../../utils/events";
+import form from "../../mixins/form";
 
 export default {
   name: "RoleForm",
   components: {
     PermissionsTable
   },
+  mixins: [form],
   props: {
     viewMode: {
       type: Boolean,
@@ -130,6 +134,7 @@ export default {
       }
 
       try {
+        this.updateLoading(true);
         if (this.id) {
           await patchRequest(`role/${this.id}`, this.form);
           snackbar(Messages.CRUDOperationSuccess("actualizado"));
@@ -142,11 +147,14 @@ export default {
         const message = getErrorMessage(error, Messages.SomethingWentWrong());
         snackbar(message);
       }
+      this.updateLoading(false);
     }
   },
-  mounted() {
+  async mounted() {
     this.id = this.$route.params.id;
-    this.dataInit();
+    this.updateLoading(true);
+    await this.dataInit();
+    this.updateLoading(false);
   }
 };
 </script>

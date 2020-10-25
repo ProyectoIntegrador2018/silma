@@ -71,10 +71,12 @@ import { deleteRequest, getRequest } from "../../utils/requestsNoErr";
 import { getErrorMessage } from "../../utils/utils";
 import { snackbar } from "../../utils/events";
 import Messages from "../../utils/messages";
+import list from "../../mixins/list";
 
 export default {
   name: "RoleList",
   components: { Table },
+  mixins: [list],
   data() {
     return {
       headers: [
@@ -88,12 +90,14 @@ export default {
   methods: {
     async dataInit() {
       try {
+        this.updateLoading(true);
         this.roles = await getRequest("role", false);
       } catch (error) {
         console.error(error);
         const message = getErrorMessage(error, Messages.SomethingWentWrong());
         snackbar(message);
       }
+      this.updateLoading(false);
     },
     async deleteRole(id) {
       try {

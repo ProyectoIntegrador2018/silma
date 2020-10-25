@@ -65,11 +65,13 @@ import { getErrorMessage } from "../../utils/utils";
 import Messages from "../../utils/messages";
 import { snackbar } from "../../utils/events";
 import Table from "../../components/table";
+import list from "../../mixins/list";
 
 export default {
   components: {
     Table
   },
+  mixins: [list],
   data() {
     return {
       genres: [],
@@ -80,8 +82,10 @@ export default {
       ]
     };
   },
-  mounted() {
-    this.getGenres();
+  async mounted() {
+    this.updateLoading(true);
+    await this.getGenres();
+    this.updateLoading(false);
   },
   methods: {
     async getGenres() {
