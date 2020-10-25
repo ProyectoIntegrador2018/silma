@@ -11,23 +11,29 @@
         <tr v-for="item in props.items" :key="item._id">
           <td v-for="header in displayedHeaders" :key="header.value">
             <div v-if="header.text == 'Fase'">
-              <select v-model="item.phase" @change="onChange(item, $event)">
-                <option value="1">Enviar Texto</option>
-                <option value="2">Lectura Editorial</option>
-                <option value="3">Entrevista con el autor</option>
-                <option value="4">Contrato</option>
-                <option value="5">Tallereo</option>
-                <option value="6">Correcciones</option>
-                <option value="7">Portada</option>
-                <option value="8">Maquetado</option>
-                <option value="9">Impresion</option>
-              </select>
-            </div>
-            <div
-              v-if="header.text != 'Fase'"
-              class="text-truncate"
-              :style="{ width: header.width }"
-            >
+              <div v-if="admin"> 
+                <v-select v-model="item.phase" 
+                :items="faseOptions"
+                item-text="label"
+                item-value="value"
+                @change="onChange(item)"
+                style="width:100%;max-width:75%;"
+                >
+                </v-select>
+              </div>
+              <div v-if="!admin"> 
+                <v-select v-model="item.phase" 
+                :items="faseOptions"
+                item-text="label"
+                item-value="value"
+                @change="onChange(item)"
+                disabled
+                style="width:100%;max-width:75%;"
+                >
+                </v-select>
+              </div>
+            </div>  
+            <div  v-if="header.text != 'Fase'" class="text-truncate" :style="{ width: header.width }">
               <slot
                 :name="header.value"
                 :value="item[header.value]"
@@ -54,10 +60,22 @@ export default {
     headers: { type: Array },
     items: { type: Array },
     withPagination: { type: Boolean, default: false },
-    expand: { type: Boolean, default: false }
+    expand: { type: Boolean, default: false },
+    admin: { type: Boolean, default: false}
   },
   data() {
     return {
+      faseOptions: [
+        {value: 1, label: "Enviar Texto" }, 
+        {value: 2, label: "Lectura Editorial"},
+        {value: 3, label: "Entrevista con el autor"},
+        {value: 4, label: "Contrato"},
+        {value: 5, label: "Tallereo"},
+        {value: 6, label: "Correcciones"},
+        {value: 7, label: "Portada"},
+        {value: 8, label: "Maquetado"},
+        {value: 9, label: "Impresion"}
+      ],
       pagination: {
         rowsPerPage: 300,
         totalItems: 20
@@ -93,7 +111,7 @@ export default {
   },
   methods: {
     onChange(item, event) {
-      this.$emit("changePhase", item._id, event.target.value);
+      this.$emit("changePhase",item._id, item.phase)
     }
   }
 };
