@@ -99,7 +99,11 @@ export default {
         roleRead: false,
         roleCreate: false,
         roleEdit: false,
-        roleDelete: false
+        roleDelete: false,
+        genreRead: false,
+        genreCreate: false,
+        genreEdit: false,
+        genreDelete: false
       },
       id: ""
     };

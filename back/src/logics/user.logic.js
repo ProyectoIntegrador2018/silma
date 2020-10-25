@@ -8,10 +8,10 @@ export async function getUserTypes(userId) {
   }).populate("role");
   const writerPromise = WriterModel.findOne({
     user: userId
-  }).populate("role");
+  });
   const readerPromise = ReaderModel.findOne({
     user: userId
-  }).populate("role");
+  });
 
   const userTypes = await Promise.all([
     adminPromise,

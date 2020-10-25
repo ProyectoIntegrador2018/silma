@@ -14,6 +14,7 @@ import ChaptersVisualization from "@/views/reader/VisualizationChapters.vue";
 import RoleList from "@/views/admins/RoleList.vue";
 import RoleForm from "@/views/admins/RoleForm.vue";
 import Feedback from "@/views/admins/Feedbacks.vue";
+import { cleanAuthCookies } from "@/utils/cookies";
 
 Vue.use(VueRouter);
 // NOTE: Use 'withAccess' for pages that can only be accessed by certain users.
@@ -93,7 +94,8 @@ const routes = [
     component: RoleList,
     meta: {
       requiresAuth: true,
-      withAccess: ["admin"]
+      withAccess: ["admin"],
+      permission: "roleRead"
     }
   },
   {
@@ -102,7 +104,8 @@ const routes = [
     component: RoleForm,
     meta: {
       requiresAuth: true,
-      withAccess: ["admin"]
+      withAccess: ["admin"],
+      permission: "roleCreate"
     },
     props: { viewMode: false }
   },
@@ -112,7 +115,8 @@ const routes = [
     component: RoleForm,
     meta: {
       requiresAuth: true,
-      withAccess: ["admin"]
+      withAccess: ["admin"],
+      permission: "roleRead"
     },
     props: { viewMode: true }
   },
@@ -122,7 +126,8 @@ const routes = [
     component: RoleForm,
     meta: {
       requiresAuth: true,
-      withAccess: ["admin"]
+      withAccess: ["admin"],
+      permission: "roleEdit"
     },
     props: { viewMode: false }
   },
@@ -132,7 +137,8 @@ const routes = [
     component: GenreList,
     meta: {
       requiresAuth: true,
-      withAccess: ["admin"]
+      withAccess: ["admin"],
+      permission: "genreRead"
     }
   },
   {
@@ -141,7 +147,8 @@ const routes = [
     component: GenreForm,
     meta: {
       requiresAuth: true,
-      withAccess: ["admin"]
+      withAccess: ["admin"],
+      permission: "genreCreate"
     },
     props: { viewMode: false }
   },
@@ -151,7 +158,8 @@ const routes = [
     component: GenreForm,
     meta: {
       requiresAuth: true,
-      withAccess: ["admin"]
+      withAccess: ["admin"],
+      permission: "genreRead"
     },
     props: { viewMode: true }
   },
@@ -161,7 +169,8 @@ const routes = [
     component: GenreForm,
     meta: {
       requiresAuth: true,
-      withAccess: ["admin"]
+      withAccess: ["admin"],
+      permission: "genreEdit"
     },
     props: { viewMode: false }
   },
@@ -181,7 +190,9 @@ router.beforeEach((to, from, next) => {
   // Redirect when authentication is required and token is not provided.
   const token = Vue.$cookies.get("token");
   const userType = Vue.$cookies.get("user_type");
+  const role = Vue.$cookies.get("role");
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  const requiredPermission = to.meta.permission;
   if (requiresAuth && (!token || !userType)) {
     next("Iniciar_Sesion");
     return;
@@ -193,7 +204,13 @@ router.beforeEach((to, from, next) => {
   const hasAccess = withAccess.some((accessTypes) =>
     accessTypes.some((accessType) => accessType === userType)
   );
-  if (requiresAuth && !hasAccess) {
+
+  // If user doesn't has access, close session and redirect to login
+  if (
+    (requiresAuth && !hasAccess) ||
+    (requiredPermission && !role[requiredPermission])
+  ) {
+    cleanAuthCookies();
     next("Iniciar_Sesion");
     return;
   }

@@ -126,6 +126,22 @@ export const RoleSchema = new Schema({
   roleDelete: {
     type: Boolean,
     default: false
+  },
+  genreRead: {
+    type: Boolean,
+    default: false
+  },
+  genreCreate: {
+    type: Boolean,
+    default: false
+  },
+  genreEdit: {
+    type: Boolean,
+    default: false
+  },
+  genreDelete: {
+    type: Boolean,
+    default: false
   }
 });
 

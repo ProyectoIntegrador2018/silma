@@ -4,7 +4,14 @@ import { AdminModel } from "../models/admin.model";
 import { WriterModel } from "../models/writer.model";
 import { ReaderModel } from "../models/reader.model";
 import config from "../config/config";
+import { SilmaError } from "./errors";
+import Messages from "./messages";
 
+/**
+ *
+ * @param {['admin', 'reader', 'writer']} authorizedUserTypes User types of the current user
+ * @param {string} permission Permission required
+ */
 export function verifyToken(authorizedUserTypes, permission = null) {
   // If array is empty, any role can access that endpoint
   authorizedUserTypes = authorizedUserTypes || ["admin", "reader", "writer"];
@@ -18,6 +25,7 @@ export function verifyToken(authorizedUserTypes, permission = null) {
 
 async function isRevoked(req, payload, done, authorizedUserTypes, permission) {
   const user = await UserModel.findById(payload.sub);
+  if (!user) return done(error, true);
   const adminPromise = AdminModel.findOne({ user: user._id }).populate("role");
   const writerPromise = WriterModel.findOne({ user: user._id }).populate(
     "role"
@@ -26,24 +34,17 @@ async function isRevoked(req, payload, done, authorizedUserTypes, permission) {
     "role"
   );
 
-  const [admin, writer, reader] = await Promise.all([
-    adminPromise,
-    writerPromise,
-    readerPromise
-  ]);
+  const roles = await Promise.all([adminPromise, writerPromise, readerPromise]);
 
   if (user) {
-    const isAuthorized = hasPermission(
-      authorizedUserTypes,
-      [admin, writer, reader],
-      permission
-    );
+    const isAuthorized = hasPermission(authorizedUserTypes, roles, permission);
     if (isAuthorized) {
       return done();
     }
   }
-  // revoke token if user no longer exists
-  return done(null, true);
+  // Revoke token if user no longer exists or doesn't have access to the route
+  const error = new SilmaError(401, Messages.Unauthorized());
+  return done(error, true);
 }
 
 /**
