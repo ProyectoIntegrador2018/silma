@@ -2,7 +2,7 @@
   <div>
     <div class="my-2" align="right">
       <div class="btns-wrapper">
-        <v-btn color="primary" dark href="/Generos"
+        <v-btn color="primary" dark href="/genres"
           >Administración de Géneros</v-btn
         >
         <v-btn color="primary" dark href="/roleList">Roles</v-btn>
@@ -183,7 +183,11 @@ export default {
         styleOptions: { color: "primary" },
         onAccept: async () => {
           const token = this.$cookies.get("token");
-          await postRequest("admins/texts/movePhase/" + id, {phase: value}, token);
+          await postRequest(
+            "admins/texts/movePhase/" + id,
+            { phase: value },
+            token
+          );
           this.getTexts();
         },
         onReject: () => {}

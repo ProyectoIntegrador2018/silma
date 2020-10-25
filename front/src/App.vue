@@ -120,4 +120,9 @@ export default {
 .bottom-buttons-wrapper > button:first-child {
   margin-right: 16px;
 }
+
+.actions-wrapper {
+  display: flex;
+  justify-content: space-evenly;
+}
 </style>
