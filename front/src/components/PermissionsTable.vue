@@ -138,6 +138,12 @@ export default {
           name: "role",
           hasCrudPermissions: true,
           specialPermissions: []
+        },
+        {
+          display: "Géneros",
+          name: "genre",
+          hasCrudPermissions: true,
+          specialPermissions: []
         }
       ];
 

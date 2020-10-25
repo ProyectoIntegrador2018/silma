@@ -2,10 +2,20 @@
   <div>
     <div class="my-2" align="right">
       <div class="btns-wrapper">
-        <v-btn color="primary" dark href="/genres"
+        <v-btn
+          v-if="hasPermission('genreRead')"
+          color="primary"
+          dark
+          href="/genres"
           >Administración de Géneros</v-btn
         >
-        <v-btn color="primary" dark href="/roleList">Roles</v-btn>
+        <v-btn
+          v-if="hasPermission('roleRead')"
+          color="primary"
+          dark
+          href="/roleList"
+          >Roles</v-btn
+        >
       </div>
     </div>
     <h1 align="left">Textos Recibidos</h1>
@@ -90,6 +100,7 @@ import Table from "@/components/table.vue";
 import { postRequest, getRequest } from "@/utils/requests";
 import { requiredRule } from "@/utils/rules";
 import { events } from "../main";
+import { hasPermission } from "../utils/utils";
 
 export default {
   components: {
@@ -98,6 +109,7 @@ export default {
   data() {
     return {
       requiredRule,
+      hasPermission,
       //Titulos que corresponden a la tabla y de donde se obtienen sus datos
       headers: [
         { text: "Título", align: "start", sortable: false, value: "title" },
