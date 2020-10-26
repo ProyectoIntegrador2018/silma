@@ -6,7 +6,8 @@ import {
   fillGenres,
   getFeedback,
   movePhase,
-  getFeedbackIdBySuggestion
+  getFeedbackIdBySuggestion,
+  setRole
 } from "@/controllers/admin.controller";
 
 import {
@@ -48,4 +49,5 @@ export const addAdminRoutes = (router) => {
     verifyToken(["admin"]),
     getFeedbackIdBySuggestion
   );
+  router.patch("/adminsSetRole/:id/:role", setRole);
 };

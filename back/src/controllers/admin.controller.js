@@ -151,3 +151,16 @@ export const getFeedbackIdBySuggestion = (request, response) => {
     return feedback[0]._id;
   });
 };
+
+export const setRole = (req, res) => {
+  send(res, async () => {
+    const newRole = await AdminModel.findByIdAndUpdate(
+      req.params.id,
+      { $set: { 'role': req.params.role }},
+      { useFindAndModify: false },
+      (err, res) => {
+        if (err) throw err;
+      });
+    return newRole;
+  });
+}
