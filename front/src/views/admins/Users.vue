@@ -39,7 +39,7 @@
       <h2 align="left">Lectores y Escritores</h2>
       <!-- Tablas de usuarios registrados -->
       <Table :headers="userHeaders" :items="readersWriters">
-        <template #actions="{ }">
+        <template #actions="{ props }">
           <v-row>
             <div style="margin: 5px 2.5px">
               <!-- Permisos de usuario -->
@@ -50,7 +50,7 @@
                     v-on="on"
                     small
                     color="error"
-                    :href="``"
+                    @click="openDialog(props)"
                   >
                     <v-icon color="white">mdi-account-remove</v-icon>
                   </v-btn>
@@ -62,13 +62,38 @@
         </template>
       </Table>
     </div>
+    <div>
+      <!-- Modal de rechazo de texto -->
+      <v-layout row wrap>
+        <v-dialog v-model="dialogStatus" persistent max-width="450">
+          <v-card>
+            <v-card-title class="headline">Revocar acceso a {{ this.selectedUser.name }} </v-card-title>
+            <v-card-text>
+              Es probable que quieras primero enviar un aviso sobre su inactivdad al usuario antes de revocarle su acceso.
+            </v-card-text>
+            <v-card-actions>
+              <v-btn color="secondary darken-1" text @click="closeDialog()">
+                Cancelar
+              </v-btn>
+              <v-spacer></v-spacer>
+              <v-btn color="primary darken-1" text @click="sendNotice()">
+                Avisar
+              </v-btn>
+              <v-spacer></v-spacer>
+              <v-btn color="red darken-1" text @click="revokeAccess()">
+                Revocar
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-layout>
+    </div>
   </v-container>
 </template>
 
 <script>
 import Table from "@/components/table.vue";
-import { requiredRule, letterRule } from "@/utils/rules";
-import { getRequest } from "@/utils/requests";
+import { getRequest, deleteRequest } from "@/utils/requests";
 import { events } from "../../main";
 
 export default {
@@ -85,6 +110,8 @@ export default {
       ],
       readersWriters: [],
       admins: [],
+      selectedUser: [],
+      dialogStatus: false,
     };
   },
   async created() {
@@ -125,7 +152,25 @@ export default {
         case "writer" : return "Escritor"
         default: return role
       }
-    }
+    },
+    openDialog(user) {
+      this.dialogStatus = true;
+      this.selectedUser = user;
+    },
+    closeDialog() {
+      this.dialogStatus = false;
+    },
+    async sendNotice() {
+      this.dialogStatus = false;
+      console.log("Send Notice", this.selectedUser);
+      await getRequest(`/users/SendNotice/${this.selectedUser._id}`);
+    },
+    async revokeAccess() {
+      this.dialogStatus = false;
+      console.log("Revoke access");
+      await deleteRequest(`/users/DeleteUser/${this.selectedUser._id}`);
+      window.location.reload();
+    },
   }
 };
 </script>

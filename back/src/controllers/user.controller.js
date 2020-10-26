@@ -1,10 +1,13 @@
 import { UserModel } from "@/models/user.model";
+import { WriterModel } from "@/models/writer.model";
+import { ReaderModel } from "@/models/reader.model"; 
 import { GenreModel } from "@/models/genre.model";
 import { send } from "@/utils/errors";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import config from "../config/config";
 import { getUserTypes } from "../logics/user.logic";
+import { sendEmail } from "@/utils/mailSender";
 
 // Authenticates a user with correct email and password.
 // Response with a user with the token.
@@ -79,3 +82,39 @@ export const getAllGenres = (request, response) => {
     return genres;
   });
 };
+
+export const sendNotice = (req, res) => {
+  send (res, async () => {
+    const user = await UserModel.findById(req.params.id);
+    console.log(user);
+    // await sendEmail(
+    //   {
+    //     email: user.email,
+    //     subject: "¡Tu novela fue aprobada!"
+    //   },
+    //   "accepted",
+    //   {
+    //     name: user.name,
+    //     title: "Tu cuenta está a punto de ser desactivada"
+    //   }
+    // );
+
+    return user; 
+  });
+}
+
+export const deleteUser = (req, res) => {
+  
+  send(res, async () => {
+    const user_id = req.params.id;
+    WriterModel.findOne({ user: user_id })
+      .deleteOne()
+      .exec();
+    ReaderModel.findOne({ user: user_id })
+      .deleteOne()
+      .exec();
+    UserModel.findOne({ _id: user_id })
+      .deleteOne()
+      .exec();
+  });
+}
