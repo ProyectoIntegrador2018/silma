@@ -6,6 +6,7 @@ import LogIn from "@/views/login/LogIn.vue";
 import Dashboard from "@/views/dashboards/Dashboard.vue";
 import PageNotFound from "@/views/PageNotFound.vue";
 import Users from "@/views/admins/Users.vue";
+import RoleSet from "@/views/admins/RoleSet.vue";
 import Genres from "@/views/admins/Genres.vue";
 import TextRegister from "@/views/writer/TextRegister.vue";
 import Questionnarie from "@/views/reader/Questionnarie.vue";
@@ -55,6 +56,15 @@ const routes = [
     path: "/Usuarios", 
     name: "Users",
     component: Users,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"]
+    }
+  },
+  {
+    path: "/RoleSet/:id", 
+    name: "RoleSet",
+    component: RoleSet,
     meta: {
       requiresAuth: true,
       withAccess: ["admin"]

@@ -5,7 +5,7 @@
       <h2 align="left">Administradores</h2>
       <!-- Tablas de usuarios registrados -->
       <Table :headers="userHeaders" :items="admins">
-        <template #actions="{ }">
+        <template #actions="{ props }">
           <v-row>
             <div style="margin: 5px 2.5px">
               <!-- Permisos de usuario -->
@@ -16,7 +16,7 @@
                     v-on="on"
                     small
                     color="primary"
-                    :href="`/RoleSet`"
+                    @click="() => {$router.push(`RoleSet/${props._id}`);}"
                   >
                     <v-icon color="white">mdi-account-multiple</v-icon>
                   </v-btn>
