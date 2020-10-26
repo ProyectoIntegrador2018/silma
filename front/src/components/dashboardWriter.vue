@@ -21,7 +21,7 @@
       >Agregar Escrito</v-btn
     >
     <!-- Tabla de escritos registrados -->
-    <Table :headers="headers" :items="data">
+    <Table :headers="headers" :items="data" @textDetails="seeTextDetails">
       <template #phase="{ props }">
         <v-chip
           label
@@ -34,12 +34,38 @@
         </v-chip>
       </template>
     </Table>
+    <v-dialog
+      v-model="dialog"
+      persistent
+      max-width="60%"
+    >
+      <v-card>
+        <v-card-title class="headline">
+          Fases cumplidas
+        </v-card-title>
+        <v-card-text>
+          <Table :headers="headersDialog" :items="dataDialog" v-bind:isDashboard="false">
+          </Table>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="blue"
+            text
+            @click="dialog = false"
+          >
+            Cerrar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import Table from "@/components/table.vue";
 import { getRequest } from "@/utils/requests";
+import { phases } from "@/utils/constants.js";
 
 export default {
   components: {
@@ -61,7 +87,19 @@ export default {
       ],
       data: [],
       writer: this.$cookies.get("user_id"),
-      role: this.$cookies.get("user_type")
+      role: this.$cookies.get("user_type"),
+      phaseDetails: phases,
+      dialog: false,
+      headersDialog: [
+        {
+          text: "Fases",
+          align: "start",
+          sortable: true,
+          value: "label"
+        },
+        { text: "Descripción", value: "description" }
+      ],
+      dataDialog: null
     };
   },
   asyncComputed: {
@@ -69,6 +107,12 @@ export default {
     async getTexts() {
       const token = this.$cookies.get("token");
       this.data = await getRequest(`texts/writer/${this.writer}`, token);
+    }
+  },
+  methods:{
+    seeTextDetails(item){
+      this.dataDialog = this.phaseDetails.filter(phase => phase.value <= item.phase);
+      this.dialog = true
     }
   }
 };

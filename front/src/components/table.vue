@@ -11,24 +11,23 @@
         <tr v-for="item in props.items" :key="item._id">
           <td v-for="header in displayedHeaders" :key="header.value">
             <div v-if="header.text == 'Fase'">
-              <div v-if="admin"> 
+              <div v-if="admin && isDashboard"> 
                 <v-select v-model="item.phase" 
                 :items="faseOptions"
                 item-text="label"
                 item-value="value"
                 @change="onChange(item)"
-                style="width:100%;max-width:75%;"
+                style="width:100%;"
                 >
                 </v-select>
               </div>
-              <div v-if="!admin"> 
+              <div v-if="!admin && isDashboard" @click="seeTextDetails(item)"> 
                 <v-select v-model="item.phase" 
                 :items="faseOptions"
                 item-text="label"
                 item-value="value"
-                @change="onChange(item)"
-                disabled
-                style="width:100%;max-width:75%;"
+                readonly
+                style="max-width:35%;"
                 >
                 </v-select>
               </div>
@@ -55,27 +54,19 @@
 </template>
 
 <script>
+import { phases } from "@/utils/constants.js";
 export default {
   props: {
     headers: { type: Array },
     items: { type: Array },
     withPagination: { type: Boolean, default: false },
     expand: { type: Boolean, default: false },
-    admin: { type: Boolean, default: false}
+    admin: { type: Boolean, default: false},
+    isDashboard: { type: Boolean, default: true}
   },
   data() {
     return {
-      faseOptions: [
-        {value: 1, label: "Enviar Texto" }, 
-        {value: 2, label: "Lectura Editorial"},
-        {value: 3, label: "Entrevista con el autor"},
-        {value: 4, label: "Contrato"},
-        {value: 5, label: "Tallereo"},
-        {value: 6, label: "Correcciones"},
-        {value: 7, label: "Portada"},
-        {value: 8, label: "Maquetado"},
-        {value: 9, label: "Impresion"}
-      ],
+      faseOptions: phases,
       pagination: {
         rowsPerPage: 300,
         totalItems: 20
@@ -109,9 +100,12 @@ export default {
       return [...expandColumn, ...this.headers];
     }
   },
-  methods: {
-    onChange(item, event) {
+  methods:{
+    onChange(item) {
       this.$emit("changePhase",item._id, item.phase)
+    },
+    seeTextDetails(item){
+      this.$emit("textDetails",item);
     }
   }
 };
