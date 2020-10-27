@@ -54,10 +54,13 @@
         <v-col cols="12" sm="3" v-for="genre in genres" :key="genre.name">
           <v-switch
             v-model="text.genres"
-            :label="genre.name"
             :value="genre._id"
-            color="success"
-          ></v-switch>
+            color="blue"
+          >
+            <template slot="label">
+              <span style="padding-right:5px;">{{genre.name}}</span><i class="glyphicon glyphicon-info-sign" @mouseover="showDescription(genre)"></i>
+            </template>
+          </v-switch>
         </v-col>
       </v-layout>
       <v-layout row wrap class="justify-center">
@@ -153,6 +156,30 @@
         >
       </v-col>
     </v-layout>
+    <v-dialog
+      v-model="showGenreDescription"
+      persistent
+      max-width="45%"
+    >
+      <v-card>
+        <v-card-title class="headline">
+          {{genreToShowDescription.name}}
+        </v-card-title>
+        <v-card-text>
+          {{genreToShowDescription.description}}
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="blue"
+            text
+            @click="showGenreDescription = false"
+          >
+            Cerrar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -168,6 +195,7 @@ import {
 } from "@/utils/constants";
 import { getRequest, postRequest } from "@/utils/requests";
 import { markdownToHTML, readChapters } from "@/utils/functions";
+
 
 export default {
   components: {},
@@ -199,7 +227,9 @@ export default {
       ageRanges,
       numericRule,
       data: null,
-      dialog: false
+      dialog: false,
+      genreToShowDescription:{name:"", description: ""},
+      showGenreDescription: false
     };
   },
   asyncComputed: {
@@ -287,6 +317,13 @@ export default {
           this.data = markdownToHTML(reader.result);
         };
       }
+    },
+    showDescription(item) {
+      this.genreToShowDescription = item;
+      if(this.genreToShowDescription.description == null){
+        this.genreToShowDescription.description = "Ups!, El género que buscas no cuenta con descripción.";
+      }
+      this.showGenreDescription = true;
     }
   }
 };
