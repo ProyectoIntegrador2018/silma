@@ -23,5 +23,5 @@ export const addRoleRoutes = (router) => {
     onSaveMiddleware,
     update
   );
-  router.delete("/role/:id", verifyToken(["admin", "roleDelete"]), deleteRole);
+  router.delete("/role/:id", verifyToken(["admin"], "roleDelete"), deleteRole);
 };

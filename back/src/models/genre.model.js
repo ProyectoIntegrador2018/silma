@@ -6,6 +6,9 @@ export const GenreSchema = new Schema({
     type: String,
     unique: true,
     required: "Name is required"
+  },
+  description: {
+    type: String
   }
 });
 GenreSchema.plugin(beautifyUnique);
