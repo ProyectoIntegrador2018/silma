@@ -2,7 +2,10 @@
   <div>
     <h1>Listado de Roles</h1>
     <div class="add-btn-container">
-      <v-btn color="primary" @click="() => $router.push('/roleFormCreate')"
+      <v-btn
+        v-if="hasPermission('roleCreate')"
+        color="primary"
+        @click="() => $router.push('/roleFormCreate')"
         >Agregar</v-btn
       >
     </div>
@@ -11,6 +14,7 @@
         <template #actions="{ props }">
           <div class="actions-wrapper">
             <v-btn
+              v-if="hasPermission('roleRead')"
               small
               color="success"
               :disabled="false"
@@ -23,7 +27,7 @@
               >Ver</v-btn
             >
             <v-btn
-              v-if="!props.isBaseRole"
+              v-if="hasPermission('roleEdit') && !props.isBaseRole"
               small
               color="primary"
               :disabled="false"
@@ -36,7 +40,7 @@
               >Editar</v-btn
             >
             <v-btn
-              v-if="!props.isBaseRole"
+              v-if="hasPermission('roleDelete') && !props.isBaseRole"
               small
               color="error"
               :disabled="false"
@@ -68,7 +72,7 @@
 <script>
 import Table from "../../components/table";
 import { deleteRequest, getRequest } from "../../utils/requestsNoErr";
-import { getErrorMessage } from "../../utils/utils";
+import { getErrorMessage, hasPermission } from "../../utils/utils";
 import { snackbar } from "../../utils/events";
 import Messages from "../../utils/messages";
 import list from "../../mixins/list";
@@ -79,6 +83,7 @@ export default {
   mixins: [list],
   data() {
     return {
+      hasPermission,
       headers: [
         { text: "Código", value: "code" },
         { text: "Nombre", value: "name" },

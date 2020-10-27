@@ -2,6 +2,7 @@ import { isNullOrUndefinedOrEmpty } from "../utils/utils";
 import Messages from "../utils/messages";
 import { SilmaError, handleSyncRequest } from "../utils/errors";
 import RoleModel from "../models/role.model";
+import { AdminModel } from "../models/admin.model";
 
 export function onSaveMiddleware(req, res, next) {
   handleSyncRequest(() => {
@@ -12,6 +13,10 @@ export function onSaveMiddleware(req, res, next) {
 
 export async function onSaveValidation(role) {
   await allFieldsUnique(role);
+}
+
+export async function onDeleteValidation(role) {
+  await isAssignedToAdmin(role);
 }
 
 function isFormComplete(role) {
@@ -33,6 +38,7 @@ async function allFieldsUnique(role) {
   }
 }
 
-/**
- * @todo Function to validate that the Role is not assigned to any user
- */
+async function isAssignedToAdmin(role) {
+  const admin = await AdminModel.findOne({ role: role._id });
+  if (admin) throw new SilmaError(400, Messages.RoleAssignedToAdmin());
+}

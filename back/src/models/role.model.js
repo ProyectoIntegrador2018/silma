@@ -1,5 +1,8 @@
 import { Schema, model } from "mongoose";
-import { onSaveValidation } from "../validations/role.validation";
+import {
+  onDeleteValidation,
+  onSaveValidation
+} from "../validations/role.validation";
 
 export const RoleSchema = new Schema({
   code: {
@@ -147,6 +150,11 @@ export const RoleSchema = new Schema({
 
 RoleSchema.pre("save", async function (next) {
   await onSaveValidation(this);
+  next();
+});
+
+RoleSchema.pre("remove", async function (next) {
+  await onDeleteValidation(this);
   next();
 });
 

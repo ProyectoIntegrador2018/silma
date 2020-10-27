@@ -10,7 +10,10 @@ const Messages = {
   NotFound: () => "Ruta no encontrada",
   DuplicatedValue: (value) =>
     formatMessage("El campo {0} esta repetido.", value),
-  Unauthorized: () => "El usuario no esta autorizado para realizar esta acción."
+  Unauthorized: () =>
+    "El usuario no esta autorizado para realizar esta acción.",
+  RoleAssignedToAdmin: () =>
+    "El rol ya esta asignado a algún Admin, no se puede eliminar."
 };
 
 export default Messages;

@@ -2,7 +2,10 @@
   <v-container>
     <h1>Géneros</h1>
     <div class="add-btn-container">
-      <v-btn color="primary" @click="() => $router.push('/genre/create')"
+      <v-btn
+        v-if="hasPermission('genreCreate')"
+        color="primary"
+        @click="() => $router.push('/genre/create')"
         >Agregar</v-btn
       >
     </div>
@@ -11,6 +14,7 @@
         <template #actions="{ props }">
           <div class="actions-wrapper">
             <v-btn
+              v-if="hasPermission('genreRead')"
               small
               color="success"
               :disabled="false"
@@ -23,6 +27,7 @@
               >Ver</v-btn
             >
             <v-btn
+              v-if="hasPermission('genreEdit')"
               small
               color="primary"
               :disabled="false"
@@ -35,6 +40,7 @@
               >Editar</v-btn
             >
             <v-btn
+              v-if="hasPermission('genreDelete')"
               small
               color="error"
               :disabled="false"
@@ -66,6 +72,7 @@ import Messages from "../../utils/messages";
 import { snackbar } from "../../utils/events";
 import Table from "../../components/table";
 import list from "../../mixins/list";
+import { hasPermission } from "../../utils/utils";
 
 export default {
   components: {
@@ -74,6 +81,7 @@ export default {
   mixins: [list],
   data() {
     return {
+      hasPermission,
       genres: [],
       headers: [
         { text: "Nombre", value: "name" },
