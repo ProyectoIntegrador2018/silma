@@ -22,14 +22,18 @@
                 <option value="8">Maquetado</option>
                 <option value="9">Impresion</option>
               </select>
-            </div>  
-            <div  v-if="header.text != 'Fase'" class="text-truncate" :style="{ width: header.width }">
+            </div>
+            <div
+              v-if="header.text != 'Fase'"
+              class="text-truncate"
+              :style="{ width: header.width }"
+            >
               <slot
                 :name="header.value"
                 :value="item[header.value]"
                 :props="item"
                 >{{ item[header.value] }}
-                </slot>
+              </slot>
             </div>
           </td>
           <td class="text-xs-center">
@@ -87,9 +91,9 @@ export default {
       return [...expandColumn, ...this.headers];
     }
   },
-  methods:{
+  methods: {
     onChange(item, event) {
-      this.$emit("changePhase",item._id, event.target.value)
+      this.$emit("changePhase", item._id, event.target.value);
     }
   }
 };
