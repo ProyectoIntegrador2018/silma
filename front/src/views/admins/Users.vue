@@ -16,7 +16,11 @@
                     v-on="on"
                     small
                     color="primary"
-                    @click="() => {$router.push(`RoleSet/${props._id}`);}"
+                    @click="
+                      () => {
+                        $router.push(`RoleSet/${props._id}`);
+                      }
+                    "
                   >
                     <v-icon color="white">mdi-account-multiple</v-icon>
                   </v-btn>
@@ -67,9 +71,12 @@
       <v-layout row wrap>
         <v-dialog v-model="dialogStatus" persistent max-width="450">
           <v-card>
-            <v-card-title class="headline">Revocar acceso a {{ this.selectedUser.name }} </v-card-title>
+            <v-card-title class="headline"
+              >Revocar acceso a {{ this.selectedUser.name }}
+            </v-card-title>
             <v-card-text>
-              Es probable que quieras primero enviar un aviso sobre su inactivdad al usuario antes de revocarle su acceso.
+              Es probable que quieras primero enviar un aviso sobre su
+              inactivdad al usuario antes de revocarle su acceso.
             </v-card-text>
             <v-card-actions>
               <v-btn color="secondary darken-1" text @click="closeDialog()">
@@ -111,7 +118,7 @@ export default {
       readersWriters: [],
       admins: [],
       selectedUser: [],
-      dialogStatus: false,
+      dialogStatus: false
     };
   },
   async created() {
@@ -121,7 +128,7 @@ export default {
   methods: {
     async composeUsers() {
       const users = await getRequest("users");
-      
+
       // Formateando los usuarios los usuarios con sus datos
       users.forEach((user) => {
         let userRoles = "";
@@ -132,14 +139,13 @@ export default {
       });
 
       // Dividiendo los usuarios en administradores y usuarios ordinarios
-      const readersWriters = []
-      const admins = users.filter( user => {
-        let isAdmin = user.roles.includes("Administrador")
+      const readersWriters = [];
+      const admins = users.filter((user) => {
+        let isAdmin = user.roles.includes("Administrador");
         if (isAdmin) {
           return isAdmin;
-        }
-        else {
-          readersWriters.push(user)
+        } else {
+          readersWriters.push(user);
         }
       });
       this.admins = admins;
@@ -147,10 +153,14 @@ export default {
     },
     formatRole(role) {
       switch (role) {
-        case "admin" : return "Administrador";
-        case "reader" : return "Lector"
-        case "writer" : return "Escritor"
-        default: return role
+        case "admin":
+          return "Administrador";
+        case "reader":
+          return "Lector";
+        case "writer":
+          return "Escritor";
+        default:
+          return role;
       }
     },
     openDialog(user) {
@@ -170,7 +180,7 @@ export default {
       console.log("Revoke access");
       await deleteRequest(`/users/DeleteUser/${this.selectedUser._id}`);
       window.location.reload();
-    },
+    }
   }
 };
 </script>

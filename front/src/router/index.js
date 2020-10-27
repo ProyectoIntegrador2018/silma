@@ -53,7 +53,7 @@ const routes = [
     }
   },
   {
-    path: "/Usuarios", 
+    path: "/Usuarios",
     name: "Users",
     component: Users,
     meta: {
@@ -62,7 +62,7 @@ const routes = [
     }
   },
   {
-    path: "/RoleSet/:id", 
+    path: "/RoleSet/:id",
     name: "RoleSet",
     component: RoleSet,
     meta: {
