@@ -16,7 +16,7 @@ var addRoleRoutes = router => {
   router.get("/role", (0, _jwt.verifyToken)(["admin"], "roleRead"), _role.list);
   router.post("/role", (0, _jwt.verifyToken)(["admin"], "roleCreate"), _role2.onSaveMiddleware, _role.create);
   router.patch("/role/:id", (0, _jwt.verifyToken)(["admin"], "roleEdit"), _role2.onSaveMiddleware, _role.update);
-  router.delete("/role/:id", (0, _jwt.verifyToken)(["admin", "roleDelete"]), _role.deleteRole);
+  router.delete("/role/:id", (0, _jwt.verifyToken)(["admin"], "roleDelete"), _role.deleteRole);
 };
 
 exports.addRoleRoutes = addRoleRoutes;

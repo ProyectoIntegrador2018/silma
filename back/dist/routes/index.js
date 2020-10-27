@@ -19,6 +19,8 @@ var _text = require("./text.route");
 
 var _suggestion = require("./suggestion.route");
 
+var _genre = require("./genre.route");
+
 var _user = require("../controllers/user.controller");
 
 var _jwt = require("../utils/jwt");
@@ -34,6 +36,7 @@ var createRoutes = () => {
   (0, _role.addRoleRoutes)(router);
   (0, _text.addTextRoutes)(router);
   (0, _suggestion.addSuggestionRoutes)(router);
+  (0, _genre.addGenreRoutes)(router);
   return router;
 };
 

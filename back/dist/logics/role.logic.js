@@ -74,10 +74,11 @@ function deleteRole(_x6, _x7) {
 
 function _deleteRole() {
   _deleteRole = _asyncToGenerator(function* (id, session) {
-    var deletedRole = yield _role.default.deleteOne({
+    var roleToDelete = yield _role.default.findOne({
       _id: id
     });
-    return deletedRole;
+    yield roleToDelete.remove();
+    return roleToDelete;
   });
   return _deleteRole.apply(this, arguments);
 }

@@ -3,11 +3,9 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getFeedbackIdBySuggestion = exports.movePhase = exports.getFeedback = exports.fillGenres = exports.createGenre = exports.createAdmin = exports.getAdmin = exports.getAdmins = exports.genres = void 0;
+exports.getFeedbackIdBySuggestion = exports.movePhase = exports.getFeedback = exports.createAdmin = exports.getAdmin = exports.getAdmins = exports.genres = void 0;
 
 var _admin = require("../models/admin.model");
-
-var _genre = require("../models/genre.model");
 
 var _feedback = require("../models/feedback.model");
 
@@ -87,39 +85,10 @@ var createAdmin = (request, response) => {
       };
     }
   }));
-}; //Funcion que crea un nuevo genero por parte de un administrador
-
-
-exports.createAdmin = createAdmin;
-
-var createGenre = (request, response) => {
-  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
-    var data = request.body;
-    var genre = yield _genre.GenreModel.create(data);
-    return genre;
-  }));
-}; //Funcion que en caso de no tener generos en la base de datos, los crea
-
-
-exports.createGenre = createGenre;
-
-var fillGenres = (request, response) => {
-  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
-    yield _genre.GenreModel.deleteMany({});
-
-    for (var genre of genres) {
-      var obj = {
-        name: genre
-      };
-      yield _genre.GenreModel.create(obj);
-    }
-
-    return yield _genre.GenreModel.find({});
-  }));
 }; //Funcion que regresa la retroalimentacion de un lector de un texto
 
 
-exports.fillGenres = fillGenres;
+exports.createAdmin = createAdmin;
 
 var getFeedback = (request, response) => {
   (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
@@ -140,7 +109,7 @@ var movePhase = (request, response) => {
       id
     } = request.params;
     var text = yield _text.TextModel.findById(id);
-    var newPhase = text.phase + 1;
+    var newPhase = request.body.phase;
     var phase = yield _text.TextModel.updateOne({
       _id: id
     }, {
@@ -150,30 +119,39 @@ var movePhase = (request, response) => {
     }, function (err, res) {
       if (err) throw err;
     });
-    var phaseInfo = _emails.phases[newPhase - 1];
-    var writer = yield _writer.WriterModel.findById(text.writer);
-    var user = yield _user.UserModel.findById(writer.user); //Enviar correo al autor del avance de su texto
-
+    /*
+    const phaseInfo = phases[newPhase];
+    const writer = await WriterModel.findById(text.writer);
+    const user = await UserModel.findById(writer.user);
+    //Enviar correo al autor del avance de su texto
     if (newPhase === 2) {
       // La fase es la de aceptacion
-      yield (0, _mailSender.sendEmail)({
-        email: user.email,
-        subject: "¡Tu novela fue aprobada!"
-      }, "accepted", {
-        name: user.name,
-        title: text.title
-      });
+      await sendEmail(
+        {
+          email: user.email,
+          subject: "¡Tu novela fue aprobada!"
+        },
+        "accepted",
+        {
+          name: user.name,
+          title: text.title
+        }
+      );
     } else {
-      yield (0, _mailSender.sendEmail)({
-        email: user.email,
-        subject: "Tu novela avanzó de Fase"
-      }, "next_phase", {
-        name: user.name,
-        title: text.title,
-        phase: newPhase + "-" + phaseInfo.name,
-        description: phaseInfo.description
-      });
-    }
+      await sendEmail(
+        {
+          email: user.email,
+          subject: "Tu novela avanzó de Fase"
+        },
+        "next_phase",
+        {
+          name: user.name,
+          title: text.title,
+          phase: newPhase + "-" + phaseInfo.name,
+          description: phaseInfo.description
+        }
+      );
+    }*/
   }));
 }; //Funcion que obtiene la retroalimentacion ligada a la sugerencia recibida por su id
 

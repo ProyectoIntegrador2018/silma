@@ -5,6 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.onSaveMiddleware = onSaveMiddleware;
 exports.onSaveValidation = onSaveValidation;
+exports.onDeleteValidation = onDeleteValidation;
 
 var _utils = require("../utils/utils");
 
@@ -13,6 +14,8 @@ var _messages = _interopRequireDefault(require("../utils/messages"));
 var _errors = require("../utils/errors");
 
 var _role = _interopRequireDefault(require("../models/role.model"));
+
+var _admin = require("../models/admin.model");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -38,6 +41,17 @@ function _onSaveValidation() {
   return _onSaveValidation.apply(this, arguments);
 }
 
+function onDeleteValidation(_x2) {
+  return _onDeleteValidation.apply(this, arguments);
+}
+
+function _onDeleteValidation() {
+  _onDeleteValidation = _asyncToGenerator(function* (role) {
+    yield isAssignedToAdmin(role);
+  });
+  return _onDeleteValidation.apply(this, arguments);
+}
+
 function isFormComplete(role) {
   var requiredProperties = ["name"];
 
@@ -46,13 +60,9 @@ function isFormComplete(role) {
   }
 }
 
-function allFieldsUnique(_x2) {
+function allFieldsUnique(_x3) {
   return _allFieldsUnique.apply(this, arguments);
 }
-/**
- * @todo Function to validate that the Role is not assigned to any user
- */
-
 
 function _allFieldsUnique() {
   _allFieldsUnique = _asyncToGenerator(function* (role) {
@@ -78,4 +88,18 @@ function _allFieldsUnique() {
     }
   });
   return _allFieldsUnique.apply(this, arguments);
+}
+
+function isAssignedToAdmin(_x4) {
+  return _isAssignedToAdmin.apply(this, arguments);
+}
+
+function _isAssignedToAdmin() {
+  _isAssignedToAdmin = _asyncToGenerator(function* (role) {
+    var admin = yield _admin.AdminModel.findOne({
+      role: role._id
+    });
+    if (admin) throw new _errors.SilmaError(400, _messages.default.RoleAssignedToAdmin());
+  });
+  return _isAssignedToAdmin.apply(this, arguments);
 }

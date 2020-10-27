@@ -16,6 +16,9 @@ var GenreSchema = new _mongoose.Schema({
     type: String,
     unique: true,
     required: "Name is required"
+  },
+  description: {
+    type: String
   }
 });
 exports.GenreSchema = GenreSchema;

@@ -24,7 +24,9 @@ var Messages = {
   SomethingWentWrong: () => "Algo salió mal.",
   CRUDOperationSuccess: operation => formatMessage("Registro {0} con éxito.", operation),
   NotFound: () => "Ruta no encontrada",
-  DuplicatedValue: value => formatMessage("El campo {0} esta repetido.", value)
+  DuplicatedValue: value => formatMessage("El campo {0} esta repetido.", value),
+  Unauthorized: () => "El usuario no esta autorizado para realizar esta acción.",
+  RoleAssignedToAdmin: () => "El rol ya esta asignado a algún Admin, no se puede eliminar."
 };
 var _default = Messages;
 exports.default = _default;

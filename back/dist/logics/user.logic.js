@@ -27,11 +27,11 @@ function _getUserTypes() {
 
     var writerPromise = _writer.WriterModel.findOne({
       user: userId
-    }).populate("role");
+    });
 
     var readerPromise = _reader.ReaderModel.findOne({
       user: userId
-    }).populate("role");
+    });
 
     var userTypes = yield Promise.all([adminPromise, writerPromise, readerPromise]);
     return userTypes;

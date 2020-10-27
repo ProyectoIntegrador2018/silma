@@ -138,6 +138,22 @@ var RoleSchema = new _mongoose.Schema({
   roleDelete: {
     type: Boolean,
     default: false
+  },
+  genreRead: {
+    type: Boolean,
+    default: false
+  },
+  genreCreate: {
+    type: Boolean,
+    default: false
+  },
+  genreEdit: {
+    type: Boolean,
+    default: false
+  },
+  genreDelete: {
+    type: Boolean,
+    default: false
   }
 });
 exports.RoleSchema = RoleSchema;
@@ -149,6 +165,16 @@ RoleSchema.pre("save", /*#__PURE__*/function () {
 
   return function (_x) {
     return _ref.apply(this, arguments);
+  };
+}());
+RoleSchema.pre("remove", /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator(function* (next) {
+    yield (0, _role.onDeleteValidation)(this);
+    next();
+  });
+
+  return function (_x2) {
+    return _ref2.apply(this, arguments);
   };
 }());
 var RoleModel = (0, _mongoose.model)("Role", RoleSchema);
