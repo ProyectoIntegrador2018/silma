@@ -19,7 +19,7 @@
       </div>
     </div>
     <h1 align="left">Textos Recibidos</h1>
-    <Table :headers="headers" :items="dataTexts" @changePhase="advancePhase">
+    <Table :headers="headers" :items="dataTexts" v-bind:admin="true" @changePhase="advancePhase">
       <!-- Actions -->
       <template #actions="{ props }">
         <div style="padding-top: 5px">
@@ -54,9 +54,9 @@
     </Table>
     <!-- Tablas de usuarios registrados -->
     <h1 align="left">Escritores</h1>
-    <Table :headers="userHeaders" :items="dataWriters"> </Table>
+    <Table :headers="userHeaders" :items="dataWriters" v-bind:admin="true"> </Table>
     <h1 align="left">Lectores Beta</h1>
-    <Table :headers="userHeaders" :items="dataReaders"> </Table>
+    <Table :headers="userHeaders" :items="dataReaders" v-bind:admin="true"> </Table>
     <v-layout row wrap>
       <v-dialog v-model="dialogReject" persistent max-width="450">
         <v-card>
