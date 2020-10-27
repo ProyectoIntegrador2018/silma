@@ -31,6 +31,14 @@
                 >
                 </v-select>
               </div>
+              <div v-if="!admin && !isDashboard"> 
+                <slot
+                :name="header.value"
+                :value="item[header.value]"
+                :props="item"
+                >{{ item[header.value] }}
+                </slot>
+              </div>
             </div>  
             <div  v-if="header.text != 'Fase'" class="text-truncate" :style="{ width: header.width }">
               <slot

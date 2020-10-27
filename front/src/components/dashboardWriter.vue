@@ -92,7 +92,7 @@ export default {
       dialog: false,
       headersDialog: [
         {
-          text: "Fases",
+          text: "Fase",
           align: "start",
           sortable: true,
           value: "label"
