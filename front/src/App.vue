@@ -1,5 +1,10 @@
 <template>
   <v-app id="app">
+    <v-progress-linear
+      v-if="globalLoading"
+      class="global-loading"
+      indeterminate
+    ></v-progress-linear>
     <v-toolbar v-if="userId" color="blue darken-3" dark max-height="65">
       <!-- Home button -->
       <v-btn icon @click="navigate()">
@@ -53,7 +58,8 @@ export default {
       role: undefined,
       name: undefined,
       showSnackbar: false,
-      snackbarMessage: ""
+      snackbarMessage: "",
+      globalLoading: false
     };
   },
   created() {
@@ -97,6 +103,9 @@ export default {
     events.$on("dialog", (options) => {
       this.$refs.warningDialog.open(options);
     });
+    events.$on("globalLoading", (globalLoading) => {
+      this.globalLoading = globalLoading;
+    });
   }
 };
 </script>
@@ -119,5 +128,16 @@ export default {
 
 .bottom-buttons-wrapper > button:first-child {
   margin-right: 16px;
+}
+
+.actions-wrapper {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.global-loading {
+  position: absolute !important;
+  left: 0;
+  top: 72px;
 }
 </style>

@@ -20,6 +20,7 @@
           :rules="[]"
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           @click:append="showPassword = !showPassword"
+          @keyup.enter="login"
           :type="showPassword ? 'text' : 'password'"
           name="input-10-1"
           v-model="user.password"

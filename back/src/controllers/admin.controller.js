@@ -1,5 +1,4 @@
 import { AdminModel } from "@/models/admin.model";
-import { GenreModel } from "@/models/genre.model";
 import { FeedbackModel } from "@/models/feedback.model";
 import { TextModel } from "@/models/text.model";
 import { WriterModel } from "@/models/writer.model";
@@ -65,27 +64,6 @@ export const createAdmin = (request, response) => {
   });
 };
 
-//Funcion que crea un nuevo genero por parte de un administrador
-export const createGenre = (request, response) => {
-  send(response, async () => {
-    const data = request.body;
-    const genre = await GenreModel.create(data);
-    return genre;
-  });
-};
-
-//Funcion que en caso de no tener generos en la base de datos, los crea
-export const fillGenres = (request, response) => {
-  send(response, async () => {
-    await GenreModel.deleteMany({});
-    for (const genre of genres) {
-      const obj = { name: genre };
-      await GenreModel.create(obj);
-    }
-    return await GenreModel.find({});
-  });
-};
-
 //Funcion que regresa la retroalimentacion de un lector de un texto
 export const getFeedback = (request, response) => {
   send(response, async () => {
@@ -99,8 +77,9 @@ export const getFeedback = (request, response) => {
 export const movePhase = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
+
     const text = await TextModel.findById(id);
-    const newPhase = text.phase + 1;
+    const newPhase = request.body.phase;
     const phase = await TextModel.updateOne(
       { _id: id },
       { $set: { phase: newPhase } },
@@ -108,7 +87,8 @@ export const movePhase = (request, response) => {
         if (err) throw err;
       }
     );
-    const phaseInfo = phases[newPhase - 1];
+    /*
+    const phaseInfo = phases[newPhase];
     const writer = await WriterModel.findById(text.writer);
     const user = await UserModel.findById(writer.user);
     //Enviar correo al autor del avance de su texto
@@ -139,7 +119,7 @@ export const movePhase = (request, response) => {
           description: phaseInfo.description
         }
       );
-    }
+    }*/
   });
 };
 

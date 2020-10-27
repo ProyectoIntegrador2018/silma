@@ -9,7 +9,11 @@ const Messages = {
     formatMessage("Registro {0} con éxito.", operation),
   NotFound: () => "Ruta no encontrada",
   DuplicatedValue: (value) =>
-    formatMessage("El campo {0} esta repetido.", value)
+    formatMessage("El campo {0} esta repetido.", value),
+  Unauthorized: () =>
+    "El usuario no esta autorizado para realizar esta acción.",
+  RoleAssignedToAdmin: () =>
+    "El rol ya esta asignado a algún Admin, no se puede eliminar."
 };
 
 export default Messages;
