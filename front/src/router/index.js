@@ -5,6 +5,8 @@ import RegisterWriter from "@/views/writer/WriterRegister.vue";
 import LogIn from "@/views/login/LogIn.vue";
 import Dashboard from "@/views/dashboards/Dashboard.vue";
 import PageNotFound from "@/views/PageNotFound.vue";
+import Users from "@/views/admins/Users.vue";
+import RoleSet from "@/views/admins/RoleSet.vue";
 import GenreList from "@/views/admins/GenreList.vue";
 import GenreForm from "@/views/admins/GenreForm.vue";
 import TextRegister from "@/views/writer/TextRegister.vue";
@@ -41,6 +43,24 @@ const routes = [
     meta: {
       requiresAuth: true,
       withAccess: ["writer"]
+    }
+  },
+  {
+    path: "/Usuarios",
+    name: "Users",
+    component: Users,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"]
+    }
+  },
+  {
+    path: "/RoleSet/:id",
+    name: "RoleSet",
+    component: RoleSet,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"]
     }
   },
   {
