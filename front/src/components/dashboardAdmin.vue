@@ -10,19 +10,26 @@
             </v-btn>
           </template>
           <v-list>
-            <v-list-item
-              v-for="(item, index) in adminTask"
-              :key="index"
-              :href="`${item.route}`"
-            >
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </v-list-item>
+            <template v-for="(item, index) in adminTask">
+              <v-list-item
+                v-if="item.hasPermission"
+                :key="index"
+                :href="`${item.route}`"
+              >
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              </v-list-item>
+            </template>
           </v-list>
         </v-menu>
       </div>
     </div>
     <h1 align="left">Textos Recibidos</h1>
-    <Table :headers="headers" :items="dataTexts">
+    <Table
+      :headers="headers"
+      :items="dataTexts"
+      v-bind:admin="true"
+      @changePhase="advancePhase"
+    >
       <!-- Actions -->
       <template #actions="{ props }">
         <v-row>
@@ -137,6 +144,7 @@ import Table from "@/components/table.vue";
 import { postRequest, getRequest } from "@/utils/requests";
 import { requiredRule } from "@/utils/rules";
 import { events } from "../main";
+import { hasPermission } from "../utils/utils";
 
 export default {
   components: {
@@ -193,9 +201,17 @@ export default {
       rejectingText: undefined,
       rejectDocument: undefined,
       adminTask: [
-        { title: "Géneros", route: "/Generos" },
-        { title: "Usuarios", route: "/Usuarios" },
-        { title: "Roles", route: "/roleList" }
+        {
+          title: "Géneros",
+          route: "/genres",
+          hasPermission: hasPermission.bind(this)("genreRead")
+        },
+        { title: "Usuarios", route: "/Usuarios", hasPermission: true },
+        {
+          title: "Roles",
+          route: "/roleList",
+          hasPermission: hasPermission.bind(this)("roleRead")
+        }
       ]
     };
   },
@@ -228,14 +244,18 @@ export default {
       this.$router.push("/Sugerencias_Texto/" + id);
     },
     //Funcion que avanza la fase del texto, primero confirmando el avance de fase
-    async advancePhase(item) {
+    async advancePhase(id, value) {
       const options = {
         title: "Avanzar",
         message: "¿Seguro que quieres avanzar el texto de fase?",
         styleOptions: { color: "primary" },
         onAccept: async () => {
           const token = this.$cookies.get("token");
-          await postRequest("admins/texts/movePhase/" + item._id, {}, token);
+          await postRequest(
+            "admins/texts/movePhase/" + id,
+            { phase: value },
+            token
+          );
           this.getTexts();
         },
         onReject: () => {}

@@ -292,3 +292,50 @@ manera. </li>
 cancelación, comunícate con la editorial. </li>
 </ol>
 `;
+
+export const phases = [
+  {
+    value: 1,
+    label: "Enviar Texto",
+    description: "El autor envía su texto para lectura editorial."
+  },
+  {
+    value: 2,
+    label: "Lectura Editorial",
+    description:
+      "Se asigna el texto a tres lectores editoriales. Si la mayoría aprueba el texto, este es admitido."
+  },
+  {
+    value: 3,
+    label: "Entrevista con el autor",
+    description:
+      "Agentes de la editorial se entrevistan con el autor a platicar de participación, ventas y otros detalles."
+  },
+  { value: 4, label: "Contrato", description: "El autor recibe el contrato." },
+  {
+    value: 5,
+    label: "Tallereo",
+    description:
+      "Se lee y revisa el libro completo por agentes de la editorial y el editor."
+  },
+  {
+    value: 6,
+    label: "Correcciones",
+    description: "El autor realiza las correcciones pertinentes al texto."
+  },
+  {
+    value: 7,
+    label: "Portada",
+    description: "Se trabaja sobre la portada del libro"
+  },
+  {
+    value: 8,
+    label: "Maquetado",
+    description: "Se trabaja en los interiores del libro."
+  },
+  {
+    value: 9,
+    label: "Impresion",
+    description: "Se manda a imprimir un primer tiraje."
+  }
+];

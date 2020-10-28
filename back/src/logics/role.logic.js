@@ -24,6 +24,7 @@ export async function update(role, session) {
 }
 
 export async function deleteRole(id, session) {
-  const deletedRole = await RoleModel.deleteOne({ _id: id });
-  return deletedRole;
+  const roleToDelete = await RoleModel.findOne({ _id: id });
+  await roleToDelete.remove();
+  return roleToDelete;
 }

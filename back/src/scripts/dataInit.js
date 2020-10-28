@@ -141,43 +141,13 @@ export async function createEverything() {
     roleRead: true,
     roleCreate: true,
     roleEdit: true,
-    roleDelete: true
+    roleDelete: true,
+    genreRead: true,
+    genreCreate: true,
+    genreEdit: true,
+    genreDelete: true
   });
   console.log("Role 1 created successfully");
-  const roleTwo = await createRole({
-    code: "roleTwo",
-    name: "Rol 2",
-    isBaseRole: true,
-    readingRead: true,
-    readingCreate: true,
-    readingEdit: true,
-    readingDelete: true,
-    bookRead: true,
-    bookCreate: true,
-    bookEdit: true,
-    bookDelete: true,
-    phaseRead: true,
-    phaseCreate: true,
-    phaseEdit: true,
-    phaseDelete: true,
-    userRead: true,
-    userCreate: true,
-    userEdit: true,
-    userDelete: true,
-    eventRead: true,
-    eventCreate: true,
-    eventEdit: true,
-    eventDelete: true,
-    reportRead: false,
-    reportCreate: false,
-    reportEdit: false,
-    reportDelete: false,
-    roleRead: false,
-    roleCreate: false,
-    roleEdit: false,
-    roleDelete: false
-  });
-  console.log("Role 2 created successfully");
   const admin1 = await createAdmin(
     {
       name: "Admin 1",
@@ -199,7 +169,7 @@ export async function createEverything() {
       phone: "8116690318",
       nationality: "Mexico"
     },
-    roleTwo._id
+    superAdminRole._id
   );
   console.log("Admin 2 created successfully");
   const genres = await fillGenres();
