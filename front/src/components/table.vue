@@ -11,36 +11,42 @@
         <tr v-for="item in props.items" :key="item._id">
           <td v-for="header in displayedHeaders" :key="header.value">
             <div v-if="header.text == 'Fase'">
-              <div v-if="admin && isDashboard"> 
-                <v-select v-model="item.phase" 
-                :items="faseOptions"
-                item-text="label"
-                item-value="value"
-                @change="onChange(item)"
-                style="width:100%;"
+              <div v-if="admin && isDashboard">
+                <v-select
+                  v-model="item.phase"
+                  :items="faseOptions"
+                  item-text="label"
+                  item-value="value"
+                  @change="onChange(item)"
+                  style="width:100%;"
                 >
                 </v-select>
               </div>
-              <div v-if="!admin && isDashboard" @click="seeTextDetails(item)"> 
-                <v-select v-model="item.phase" 
-                :items="faseOptions"
-                item-text="label"
-                item-value="value"
-                readonly
-                style="max-width:35%;"
+              <div v-if="!admin && isDashboard" @click="seeTextDetails(item)">
+                <v-select
+                  v-model="item.phase"
+                  :items="faseOptions"
+                  item-text="label"
+                  item-value="value"
+                  readonly
+                  style="max-width:35%;"
                 >
                 </v-select>
               </div>
-              <div v-if="!admin && !isDashboard"> 
+              <div v-if="!admin && !isDashboard">
                 <slot
-                :name="header.value"
-                :value="item[header.value]"
-                :props="item"
-                >{{ item[header.value] }}
+                  :name="header.value"
+                  :value="item[header.value]"
+                  :props="item"
+                  >{{ item[header.value] }}
                 </slot>
               </div>
-            </div>  
-            <div  v-if="header.text != 'Fase'" class="text-truncate" :style="{ width: header.width }">
+            </div>
+            <div
+              v-if="header.text != 'Fase'"
+              class="text-truncate"
+              :style="{ width: header.width }"
+            >
               <slot
                 :name="header.value"
                 :value="item[header.value]"
@@ -69,8 +75,8 @@ export default {
     items: { type: Array },
     withPagination: { type: Boolean, default: false },
     expand: { type: Boolean, default: false },
-    admin: { type: Boolean, default: false},
-    isDashboard: { type: Boolean, default: true}
+    admin: { type: Boolean, default: false },
+    isDashboard: { type: Boolean, default: true }
   },
   data() {
     return {
@@ -108,12 +114,12 @@ export default {
       return [...expandColumn, ...this.headers];
     }
   },
-  methods:{
+  methods: {
     onChange(item) {
-      this.$emit("changePhase",item._id, item.phase)
+      this.$emit("changePhase", item._id, item.phase);
     },
-    seeTextDetails(item){
-      this.$emit("textDetails",item);
+    seeTextDetails(item) {
+      this.$emit("textDetails", item);
     }
   }
 };

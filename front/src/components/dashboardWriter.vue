@@ -34,26 +34,22 @@
         </v-chip>
       </template>
     </Table>
-    <v-dialog
-      v-model="dialog"
-      persistent
-      max-width="60%"
-    >
+    <v-dialog v-model="dialog" persistent max-width="60%">
       <v-card>
         <v-card-title class="headline">
           Fases cumplidas
         </v-card-title>
         <v-card-text>
-          <Table :headers="headersDialog" :items="dataDialog" v-bind:isDashboard="false">
+          <Table
+            :headers="headersDialog"
+            :items="dataDialog"
+            v-bind:isDashboard="false"
+          >
           </Table>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn
-            color="blue"
-            text
-            @click="dialog = false"
-          >
+          <v-btn color="blue" text @click="dialog = false">
             Cerrar
           </v-btn>
         </v-card-actions>
@@ -109,10 +105,12 @@ export default {
       this.data = await getRequest(`texts/writer/${this.writer}`, token);
     }
   },
-  methods:{
-    seeTextDetails(item){
-      this.dataDialog = this.phaseDetails.filter(phase => phase.value <= item.phase);
-      this.dialog = true
+  methods: {
+    seeTextDetails(item) {
+      this.dataDialog = this.phaseDetails.filter(
+        (phase) => phase.value <= item.phase
+      );
+      this.dialog = true;
     }
   }
 };

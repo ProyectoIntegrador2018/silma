@@ -52,13 +52,13 @@
       <p>Seleccionar géneros (Máximo 3)</p>
       <v-layout row wrap>
         <v-col cols="12" sm="3" v-for="genre in genres" :key="genre.name">
-          <v-switch
-            v-model="text.genres"
-            :value="genre._id"
-            color="blue"
-          >
+          <v-switch v-model="text.genres" :value="genre._id" color="blue">
             <template slot="label">
-              <span style="padding-right:5px;">{{genre.name}}</span><i class="glyphicon glyphicon-info-sign" @mouseover="showDescription(genre)"></i>
+              <span style="padding-right:5px;">{{ genre.name }}</span
+              ><i
+                class="glyphicon glyphicon-info-sign"
+                @mouseover="showDescription(genre)"
+              ></i>
             </template>
           </v-switch>
         </v-col>
@@ -156,25 +156,17 @@
         >
       </v-col>
     </v-layout>
-    <v-dialog
-      v-model="showGenreDescription"
-      persistent
-      max-width="45%"
-    >
+    <v-dialog v-model="showGenreDescription" persistent max-width="45%">
       <v-card>
         <v-card-title class="headline">
-          {{genreToShowDescription.name}}
+          {{ genreToShowDescription.name }}
         </v-card-title>
         <v-card-text>
-          {{genreToShowDescription.description}}
+          {{ genreToShowDescription.description }}
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn
-            color="blue"
-            text
-            @click="showGenreDescription = false"
-          >
+          <v-btn color="blue" text @click="showGenreDescription = false">
             Cerrar
           </v-btn>
         </v-card-actions>
@@ -195,7 +187,6 @@ import {
 } from "@/utils/constants";
 import { getRequest, postRequest } from "@/utils/requests";
 import { markdownToHTML, readChapters } from "@/utils/functions";
-
 
 export default {
   components: {},
@@ -228,7 +219,7 @@ export default {
       numericRule,
       data: null,
       dialog: false,
-      genreToShowDescription:{name:"", description: ""},
+      genreToShowDescription: { name: "", description: "" },
       showGenreDescription: false
     };
   },
@@ -320,8 +311,9 @@ export default {
     },
     showDescription(item) {
       this.genreToShowDescription = item;
-      if(this.genreToShowDescription.description == null){
-        this.genreToShowDescription.description = "Ups!, El género que buscas no cuenta con descripción.";
+      if (this.genreToShowDescription.description == null) {
+        this.genreToShowDescription.description =
+          "Ups!, El género que buscas no cuenta con descripción.";
       }
       this.showGenreDescription = true;
     }

@@ -2,43 +2,91 @@
   <div>
     <div class="my-2" align="right">
       <div class="btns-wrapper">
-        <v-btn
-          v-if="hasPermission('genreRead')"
-          color="primary"
-          dark
-          href="/genres"
-          >Administración de Géneros</v-btn
-        >
-        <v-btn
-          v-if="hasPermission('roleRead')"
-          color="primary"
-          dark
-          href="/roleList"
-          >Roles</v-btn
-        >
+        <v-menu offset-y open-on-hover>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn color="primary" v-bind="attrs" v-on="on">
+              <v-icon left>mdi-account-cog</v-icon>
+              Administrar
+            </v-btn>
+          </template>
+          <v-list>
+            <template v-for="(item, index) in adminTask">
+              <v-list-item
+                v-if="item.hasPermission"
+                :key="index"
+                :href="`${item.route}`"
+              >
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              </v-list-item>
+            </template>
+          </v-list>
+        </v-menu>
       </div>
     </div>
     <h1 align="left">Textos Recibidos</h1>
-    <Table :headers="headers" :items="dataTexts" v-bind:admin="true" @changePhase="advancePhase">
+    <Table
+      :headers="headers"
+      :items="dataTexts"
+      v-bind:admin="true"
+      @changePhase="advancePhase"
+    >
       <!-- Actions -->
       <template #actions="{ props }">
-        <div style="padding-top: 5px">
-          <!-- Accesar a las sugerencias pertenecientes a este texto -->
-          <v-btn small color="primary" depressed @click="seeSuggestions(props)"
-            >Sugerencias</v-btn
-          >
-        </div>
-        <div style="padding-top: 5px">
+        <v-row>
+          <!-- Boton avanzar fase -->
+          <div style="margin: 2.5px 2.5px">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  v-bind="attrs"
+                  v-on="on"
+                  small
+                  color="success"
+                  :disabled="props.isRejected || props.phase == 4"
+                  @click="advancePhase(props)"
+                >
+                  <v-icon>mdi-file-move</v-icon>
+                </v-btn>
+              </template>
+              <span>Avanzar fase</span>
+            </v-tooltip>
+          </div>
+          <!-- Boton para accesar a las sugerencias pertenecientes a este texto -->
+          <div style="margin: 2.5px 2.5px">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  v-bind="attrs"
+                  v-on="on"
+                  small
+                  color="primary"
+                  @click="seeSuggestions(props)"
+                >
+                  <v-icon color="white">mdi-file-document-edit</v-icon>
+                </v-btn>
+              </template>
+              <span>Sugerencias</span>
+            </v-tooltip>
+          </div>
           <!-- Rechazar texto -->
-          <v-btn
-            small
-            color="error"
-            :disabled="props.isRejected"
-            depressed
-            @click="openRejectDialog(props)"
-            >Rechazar</v-btn
-          >
-        </div>
+          <div style="margin: 2.5px 2.5px">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  v-bind="attrs"
+                  v-on="on"
+                  small
+                  color="error"
+                  :disabled="props.isRejected"
+                  @click="openRejectDialog(props)"
+                >
+                  <v-icon>mdi-file-cancel</v-icon>
+                </v-btn>
+              </template>
+              <span>Rechazar texto</span>
+            </v-tooltip>
+          </div>
+        </v-row>
       </template>
       <template #phase="{ props }">
         <v-chip
@@ -52,11 +100,7 @@
         </v-chip>
       </template>
     </Table>
-    <!-- Tablas de usuarios registrados -->
-    <h1 align="left">Escritores</h1>
-    <Table :headers="userHeaders" :items="dataWriters" v-bind:admin="true"> </Table>
-    <h1 align="left">Lectores Beta</h1>
-    <Table :headers="userHeaders" :items="dataReaders" v-bind:admin="true"> </Table>
+    <!-- Modal de rechazo de texto -->
     <v-layout row wrap>
       <v-dialog v-model="dialogReject" persistent max-width="450">
         <v-card>
@@ -109,7 +153,6 @@ export default {
   data() {
     return {
       requiredRule,
-      hasPermission,
       //Titulos que corresponden a la tabla y de donde se obtienen sus datos
       headers: [
         { text: "Título", align: "start", sortable: false, value: "title" },
@@ -156,7 +199,20 @@ export default {
       dataWriters: [],
       dialogReject: false,
       rejectingText: undefined,
-      rejectDocument: undefined
+      rejectDocument: undefined,
+      adminTask: [
+        {
+          title: "Géneros",
+          route: "/genres",
+          hasPermission: hasPermission.bind(this)("genreRead")
+        },
+        { title: "Usuarios", route: "/Usuarios", hasPermission: true },
+        {
+          title: "Roles",
+          route: "/roleList",
+          hasPermission: hasPermission.bind(this)("roleRead")
+        }
+      ]
     };
   },
   async created() {
