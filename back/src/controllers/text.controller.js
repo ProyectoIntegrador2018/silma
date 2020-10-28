@@ -80,8 +80,10 @@ export const retrieveTextDocument = (request, response) => {
 export const getTextsOfWriter = (request, response) => {
   send(response, async () => {
     const { writer } = request.params;
-    const reader = await TextModel.find({ writer }).populate("genres");
-    return reader;
+    const writerText = await WriterModel.findOne({user: writer});
+    const writerID = writerText._id;
+    const texts = await TextModel.find({writer: writerID});
+    return texts;
   });
 };
 

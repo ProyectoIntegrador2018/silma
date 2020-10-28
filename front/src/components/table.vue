@@ -11,17 +11,34 @@
         <tr v-for="item in props.items" :key="item._id">
           <td v-for="header in displayedHeaders" :key="header.value">
             <div v-if="header.text == 'Fase'">
-              <select v-model="item.phase" @change="onChange(item, $event)">
-                <option value="1">Enviar Texto</option>
-                <option value="2">Lectura Editorial</option>
-                <option value="3">Entrevista con el autor</option>
-                <option value="4">Contrato</option>
-                <option value="5">Tallereo</option>
-                <option value="6">Correcciones</option>
-                <option value="7">Portada</option>
-                <option value="8">Maquetado</option>
-                <option value="9">Impresion</option>
-              </select>
+              <div v-if="admin && isDashboard"> 
+                <v-select v-model="item.phase" 
+                :items="faseOptions"
+                item-text="label"
+                item-value="value"
+                @change="onChange(item)"
+                style="width:100%;"
+                >
+                </v-select>
+              </div>
+              <div v-if="!admin && isDashboard" @click="seeTextDetails(item)"> 
+                <v-select v-model="item.phase" 
+                :items="faseOptions"
+                item-text="label"
+                item-value="value"
+                readonly
+                style="max-width:35%;"
+                >
+                </v-select>
+              </div>
+              <div v-if="!admin && !isDashboard"> 
+                <slot
+                :name="header.value"
+                :value="item[header.value]"
+                :props="item"
+                >{{ item[header.value] }}
+                </slot>
+              </div>
             </div>  
             <div  v-if="header.text != 'Fase'" class="text-truncate" :style="{ width: header.width }">
               <slot
@@ -29,7 +46,7 @@
                 :value="item[header.value]"
                 :props="item"
                 >{{ item[header.value] }}
-                </slot>
+              </slot>
             </div>
           </td>
           <td class="text-xs-center">
@@ -45,15 +62,19 @@
 </template>
 
 <script>
+import { phases } from "@/utils/constants.js";
 export default {
   props: {
     headers: { type: Array },
     items: { type: Array },
     withPagination: { type: Boolean, default: false },
-    expand: { type: Boolean, default: false }
+    expand: { type: Boolean, default: false },
+    admin: { type: Boolean, default: false},
+    isDashboard: { type: Boolean, default: true}
   },
   data() {
     return {
+      faseOptions: phases,
       pagination: {
         rowsPerPage: 300,
         totalItems: 20
@@ -88,8 +109,11 @@ export default {
     }
   },
   methods:{
-    onChange(item, event) {
-      this.$emit("changePhase",item._id, event.target.value)
+    onChange(item) {
+      this.$emit("changePhase",item._id, item.phase)
+    },
+    seeTextDetails(item){
+      this.$emit("textDetails",item);
     }
   }
 };
