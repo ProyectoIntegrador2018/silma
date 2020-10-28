@@ -83,10 +83,10 @@
                 Cancelar
               </v-btn>
               <v-spacer></v-spacer>
-              <v-btn color="primary darken-1" text @click="sendNotice()">
+              <!-- <v-btn color="primary darken-1" text @click="sendNotice()">
                 Avisar
               </v-btn>
-              <v-spacer></v-spacer>
+              <v-spacer></v-spacer> -->
               <v-btn color="red darken-1" text @click="revokeAccess()">
                 Revocar
               </v-btn>
@@ -172,12 +172,10 @@ export default {
     },
     async sendNotice() {
       this.dialogStatus = false;
-      console.log("Send Notice", this.selectedUser);
       await getRequest(`/users/SendNotice/${this.selectedUser._id}`);
     },
     async revokeAccess() {
       this.dialogStatus = false;
-      console.log("Revoke access");
       await deleteRequest(`/users/DeleteUser/${this.selectedUser._id}`);
       window.location.reload();
     }

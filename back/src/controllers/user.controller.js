@@ -86,7 +86,6 @@ export const getAllGenres = (request, response) => {
 export const sendNotice = (req, res) => {
   send (res, async () => {
     const user = await UserModel.findById(req.params.id);
-    console.log(user);
     // await sendEmail(
     //   {
     //     email: user.email,
@@ -107,13 +106,13 @@ export const deleteUser = (req, res) => {
   
   send(res, async () => {
     const user_id = req.params.id;
-    WriterModel.findOne({ user: user_id })
+    await WriterModel.findOne({ user: user_id })
       .deleteOne()
       .exec();
-    ReaderModel.findOne({ user: user_id })
+    await ReaderModel.findOne({ user: user_id })
       .deleteOne()
       .exec();
-    UserModel.findOne({ _id: user_id })
+    await UserModel.findOne({ _id: user_id })
       .deleteOne()
       .exec();
   });
