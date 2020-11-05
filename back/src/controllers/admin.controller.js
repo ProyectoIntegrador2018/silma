@@ -87,11 +87,11 @@ export const movePhase = (request, response) => {
         if (err) throw err;
       }
     );
-    /*
+
     const phaseInfo = phases[newPhase];
     const writer = await WriterModel.findById(text.writer);
     const user = await UserModel.findById(writer.user);
-    //Enviar correo al autor del avance de su texto
+    // Enviar correo al autor del avance de su texto
     if (newPhase === 2) {
       // La fase es la de aceptacion
       await sendEmail(
@@ -119,7 +119,7 @@ export const movePhase = (request, response) => {
           description: phaseInfo.description
         }
       );
-    }*/
+    }
   });
 };
 
@@ -136,11 +136,12 @@ export const setRole = (req, res) => {
   send(res, async () => {
     const newRole = await AdminModel.findByIdAndUpdate(
       req.params.id,
-      { $set: { 'role': req.params.role }},
+      { $set: { role: req.params.role } },
       { useFindAndModify: false },
       (err, res) => {
         if (err) throw err;
-      });
+      }
+    );
     return newRole;
   });
-}
+};
