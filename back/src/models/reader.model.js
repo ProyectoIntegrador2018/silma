@@ -39,6 +39,10 @@ export const ReaderSchema = new Schema({
   lastReview: {
     type: Date,
     default: Date.now
+  },
+  rejectsInARow: {
+    type: Number,
+    default: 0
   }
 });
 ReaderSchema.plugin(beautifyUnique);

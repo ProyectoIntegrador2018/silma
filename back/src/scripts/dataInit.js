@@ -106,6 +106,18 @@ async function deleteEverything() {
   ]);
 }
 
+async function createSuggestion(reader, text) {
+  const suggestion = {
+    reader,
+    text,
+    sentDate: new Date(),
+    suggestionStatus: "Pending",
+    score: 10,
+    readingChapters: 5
+  };
+  return await SuggestionModel.create(suggestion);
+}
+
 export async function createEverything() {
   const rolesExists = await RoleModel.find();
   if (rolesExists.length > 0) return;
@@ -244,5 +256,13 @@ export async function createEverything() {
     numberOfPages: 120,
     numberOfChapters: 30
   });
+
   console.log("Text 2 created successfully");
+
+  await Promise.all([
+    createSuggestion(reader1._id, text1._id),
+    createSuggestion(reader1._id, text2._id)
+  ]);
+
+  console.log("Suggestions created successfully");
 }
