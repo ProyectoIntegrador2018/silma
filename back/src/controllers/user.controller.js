@@ -1,6 +1,6 @@
 import { UserModel } from "@/models/user.model";
 import { WriterModel } from "@/models/writer.model";
-import { ReaderModel } from "@/models/reader.model"; 
+import { ReaderModel } from "@/models/reader.model";
 import { GenreModel } from "@/models/genre.model";
 import { send } from "@/utils/errors";
 import bcrypt from "bcrypt";
@@ -48,11 +48,11 @@ export const getUser = (request, response) => {
 
 // Response with info of every user
 export const getUsers = (req, res) => {
-  send(res, async() => {
+  send(res, async () => {
     const users = await UserModel.find();
-    return users
+    return users;
   });
-}
+};
 
 // Creates a new user with an assigned role.
 export const createUser = async (request, response, role) => {
@@ -84,36 +84,29 @@ export const getAllGenres = (request, response) => {
 };
 
 export const sendNotice = (req, res) => {
-  send (res, async () => {
+  send(res, async () => {
     const user = await UserModel.findById(req.params.id);
-    // await sendEmail(
-    //   {
-    //     email: user.email,
-    //     subject: "¡Tu novela fue aprobada!"
-    //   },
-    //   "accepted",
-    //   {
-    //     name: user.name,
-    //     title: "Tu cuenta está a punto de ser desactivada"
-    //   }
-    // );
+    await sendEmail(
+      {
+        email: user.email,
+        subject: "¡Tu novela fue aprobada!"
+      },
+      "accepted",
+      {
+        name: user.name,
+        title: "Tu cuenta está a punto de ser desactivada"
+      }
+    );
 
-    return user; 
+    return user;
   });
-}
+};
 
 export const deleteUser = (req, res) => {
-  
   send(res, async () => {
     const user_id = req.params.id;
-    await WriterModel.findOne({ user: user_id })
-      .deleteOne()
-      .exec();
-    await ReaderModel.findOne({ user: user_id })
-      .deleteOne()
-      .exec();
-    await UserModel.findOne({ _id: user_id })
-      .deleteOne()
-      .exec();
+    await WriterModel.findOne({ user: user_id }).deleteOne().exec();
+    await ReaderModel.findOne({ user: user_id }).deleteOne().exec();
+    await UserModel.findOne({ _id: user_id }).deleteOne().exec();
   });
-}
+};
