@@ -140,4 +140,8 @@ export default {
   left: 0;
   top: 72px;
 }
+
+.center-td {
+  text-align: center;
+}
 </style>
