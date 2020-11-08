@@ -3,82 +3,84 @@
     <div class="display-3 font-weight-medium" align="center">Usuarios</div>
     <div style="margin-top: 25px">
       <!-- Tablas de usuarios registrados -->
-      <template>
-        <v-data-table
-          class="elevation-1"
-          :headers="userHeaders"
-          :items="allUsers"
-          item-key="name"
-        >
-          <template v-slot:body="{ items }">
-            <tbody>
-              <tr v-for="(item, key) in items" :key="key">
-                <td>{{ item.name }}</td>
-                <td>{{ item.email }}</td>
-                <td class="center-td">
-                  <v-icon v-if="item.isreader" color="success">
-                    mdi-check-circle
-                  </v-icon>
-                </td>
-                <td class="center-td">
-                  <v-icon v-if="item.iswriter" color="success">
-                    mdi-check-circle
-                  </v-icon>
-                </td>
-                <td class="center-td">
-                  <v-icon v-if="item.isadmin" color="success">
-                    mdi-check-circle
-                  </v-icon>
-                </td>
-                <td>
-                  <v-row>
-                    <!-- Permisos de usuario -->
-                    <div style="margin: 5px 2.5px">
-                      <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-btn
-                            :disabled="!item.isadmin"
-                            v-bind="attrs"
-                            v-on="on"
-                            small
-                            color="primary"
-                            @click="
-                              () => {
-                                $router.push(`RoleSet/${item._id}`);
-                              }
-                            "
-                          >
-                            <v-icon color="white">mdi-account-multiple</v-icon>
-                          </v-btn>
-                        </template>
-                        <span>Permisos de usuario</span>
-                      </v-tooltip>
-                    </div>
-                    <!-- Revocar acceso a Usuario -->
-                    <div style="margin: 5px 2.5px">
-                      <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-btn
-                            :disabled="item.isadmin"
-                            v-bind="attrs"
-                            v-on="on"
-                            small
-                            color="error"
-                            @click="openDialog(item)"
-                          >
-                            <v-icon color="white">mdi-account-remove</v-icon>
-                          </v-btn>
-                        </template>
-                        <span>Revocar acceso</span>
-                      </v-tooltip>
-                    </div>
-                  </v-row>
-                </td>
-              </tr>
-            </tbody>
-          </template>
-        </v-data-table>
-      </template>
+      <v-data-table
+        class="elevation-1"
+        :headers="userHeaders"
+        :items="allUsers"
+        item-key="name"
+      >
+        <template v-slot:body="{ items }">
+          <tbody>
+            <tr v-for="(item, key) in items" :key="key" :class="rowClass(item)">
+              <td>{{ item.name }}</td>
+              <td>{{ item.email }}</td>
+              <td class="center-td">
+                <v-icon v-if="item.isreader" color="success">
+                  mdi-check-circle
+                </v-icon>
+              </td>
+              <td class="center-td">
+                <v-icon v-if="item.iswriter" color="success">
+                  mdi-check-circle
+                </v-icon>
+              </td>
+              <td class="center-td">
+                <v-icon v-if="item.isadmin" color="success">
+                  mdi-check-circle
+                </v-icon>
+              </td>
+              <td>
+                <v-row>
+                  <!-- Permisos de usuario -->
+                  <div style="margin: 5px 2.5px">
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                          :disabled="!item.isadmin"
+                          v-bind="attrs"
+                          v-on="on"
+                          small
+                          color="primary"
+                          @click="
+                            () => {
+                              $router.push(`RoleSet/${item._id}`);
+                            }
+                          "
+                        >
+                          <v-icon color="white">mdi-account-multiple</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>Permisos de usuario</span>
+                    </v-tooltip>
+                  </div>
+                  <!-- Revocar acceso a Usuario -->
+                  <div style="margin: 5px 2.5px">
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                          :disabled="item.isadmin"
+                          v-bind="attrs"
+                          v-on="on"
+                          small
+                          color="error"
+                          @click="openDialog(item)"
+                        >
+                          <v-icon color="white">mdi-account-remove</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>Revocar acceso</span>
+                    </v-tooltip>
+                  </div>
+                </v-row>
+              </td>
+            </tr>
+          </tbody>
+        </template>
+      </v-data-table>
+      <div class="info-container">
+        <div class="red-square"></div>
+        <div>Lectores que han rechazado más de 5 textos seguidos</div>
+      </div>
     </div>
     <div>
       <!-- Modal de rechazo de texto -->
@@ -111,6 +113,29 @@
     </div>
   </v-container>
 </template>
+
+<style scoped>
+.many-rejects-reader {
+  background: red;
+  color: white;
+}
+.many-rejects-reader:hover {
+  color: unset;
+}
+.red-square {
+  width: 20px;
+  height: 20px;
+  background: red;
+}
+.info-container {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+}
+.info-container > :first-child {
+  margin-right: 8px;
+}
+</style>
 
 <script>
 import { getRequest, deleteRequest } from "@/utils/requests";
@@ -172,6 +197,16 @@ export default {
       this.dialogStatus = false;
       await deleteRequest(`/users/DeleteUser/${this.selectedUser._id}`);
       window.location.reload();
+    },
+    rowClass(user) {
+      if (!user.isreader) return "";
+      if (
+        !user.reader ||
+        !user.reader.rejectsInARow ||
+        user.reader.rejectsInARow < 6
+      )
+        return "";
+      return "many-rejects-reader";
     }
   }
 };
