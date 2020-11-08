@@ -37,7 +37,7 @@
                       <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
                           <v-btn
-                            :disabled="!item.admin"
+                            :disabled="!item.isadmin"
                             v-bind="attrs"
                             v-on="on"
                             small
@@ -59,7 +59,7 @@
                       <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
                           <v-btn
-                            :disabled="item.admin"
+                            :disabled="item.isadmin"
                             v-bind="attrs"
                             v-on="on"
                             small
@@ -122,13 +122,18 @@ export default {
       userHeaders: [
         { text: "Nombre", align: "start", sortable: true, value: "name" },
         { text: "Correo", sortable: true, value: "email" },
-        { text: "Lector", align: "center", sortable: true, value: "reader" },
-        { text: "Escritor", align: "center", sortable: true, value: "writer" },
+        { text: "Lector", align: "center", sortable: true, value: "isreader" },
+        {
+          text: "Escritor",
+          align: "center",
+          sortable: true,
+          value: "iswriter"
+        },
         {
           text: "Administrador",
           align: "center",
           sortable: true,
-          value: "admin"
+          value: "isadmin"
         },
         { text: "Acciones", align: "center", sortable: false, value: "actions" }
       ],
