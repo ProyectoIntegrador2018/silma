@@ -5,70 +5,78 @@
       <!-- Tablas de usuarios registrados -->
       <template>
         <v-data-table
-        class="elevation-1"
-        :headers="userHeaders"
-        :items="allUsers"
-        item-key="name"
+          class="elevation-1"
+          :headers="userHeaders"
+          :items="allUsers"
+          item-key="name"
         >
-        <template v-slot:item.reader = "{ item }">
-          <v-icon v-if="item.reader" color="success">
-            mdi-check-circle
-          </v-icon>
-        </template>
-        <template v-slot:item.writer = "{ item }">
-          <v-icon v-if="item.writer" color="success">
-            mdi-check-circle
-          </v-icon>
-        </template>
-        <template v-slot:item.admin = "{ item }">
-          <v-icon v-if="item.admin" color="success">
-            mdi-check-circle
-          </v-icon>
-        </template>
-        <template v-slot:item.actions="{ item }">
-          <v-row>
-          <!-- Permisos de usuario -->
-          <div style="margin: 5px 2.5px">
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  :disabled="!item.admin"
-                  v-bind="attrs"
-                  v-on="on"
-                  small
-                  color="primary"
-                  @click="
-                    () => {
-                      $router.push(`RoleSet/${item._id}`);
-                    }
-                  "
-                >
-                  <v-icon  color="white">mdi-account-multiple</v-icon>
-                </v-btn>
-              </template>
-              <span>Permisos de usuario</span>
-            </v-tooltip>
-          </div>
-          <!-- Revocar acceso a Usuario -->
-          <div style="margin: 5px 2.5px">
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  :disabled="item.admin"
-                  v-bind="attrs"
-                  v-on="on"
-                  small
-                  color="error"
-                  @click="openDialog(item)"
-                >
-                  <v-icon  color="white">mdi-account-remove</v-icon>
-                </v-btn>
-              </template>
-              <span>Revocar acceso</span>
-            </v-tooltip>
-          </div>
-          </v-row>
-        </template>
+          <template v-slot:body="{ items }">
+            <tbody>
+              <tr v-for="(item, key) in items" :key="key">
+                <td>{{ item.name }}</td>
+                <td>{{ item.email }}</td>
+                <td class="center-td">
+                  <v-icon v-if="item.isreader" color="success">
+                    mdi-check-circle
+                  </v-icon>
+                </td>
+                <td class="center-td">
+                  <v-icon v-if="item.iswriter" color="success">
+                    mdi-check-circle
+                  </v-icon>
+                </td>
+                <td class="center-td">
+                  <v-icon v-if="item.isadmin" color="success">
+                    mdi-check-circle
+                  </v-icon>
+                </td>
+                <td>
+                  <v-row>
+                    <!-- Permisos de usuario -->
+                    <div style="margin: 5px 2.5px">
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn
+                            :disabled="!item.admin"
+                            v-bind="attrs"
+                            v-on="on"
+                            small
+                            color="primary"
+                            @click="
+                              () => {
+                                $router.push(`RoleSet/${item._id}`);
+                              }
+                            "
+                          >
+                            <v-icon color="white">mdi-account-multiple</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Permisos de usuario</span>
+                      </v-tooltip>
+                    </div>
+                    <!-- Revocar acceso a Usuario -->
+                    <div style="margin: 5px 2.5px">
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn
+                            :disabled="item.admin"
+                            v-bind="attrs"
+                            v-on="on"
+                            small
+                            color="error"
+                            @click="openDialog(item)"
+                          >
+                            <v-icon color="white">mdi-account-remove</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Revocar acceso</span>
+                      </v-tooltip>
+                    </div>
+                  </v-row>
+                </td>
+              </tr>
+            </tbody>
+          </template>
         </v-data-table>
       </template>
     </div>
@@ -116,7 +124,12 @@ export default {
         { text: "Correo", sortable: true, value: "email" },
         { text: "Lector", align: "center", sortable: true, value: "reader" },
         { text: "Escritor", align: "center", sortable: true, value: "writer" },
-        { text: "Administrador", align: "center", sortable: true, value: "admin" },
+        {
+          text: "Administrador",
+          align: "center",
+          sortable: true,
+          value: "admin"
+        },
         { text: "Acciones", align: "center", sortable: false, value: "actions" }
       ],
       allUsers: [],
@@ -129,12 +142,12 @@ export default {
     await this.composeUsers();
   },
   methods: {
-    async composeUsers () {
+    async composeUsers() {
       const users = await getRequest("users");
       // Formateando los usuarios los usuarios con sus datos
       users.forEach((user) => {
         user.roles.forEach((role) => {
-          user[`${role}`] = true;
+          user[`is${role}`] = true;
         });
       });
       this.allUsers = users;
