@@ -145,6 +145,10 @@ export const RoleSchema = new Schema({
   genreDelete: {
     type: Boolean,
     default: false
+  },
+  advancePhase: {
+    type: Boolean,
+    default: false
   }
 });
 
