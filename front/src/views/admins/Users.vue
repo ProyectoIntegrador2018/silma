@@ -1,13 +1,31 @@
 <template>
   <v-container>
     <div class="display-3 font-weight-medium" align="center">Usuarios</div>
-    <div style="margin-top: 25px">
-      <!-- Tablas de usuarios registrados -->
+    <!-- Tablas de usuarios registrados -->
+    <v-card style="margin-top: 25px">
+      <v-card-title>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Buscar"
+          single-line
+          hide-details
+        ></v-text-field>
+        <v-spacer></v-spacer>
+        <v-select
+          v-model="sortBy"
+          hide-details
+          dense
+          :items="selectKeys"
+          prepend-inner-icon="mdi-magnify"
+          label="Filtrar por"
+        ></v-select>
+      </v-card-title>
       <template>
         <v-data-table
-          class="elevation-1"
           :headers="userHeaders"
-          :items="allUsers"
+          :items="filteredUsers"
+          :search="search"
           item-key="name"
         >
           <template v-slot:body="{ items }">
@@ -79,7 +97,7 @@
           </template>
         </v-data-table>
       </template>
-    </div>
+    </v-card>
     <div>
       <!-- Modal de rechazo de texto -->
       <v-layout row wrap>
@@ -138,8 +156,12 @@ export default {
         { text: "Acciones", align: "center", sortable: false, value: "actions" }
       ],
       allUsers: [],
+      filteredUsers: [],
       selectedUser: [],
-      dialogStatus: false
+      dialogStatus: false,
+      selectKeys: ["Escritor", "Lector", "Administrador", "Ninguno"],
+      search: "",
+      sortBy: ""
     };
   },
   async created() {
@@ -155,7 +177,7 @@ export default {
           user[`is${role}`] = true;
         });
       });
-      this.allUsers = users;
+      this.allUsers = this.filteredUsers = users;
     },
     openDialog(user) {
       this.dialogStatus = true;
@@ -172,6 +194,31 @@ export default {
       this.dialogStatus = false;
       await deleteRequest(`/users/DeleteUser/${this.selectedUser._id}`);
       window.location.reload();
+    }
+  },
+  watch: {
+    sortBy: function(val) {
+      switch (val) {
+        case "Escritor":
+          this.filteredUsers = this.allUsers.filter(
+            (user) => user.iswriter == true
+          );
+          break;
+        case "Lector":
+          this.filteredUsers = this.allUsers.filter(
+            (user) => user.isreader == true
+          );
+          break;
+        case "Administrador":
+          this.filteredUsers = this.allUsers.filter(
+            (user) => user.isadmin == true
+          );
+          break;
+        case "Ninguno":
+        default:
+          this.filteredUsers = this.allUsers;
+          break;
+      }
     }
   }
 };
