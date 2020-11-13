@@ -33,7 +33,11 @@
 </template>
 
 <script>
-import { deleteRequest, getRequest } from "../../utils/requestsNoErr";
+import {
+  deleteRequest,
+  getRequest,
+  postRequest
+} from "../../utils/requestsNoErr";
 import { getErrorMessage } from "../../utils/utils";
 import { snackbar } from "../../utils/events";
 import { patchRequest } from "../../utils/requestsNoErr";
@@ -51,7 +55,8 @@ export default {
       user: "",
       actualRole: "",
       newRole: "",
-      selected_role: []
+      selected_role: [],
+      isNewAdmin: false
     };
   },
   methods: {
@@ -59,8 +64,9 @@ export default {
       try {
         if (this.id) {
           this.user = await getRequest(`/users/${this.id}`);
-          this.actualRole = this.newRole = this.user.admin.role;
+          this.setAdminInfo(this.user);
           this.roles = await getRequest("role", false);
+          this.roles.push({ name: "Ninguno" });
           this.preSelectRole();
         }
       } catch (error) {
@@ -71,16 +77,17 @@ export default {
     },
     // Save role in db
     async save() {
-      try {
-        await patchRequest(
-          `adminsSetRole/${this.user.admin._id}/${this.selected_role[0]._id}`
-        );
-        snackbar(Messages.CRUDOperationSuccess("actualizado"));
-        this.$router.go(-1);
-      } catch (error) {
-        const message = getErrorMessage(error, Messages.SomethingWentWrong());
-        snackbar(message);
+      const selectedRole = this.selected_role[0];
+      if (!this.isNewAdmin) {
+        if (selectedRole.name != "Ninguno") {
+          this.updateRole(selectedRole);
+        } else {
+          this.deleteAdmin(selectedRole);
+        }
+      } else if (selectedRole.name != "Ninguno") {
+        this.createNewAdmin(selectedRole);
       }
+      this.$router.go(-1);
     },
     preSelectRole() {
       this.roles.forEach((x) => {
@@ -88,6 +95,47 @@ export default {
           this.selected_role.push(x);
         }
       });
+    },
+    // To know if I'm gonna need a new admin
+    setAdminInfo(user) {
+      const userAdmin = user.admin;
+      if (userAdmin) {
+        this.actualRole = this.newRole = userAdmin.role;
+      } else {
+        this.actualRole = this.newRole = { name: "Ninguno" };
+        this.isNewAdmin = true;
+      }
+    },
+    async updateRole(role) {
+      try {
+        await patchRequest(`adminsSetRole/${this.user.admin._id}/${role._id}`);
+        snackbar(Messages.CRUDOperationSuccess("actualizado"));
+      } catch (error) {
+        const message = getErrorMessage(error, Messages.SomethingWentWrong());
+        snackbar(message);
+      }
+    },
+    async createNewAdmin(role) {
+      const newAdmin = {
+        user: this.user._id,
+        role: role._id
+      };
+      try {
+        await postRequest(`/admins/makeAdmin`, newAdmin);
+        snackbar(Messages.CRUDOperationSuccess("actualizado"));
+      } catch (error) {
+        const message = getErrorMessage(error, Messages.SomethingWentWrong());
+        snackbar(message);
+      }
+    },
+    async deleteAdmin(role) {
+      try {
+        await deleteRequest(`/admins/removeAdmin/${this.user._id}`);
+        snackbar(Messages.CRUDOperationSuccess("actualizado"));
+      } catch (error) {
+        const message = getErrorMessage(error, Messages.SomethingWentWrong());
+        snackbar(message);
+      }
     }
   },
   mounted() {
