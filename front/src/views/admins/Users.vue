@@ -55,11 +55,11 @@
                       <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
                           <v-btn
-                            :disabled="!item.isadmin"
+                            :disabled="!item.isadmin || item.name == 'Admin 1'"
                             v-bind="attrs"
                             v-on="on"
                             small
-                            color="primary"
+                            color="success"
                             @click="
                               () => {
                                 $router.push(`RoleSet/${item._id}`);
@@ -70,6 +70,28 @@
                           </v-btn>
                         </template>
                         <span>Permisos de usuario</span>
+                      </v-tooltip>
+                    </div>
+                    <!-- Revocar acceso a Usuario -->
+                    <div style="margin: 5px 2.5px">
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn
+                            :disabled="item.isadmin"
+                            v-bind="attrs"
+                            v-on="on"
+                            small
+                            color="primary"
+                            @click="
+                              () => {
+                                $router.push(`RoleSet/${item._id}`);
+                              }
+                            "
+                          >
+                            <v-icon color="white">mdi-account-key</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Hacer admin</span>
                       </v-tooltip>
                     </div>
                     <!-- Revocar acceso a Usuario -->
