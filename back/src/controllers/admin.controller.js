@@ -87,11 +87,11 @@ export const movePhase = (request, response) => {
         if (err) throw err;
       }
     );
-    /*
+
     const phaseInfo = phases[newPhase];
     const writer = await WriterModel.findById(text.writer);
     const user = await UserModel.findById(writer.user);
-    //Enviar correo al autor del avance de su texto
+    // Enviar correo al autor del avance de su texto
     if (newPhase === 2) {
       // La fase es la de aceptacion
       await sendEmail(
@@ -119,7 +119,7 @@ export const movePhase = (request, response) => {
           description: phaseInfo.description
         }
       );
-    }*/
+    }
   });
 };
 
@@ -136,11 +136,44 @@ export const setRole = (req, res) => {
   send(res, async () => {
     const newRole = await AdminModel.findByIdAndUpdate(
       req.params.id,
-      { $set: { 'role': req.params.role }},
+      { $set: { role: req.params.role } },
       { useFindAndModify: false },
       (err, res) => {
         if (err) throw err;
-      });
+      }
+    );
     return newRole;
   });
-}
+};
+
+// Funcion para hacer administrador a un usuario registrado
+export const makeAdmin = (req, res) => {
+  send(res, async () => {
+    const user = req.body;
+    //Autenticar que no existe ya alguien registrado con el correo
+    const lookUserAdmin = await AdminModel.findOne({ user: user._id });
+    if (!lookUserAdmin) {
+      const newAdmin = await AdminModel.create(user);
+      // Agregar al campo de roles
+      await UserModel.updateOne(
+        { _id: user.user },
+        { $addToSet: { roles: "admin" } }
+      );
+      return newAdmin;
+    } else {
+      throw { error: "The e-mail already has a admin account" };
+    }
+  });
+};
+
+// Funcion para remover permisos de administrador
+export const removeAdmin = (req, res) => {
+  send(res, async () => {
+    const user_id = req.params.id;
+    await AdminModel.findOne({ user: user_id }).deleteOne().exec();
+    await UserModel.update(
+      { _id: user_id },
+      { $pullAll: { roles: ["admin"] } }
+    );
+  });
+};

@@ -8,11 +8,6 @@ import config from "./config/config";
 import routesErrorHandler from "./middlewares/errorHandler";
 import { createEverything } from "./scripts/dataInit";
 
-// In development use .env.local for environment variables
-if (config.ENV !== "production") {
-  require("dotenv").config({ path: ".env.local" });
-}
-
 // Api app configuration
 const app = express();
 app.use(fileupload());

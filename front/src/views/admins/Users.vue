@@ -1,71 +1,125 @@
 <template>
   <v-container>
     <div class="display-3 font-weight-medium" align="center">Usuarios</div>
-    <div style="margin-top: 25px">
-      <h2 align="left">Administradores</h2>
-      <!-- Tablas de usuarios registrados -->
-      <Table :headers="userHeaders" :items="admins">
-        <template #actions="{ props }">
-          <v-row>
-            <div style="margin: 5px 2.5px">
-              <!-- Permisos de usuario -->
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    v-bind="attrs"
-                    v-on="on"
-                    small
-                    color="primary"
-                    @click="
-                      () => {
-                        $router.push(`RoleSet/${props._id}`);
-                      }
-                    "
-                  >
-                    <v-icon color="white">mdi-account-multiple</v-icon>
-                  </v-btn>
-                </template>
-                <span>Permisos de usuario</span>
-              </v-tooltip>
-            </div>
-            <!-- 
-            <div style="margin: 5px 2.5px">
-              Eliminar Usuario
-              <v-btn small color="error">
-                <v-icon>mdi-account-remove</v-icon>
-              </v-btn>
-            </div> -->
-          </v-row>
-        </template>
-      </Table>
-    </div>
-    <div style="margin-top: 25px">
-      <h2 align="left">Lectores y Escritores</h2>
-      <!-- Tablas de usuarios registrados -->
-      <Table :headers="userHeaders" :items="readersWriters">
-        <template #actions="{ props }">
-          <v-row>
-            <div style="margin: 5px 2.5px">
-              <!-- Permisos de usuario -->
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    v-bind="attrs"
-                    v-on="on"
-                    small
-                    color="error"
-                    @click="openDialog(props)"
-                  >
-                    <v-icon color="white">mdi-account-remove</v-icon>
-                  </v-btn>
-                </template>
-                <span>Revocar acceso</span>
-              </v-tooltip>
-            </div>
-          </v-row>
-        </template>
-      </Table>
-    </div>
+    <!-- Tablas de usuarios registrados -->
+    <v-card style="margin-top: 25px">
+      <v-card-title>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Buscar"
+          single-line
+          hide-details
+        ></v-text-field>
+        <v-spacer></v-spacer>
+        <v-select
+          v-model="sortBy"
+          hide-details
+          dense
+          :items="selectKeys"
+          prepend-inner-icon="mdi-magnify"
+          label="Filtrar por"
+        ></v-select>
+      </v-card-title>
+      <template>
+        <v-data-table
+          :headers="userHeaders"
+          :items="filteredUsers"
+          :search="search"
+          item-key="name"
+        >
+          <template v-slot:body="{ items }">
+            <tbody>
+              <tr v-for="(item, key) in items" :key="key">
+                <td>{{ item.name }}</td>
+                <td>{{ item.email }}</td>
+                <td class="center-td">
+                  <v-icon v-if="item.isreader" color="success">
+                    mdi-check-circle
+                  </v-icon>
+                </td>
+                <td class="center-td">
+                  <v-icon v-if="item.iswriter" color="success">
+                    mdi-check-circle
+                  </v-icon>
+                </td>
+                <td class="center-td">
+                  <v-icon v-if="item.isadmin" color="success">
+                    mdi-check-circle
+                  </v-icon>
+                </td>
+                <td>
+                  <v-row>
+                    <!-- Permisos de usuario -->
+                    <div style="margin: 5px 2.5px">
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn
+                            :disabled="!item.isadmin || item.name == 'Admin 1'"
+                            v-bind="attrs"
+                            v-on="on"
+                            small
+                            color="success"
+                            @click="
+                              () => {
+                                $router.push(`RoleSet/${item._id}`);
+                              }
+                            "
+                          >
+                            <v-icon color="white">mdi-account-multiple</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Permisos de usuario</span>
+                      </v-tooltip>
+                    </div>
+                    <!-- Revocar acceso a Usuario -->
+                    <div style="margin: 5px 2.5px">
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn
+                            :disabled="item.isadmin"
+                            v-bind="attrs"
+                            v-on="on"
+                            small
+                            color="primary"
+                            @click="
+                              () => {
+                                $router.push(`RoleSet/${item._id}`);
+                              }
+                            "
+                          >
+                            <v-icon color="white">mdi-account-key</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Hacer admin</span>
+                      </v-tooltip>
+                    </div>
+                    <!-- Revocar acceso a Usuario -->
+                    <div style="margin: 5px 2.5px">
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn
+                            :disabled="item.isadmin"
+                            v-bind="attrs"
+                            v-on="on"
+                            small
+                            color="error"
+                            @click="openDialog(item)"
+                          >
+                            <v-icon color="white">mdi-account-remove</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Revocar acceso</span>
+                      </v-tooltip>
+                    </div>
+                  </v-row>
+                </td>
+              </tr>
+            </tbody>
+          </template>
+        </v-data-table>
+      </template>
+    </v-card>
     <div>
       <!-- Modal de rechazo de texto -->
       <v-layout row wrap>
@@ -99,26 +153,37 @@
 </template>
 
 <script>
-import Table from "@/components/table.vue";
 import { getRequest, deleteRequest } from "@/utils/requests";
 import { events } from "../../main";
 
 export default {
-  components: {
-    Table
-  },
   data() {
     return {
       userHeaders: [
         { text: "Nombre", align: "start", sortable: true, value: "name" },
-        { text: "Correo", sortable: false, value: "email" },
-        { text: "Roles", sortable: false, value: "roles" },
-        { text: "Acciones", actions: true, sortable: false }
+        { text: "Correo", sortable: true, value: "email" },
+        { text: "Lector", align: "center", sortable: true, value: "isreader" },
+        {
+          text: "Escritor",
+          align: "center",
+          sortable: true,
+          value: "iswriter"
+        },
+        {
+          text: "Administrador",
+          align: "center",
+          sortable: true,
+          value: "isadmin"
+        },
+        { text: "Acciones", align: "center", sortable: false, value: "actions" }
       ],
-      readersWriters: [],
-      admins: [],
+      allUsers: [],
+      filteredUsers: [],
       selectedUser: [],
-      dialogStatus: false
+      dialogStatus: false,
+      selectKeys: ["Escritor", "Lector", "Administrador", "Ninguno"],
+      search: "",
+      sortBy: ""
     };
   },
   async created() {
@@ -128,40 +193,13 @@ export default {
   methods: {
     async composeUsers() {
       const users = await getRequest("users");
-
       // Formateando los usuarios los usuarios con sus datos
       users.forEach((user) => {
-        let userRoles = "";
         user.roles.forEach((role) => {
-          userRoles += `${this.formatRole(role)}, `;
+          user[`is${role}`] = true;
         });
-        user.roles = userRoles.slice(0, -2);
       });
-
-      // Dividiendo los usuarios en administradores y usuarios ordinarios
-      const readersWriters = [];
-      const admins = users.filter((user) => {
-        let isAdmin = user.roles.includes("Administrador");
-        if (isAdmin) {
-          return isAdmin;
-        } else {
-          readersWriters.push(user);
-        }
-      });
-      this.admins = admins;
-      this.readersWriters = readersWriters;
-    },
-    formatRole(role) {
-      switch (role) {
-        case "admin":
-          return "Administrador";
-        case "reader":
-          return "Lector";
-        case "writer":
-          return "Escritor";
-        default:
-          return role;
-      }
+      this.allUsers = this.filteredUsers = users;
     },
     openDialog(user) {
       this.dialogStatus = true;
@@ -178,6 +216,31 @@ export default {
       this.dialogStatus = false;
       await deleteRequest(`/users/DeleteUser/${this.selectedUser._id}`);
       window.location.reload();
+    }
+  },
+  watch: {
+    sortBy: function(val) {
+      switch (val) {
+        case "Escritor":
+          this.filteredUsers = this.allUsers.filter(
+            (user) => user.iswriter == true
+          );
+          break;
+        case "Lector":
+          this.filteredUsers = this.allUsers.filter(
+            (user) => user.isreader == true
+          );
+          break;
+        case "Administrador":
+          this.filteredUsers = this.allUsers.filter(
+            (user) => user.isadmin == true
+          );
+          break;
+        case "Ninguno":
+        default:
+          this.filteredUsers = this.allUsers;
+          break;
+      }
     }
   }
 };
