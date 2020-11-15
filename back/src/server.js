@@ -7,11 +7,7 @@ import fileupload from "express-fileupload";
 import config from "./config/config";
 import routesErrorHandler from "./middlewares/errorHandler";
 import { createEverything } from "./scripts/dataInit";
-
-// In development use .env.local for environment variables
-if (config.ENV !== "production") {
-  require("dotenv").config({ path: ".env.local" });
-}
+import { runProdDataInit } from "./scripts/prodDataInit";
 
 // Api app configuration
 const app = express();
@@ -51,6 +47,7 @@ else console.log("Db connected successfully");
 
 if (config.ENV !== "production")
   createEverything().catch((err) => console.error(err));
+else if (config.ENV === "production") runProdDataInit();
 
 // API Routes
 const router = createRoutes();

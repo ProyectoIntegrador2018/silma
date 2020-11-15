@@ -7,7 +7,6 @@ const templatesDir = path.resolve(__dirname, "../email-templates");
 // Sends an email from a specified template and some data.
 // At request provide both the email and the subject.
 export const sendEmail = async (request, htmlFile, data) => {
-  // if (!config.EMAIL_HOST) return;
   // Gets html template and fills it with the provided data.
   const email = new Email({
     views: {
@@ -22,7 +21,7 @@ export const sendEmail = async (request, htmlFile, data) => {
   let transporter = nodemailer.createTransport({
     host: config.EMAIL_HOST,
     port: config.EMAIL_PORT,
-    secure: true,
+    secure: false,
     auth: {
       user: config.EMAIL_USER,
       pass: config.EMAIL_PASSWORD
