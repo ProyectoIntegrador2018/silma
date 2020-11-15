@@ -3,9 +3,13 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getAllGenres = exports.createUser = exports.getUser = exports.authUser = void 0;
+exports.deleteUser = exports.sendNotice = exports.getAllGenres = exports.createUser = exports.getUsers = exports.getUser = exports.authUser = void 0;
 
 var _user = require("../models/user.model");
+
+var _writer = require("../models/writer.model");
+
+var _reader = require("../models/reader.model");
 
 var _genre = require("../models/genre.model");
 
@@ -18,6 +22,8 @@ var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
 var _config = _interopRequireDefault(require("../config/config"));
 
 var _user2 = require("../logics/user.logic");
+
+var _mailSender = require("../utils/mailSender");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -87,13 +93,23 @@ var getUser = (request, response) => {
 
     return user;
   }));
-}; // Creates a new user with an assigned role.
+}; // Response with info of every user
 
 
 exports.getUser = getUser;
 
+var getUsers = (req, res) => {
+  (0, _errors.send)(res, /*#__PURE__*/_asyncToGenerator(function* () {
+    var users = yield _user.UserModel.find();
+    return users;
+  }));
+}; // Creates a new user with an assigned role.
+
+
+exports.getUsers = getUsers;
+
 var createUser = /*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator(function* (request, response, role) {
+  var _ref4 = _asyncToGenerator(function* (request, response, role) {
     var data = request.body;
     var user = yield _user.UserModel.findOne({
       email: data.email
@@ -123,7 +139,7 @@ var createUser = /*#__PURE__*/function () {
   });
 
   return function createUser(_x, _x2, _x3) {
-    return _ref3.apply(this, arguments);
+    return _ref4.apply(this, arguments);
   };
 }(); // Response with all the genres.
 
@@ -138,3 +154,36 @@ var getAllGenres = (request, response) => {
 };
 
 exports.getAllGenres = getAllGenres;
+
+var sendNotice = (req, res) => {
+  (0, _errors.send)(res, /*#__PURE__*/_asyncToGenerator(function* () {
+    var user = yield _user.UserModel.findById(req.params.id);
+    yield (0, _mailSender.sendEmail)({
+      email: user.email,
+      subject: "¡Tu novela fue aprobada!"
+    }, "accepted", {
+      name: user.name,
+      title: "Tu cuenta está a punto de ser desactivada"
+    });
+    return user;
+  }));
+};
+
+exports.sendNotice = sendNotice;
+
+var deleteUser = (req, res) => {
+  (0, _errors.send)(res, /*#__PURE__*/_asyncToGenerator(function* () {
+    var user_id = req.params.id;
+    yield _writer.WriterModel.findOne({
+      user: user_id
+    }).deleteOne().exec();
+    yield _reader.ReaderModel.findOne({
+      user: user_id
+    }).deleteOne().exec();
+    yield _user.UserModel.findOne({
+      _id: user_id
+    }).deleteOne().exec();
+  }));
+};
+
+exports.deleteUser = deleteUser;

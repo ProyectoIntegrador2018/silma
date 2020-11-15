@@ -12,6 +12,10 @@ var _mongooseBeautifulUniqueValidation = _interopRequireDefault(require("mongoos
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var AdminSchema = new _mongoose.Schema({
+  isSuperAdmin: {
+    type: Boolean,
+    default: false
+  },
   user: {
     type: _mongoose.Schema.Types.ObjectId,
     ref: "User"

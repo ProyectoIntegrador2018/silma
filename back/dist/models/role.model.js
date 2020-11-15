@@ -154,6 +154,10 @@ var RoleSchema = new _mongoose.Schema({
   genreDelete: {
     type: Boolean,
     default: false
+  },
+  advancePhase: {
+    type: Boolean,
+    default: false
   }
 });
 exports.RoleSchema = RoleSchema;

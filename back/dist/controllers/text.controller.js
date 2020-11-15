@@ -126,10 +126,14 @@ var getTextsOfWriter = (request, response) => {
     var {
       writer
     } = request.params;
-    var reader = yield _text.TextModel.find({
-      writer
-    }).populate("genres");
-    return reader;
+    var writerText = yield _writer.WriterModel.findOne({
+      user: writer
+    });
+    var writerID = writerText._id;
+    var texts = yield _text.TextModel.find({
+      writer: writerID
+    });
+    return texts;
   }));
 }; // Rejects a particular text and sends an email to the writer with a pdf file.
 

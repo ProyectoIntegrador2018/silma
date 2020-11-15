@@ -21,6 +21,9 @@ var addAdminRoutes = router => {
   router.post("/admins/suggestions/createSuggestions/", (0, _jwt.verifyToken)(["admin"]), _suggestion.createSuggestionAdmin);
   router.delete("/admins/suggestions/deleteSuggestion/:id", (0, _jwt.verifyToken)(["admin"]), _suggestion.deleteSuggestionAdmin);
   router.get("/admins/feedbacks/:id", (0, _jwt.verifyToken)(["admin"]), _admin.getFeedbackIdBySuggestion);
+  router.patch("/adminsSetRole/:id/:role", _admin.setRole);
+  router.post("/admins/makeAdmin", _admin.makeAdmin);
+  router.delete("/admins/removeAdmin/:id", _admin.removeAdmin);
 };
 
 exports.addAdminRoutes = addAdminRoutes;

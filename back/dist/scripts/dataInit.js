@@ -225,7 +225,8 @@ function _createEverything() {
       genreRead: true,
       genreCreate: true,
       genreEdit: true,
-      genreDelete: true
+      genreDelete: true,
+      advancePhase: true
     });
     console.log("Role 1 created successfully");
     var admin1 = yield createAdmin({

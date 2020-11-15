@@ -18,16 +18,11 @@ var _errorHandler = _interopRequireDefault(require("./middlewares/errorHandler")
 
 var _dataInit = require("./scripts/dataInit");
 
+var _prodDataInit = require("./scripts/prodDataInit");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// In development use .env.local for environment variables
-if (_config.default.ENV !== "production") {
-  require("dotenv").config({
-    path: ".env.local"
-  });
-} // Api app configuration
-
-
+// Api app configuration
 var app = (0, _express.default)();
 app.use((0, _expressFileupload.default)());
 app.use((0, _cors.default)({
@@ -55,7 +50,7 @@ _mongoose.default.connect(_config.default.MONGO_URL, {
 var db = _mongoose.default.connection; // Added check for DB connection
 
 if (!db) console.log("Error connecting db");else console.log("Db connected successfully");
-if (_config.default.ENV !== "production") (0, _dataInit.createEverything)().catch(err => console.error(err)); // API Routes
+if (_config.default.ENV !== "production") (0, _dataInit.createEverything)().catch(err => console.error(err));else if (_config.default.ENV === "production") (0, _prodDataInit.runProdDataInit)(); // API Routes
 
 var router = (0, _routes.createRoutes)(); // Attach error handlers to Express app
 

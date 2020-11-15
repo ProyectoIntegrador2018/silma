@@ -30,6 +30,9 @@ var createRoutes = () => {
   router.post("/user/authentication", _user.authUser);
   router.get("/users/:id", (0, _jwt.verifyToken)(), _user.getUser);
   router.get("/user/genres", _user.getAllGenres);
+  router.get("/users", _user.getUsers);
+  router.get("/users/SendNotice/:id", _user.sendNotice);
+  router.delete("/users/DeleteUser/:id", _user.deleteUser);
   (0, _writer.addWriterRoutes)(router);
   (0, _admin.addAdminRoutes)(router);
   (0, _reader.addReaderRoutes)(router);

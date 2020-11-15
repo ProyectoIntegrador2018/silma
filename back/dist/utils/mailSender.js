@@ -25,7 +25,6 @@ var templatesDir = _path.default.resolve(__dirname, "../email-templates"); // Se
 
 var sendEmail = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator(function* (request, htmlFile, data) {
-    // if (!config.EMAIL_HOST) return;
     // Gets html template and fills it with the provided data.
     var email = new _emailTemplates.default({
       views: {
@@ -40,7 +39,7 @@ var sendEmail = /*#__PURE__*/function () {
     var transporter = _nodemailer.default.createTransport({
       host: _config.default.EMAIL_HOST,
       port: _config.default.EMAIL_PORT,
-      secure: true,
+      secure: false,
       auth: {
         user: _config.default.EMAIL_USER,
         pass: _config.default.EMAIL_PASSWORD

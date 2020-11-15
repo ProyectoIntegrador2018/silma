@@ -1,4 +1,3 @@
-.env.*.local
 
 # Log files
 npm-debug.log*
