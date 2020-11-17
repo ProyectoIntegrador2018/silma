@@ -17,6 +17,8 @@ import RoleList from "@/views/admins/RoleList.vue";
 import RoleForm from "@/views/admins/RoleForm.vue";
 import Feedback from "@/views/admins/Feedbacks.vue";
 import { cleanAuthCookies } from "@/utils/cookies";
+import EventForm from "@/views/admins/EventForm.vue";
+import EventList from "@/views/admins/EventList.vue";
 
 Vue.use(VueRouter);
 // NOTE: Use 'withAccess' for pages that can only be accessed by certain users.
@@ -191,6 +193,49 @@ const routes = [
       requiresAuth: true,
       withAccess: ["admin"],
       permission: "genreEdit"
+    },
+    props: { viewMode: false }
+  },
+  {
+    path: "/event",
+    name: "Event",
+    component: EventList,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+      permission: "eventRead"
+    }
+  },
+  {
+    path: "/event/create",
+    name: "EventCreate",
+    component: EventForm,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+      permission: "eventCreate"
+    },
+    props: { viewMode: false }
+  },
+  {
+    path: "/event/view/:id",
+    name: "EventrmView",
+    component: EventForm,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+      permission: "eventRead"
+    },
+    props: { viewMode: true }
+  },
+  {
+    path: "/event/edit/:id",
+    name: "EventFormEdit",
+    component: EventForm,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+      permission: "eventEdit"
     },
     props: { viewMode: false }
   },
