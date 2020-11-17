@@ -89,9 +89,9 @@ export const sendNotice = (req, res) => {
     await sendEmail(
       {
         email: user.email,
-        subject: "¡Tu novela fue aprobada!"
+        subject: "Tu cuenta está a punto de ser desactivada"
       },
-      "accepted",
+      "accountNotice",
       {
         name: user.name,
         title: "Tu cuenta está a punto de ser desactivada"
