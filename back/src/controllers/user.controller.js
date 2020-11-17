@@ -89,12 +89,12 @@ export const sendNotice = (req, res) => {
     await sendEmail(
       {
         email: user.email,
-        subject: "Tu cuenta está a punto de ser desactivada"
+        subject: "Inactividad de cuenta"
       },
       "accountNotice",
       {
         name: user.name,
-        title: "Tu cuenta está a punto de ser desactivada"
+        title: "Inactividad de cuenta"
       }
     );
 
