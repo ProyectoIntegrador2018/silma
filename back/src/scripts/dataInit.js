@@ -146,7 +146,11 @@ export async function createEverything() {
     genreCreate: true,
     genreEdit: true,
     genreDelete: true,
-    advancePhase: true
+    advancePhase: true,
+    pointOfSaleRead: true,
+    pointOfSaleCreate: true,
+    pointOfSaleDelete: true,
+    pointOfSaleEdit: true
   });
   console.log("Role 1 created successfully");
   const admin1 = await createAdmin(

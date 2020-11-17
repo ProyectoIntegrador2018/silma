@@ -211,6 +211,11 @@ export default {
           title: "Roles",
           route: "/roleList",
           hasPermission: hasPermission.bind(this)("roleRead")
+        },
+        {
+          title: "Puntos de Venta",
+          route: "/pointOfSale",
+          hasPermission: true
         }
       ]
     };

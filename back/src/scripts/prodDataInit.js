@@ -49,7 +49,11 @@ async function createAllRoles() {
       genreCreate: true,
       genreEdit: true,
       genreDelete: true,
-      advancePhase: true
+      advancePhase: true,
+      pointOfSaleRead: true,
+      pointOfSaleCreate: true,
+      pointOfSaleEdit: true,
+      pointOfSaleDelete: true,
     }
   ];
   const promises = roles.map((role) => createRole(role));

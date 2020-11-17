@@ -149,7 +149,23 @@ export const RoleSchema = new Schema({
   advancePhase: {
     type: Boolean,
     default: false
-  }
+  },
+  pointOfSaleRead: {
+    type: Boolean,
+    default: false
+  },
+  pointOfSaleCreate: {
+    type: Boolean,
+    default: false
+  },
+  pointOfSaleEdit: {
+    type: Boolean,
+    default: false
+  },
+  pointOfSaleDelete: {
+    type: Boolean,
+    default: false
+  },
 });
 
 RoleSchema.pre("save", async function (next) {
