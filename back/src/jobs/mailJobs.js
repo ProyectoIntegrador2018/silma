@@ -4,6 +4,7 @@ import { SuggestionModel } from "../models/suggestion.model";
 import moment from "moment-timezone";
 import { ReaderModel } from "@/models/reader.model";
 import { UserModel } from "@/models/user.model";
+import { TextModel } from "@/models/text.model";
 
 export function startMailJobs() {
   sendReminderMailToReaders();
@@ -19,23 +20,23 @@ function sendReminderMailToReaders() {
       });
 
       if (suggestions.length > 0) {
-        const readersPromises = suggestions.map((x) =>
-          ReaderModel.findById(x.reader)
-        );
-        const readers = await Promise.all(readersPromises);
-        const usersPromises = readers.map((x) => UserModel.findById(x.user));
-        const users = await Promise.all(usersPromises);
-
-        const mailPromises = users.map(async (x) => {
+        const sendMailPromises = suggestions.map(async (x) => {
+          const reader = await ReaderModel.findById(x.reader);
+          const userPromise = UserModel.findById(reader.user);
+          const textPromise = TextModel.findById(x.text);
+          const [text, user] = await Promise.all([textPromise, userPromise]);
           const mailData = {
-            email: x.email,
-            subject: "SUGGESTION NOT READ YET"
+            email: user.email,
+            subject: "Recordatorio de lectura"
           };
-          await sendEmail(mailData, "new_suggestion");
-          console.log(`EMAIL SENT TO ${x.email}`);
+          await sendEmail(mailData, "reading_remainder", {
+            readerName: user.name,
+            book: text.title
+          });
+          console.log(`EMAIL SENT TO ${user.email}`);
         });
 
-        await Promise.all(mailPromises);
+        await Promise.all(sendMailPromises);
       } else
         console.log(
           "NO USER WITH SUGGESTIONS NOT READ WITH TWO WEEKS OR MORE."
