@@ -50,7 +50,20 @@ export const getUser = (request, response) => {
 export const getUsers = (req, res) => {
   send(res, async () => {
     const users = await UserModel.find();
-    return users;
+    const readerUsersPromises = users
+      .filter((user) => user.roles.some((x) => x === "reader"))
+      .map(async (userReader) => {
+        const userReaderJSON = userReader.toJSON();
+        const reader = await ReaderModel.findOne({ user: userReader._id });
+        return {
+          ...userReaderJSON,
+          reader
+        };
+      });
+    const readerUsers = await Promise.all(readerUsersPromises);
+    return users
+      .filter((user) => !user.roles.some((x) => x === "reader"))
+      .concat(readerUsers);
   });
 };
 

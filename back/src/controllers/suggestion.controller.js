@@ -3,6 +3,7 @@ import { SuggestionModel } from "@/models/suggestion.model";
 import { TextModel } from "@/models/text.model";
 import { sendEmail } from "@/utils/mailSender";
 import { send } from "@/utils/errors";
+import { UserModel } from "@/models/user.model";
 
 //Asigna X cantindad de lectores a un libro
 export const assignReaders = async (text, amount) => {
@@ -192,14 +193,20 @@ export const calculateBetweenDatesPoints = async (initialDate, finalDate) => {
 };
 
 //Funcion que modifica el status de la sugerencia de un lector a un libro
-export const changeSuggestionStatus = async (id, newStatus, previousStatus) => {
+export const changeSuggestionStatus = async (
+  id,
+  newStatus,
+  previousStatus,
+  session
+) => {
   const suggestion = await SuggestionModel.findById(id).populate("text");
   if (!suggestion) throw { error: `Suggestion with id: ${id} not found` };
   if (suggestion.suggestionStatus === previousStatus) {
     suggestion.suggestionStatus = newStatus;
     await SuggestionModel.updateOne(
       { _id: suggestion._id },
-      { suggestionStatus: newStatus, ...suggestion._doc }
+      { suggestionStatus: newStatus, ...suggestion._doc },
+      { session }
     );
     return suggestion;
   } else {
@@ -211,26 +218,58 @@ export const changeSuggestionStatus = async (id, newStatus, previousStatus) => {
 
 //Funcion que rechaza la sugerencia a un libro por parte de un lector
 export const rejectSuggestion = (request, response) => {
-  send(response, async () => {
+  send(response, async (session) => {
     const { id } = request.params;
-    var suggestion = await SuggestionModel.findById(id);
-    var text = await TextModel.findById(suggestion.text);
+    const suggestion = await SuggestionModel.findById(id);
+    const textPromise = TextModel.findById(suggestion.text);
+    const readerPromise = ReaderModel.findById(suggestion.reader);
+    const [text, reader] = await Promise.all([textPromise, readerPromise]);
+    const user = await UserModel.findById(reader.user);
     await assignReaders(text, 1);
     const newSuggestion = await changeSuggestionStatus(
       id,
       "Rejected",
-      "Pending"
+      "Pending",
+      session
     );
+    // Update reader rejects in a row
+    reader.rejectsInARow++;
+    await reader.save({ session });
+
+    // If reader has rejected over five suggestions, send mail
+    if (reader.rejectsInARow > 5) {
+      const emailData = {
+        email: user.email,
+        subject: "Rechazo de lecturas"
+      };
+      await sendEmail(emailData, "reading_rejects", { readerName: user.name });
+      console.log(`EMAIL SENT TO USER ${user.name}`);
+    }
+
     return newSuggestion;
   });
 };
 
 //Funcion que acepta la sugerencia a un libro por parte de un lector
 export const acceptSuggestion = (request, response) => {
-  send(response, async () => {
+  send(response, async (session) => {
     const { id } = request.params;
-    const suggestion = await changeSuggestionStatus(id, "Accepted", "Pending");
-    return suggestion;
+    const suggestion = await SuggestionModel.findById(id);
+    const newSuggestionPromise = changeSuggestionStatus(
+      id,
+      "Accepted",
+      "Pending",
+      session
+    );
+    const readerPromise = ReaderModel.findById(suggestion.reader);
+    const [newSuggestion, reader] = await Promise.all([
+      newSuggestionPromise,
+      readerPromise
+    ]);
+    // Set rejects in a row to 0
+    reader.rejectsInARow = 0;
+    await reader.save();
+    return newSuggestion;
   });
 };
 
@@ -241,7 +280,8 @@ export const completeSuggestion = (request, response) => {
     const suggestion = await changeSuggestionStatus(
       id,
       "Completed",
-      "Accepted"
+      "Accepted",
+      session
     );
     return suggestion;
   });
@@ -366,7 +406,7 @@ export const getReadersWithoutSuggestion = (request, response) => {
     occupiedReaders.forEach((element) => {
       idOccupied.push(element.reader.toString());
     });
-    var finalArr = readers.filter(function(item) {
+    var finalArr = readers.filter(function (item) {
       return idOccupied.indexOf(item._id.toString()) === -1;
     });
     return finalArr;
@@ -377,9 +417,7 @@ export const getReadersWithoutSuggestion = (request, response) => {
 export const deleteSuggestionAdmin = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
-    SuggestionModel.findOne({ _id: id })
-      .deleteOne()
-      .exec();
+    SuggestionModel.findOne({ _id: id }).deleteOne().exec();
   });
 };
 
