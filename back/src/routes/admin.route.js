@@ -5,7 +5,9 @@ import {
   getFeedback,
   movePhase,
   getFeedbackIdBySuggestion,
-  setRole
+  setRole,
+  makeAdmin,
+  removeAdmin
 } from "@/controllers/admin.controller";
 
 import {
@@ -46,4 +48,6 @@ export const addAdminRoutes = (router) => {
     getFeedbackIdBySuggestion
   );
   router.patch("/adminsSetRole/:id/:role", setRole);
+  router.post("/admins/makeAdmin", makeAdmin);
+  router.delete("/admins/removeAdmin/:id", removeAdmin);
 };

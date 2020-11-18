@@ -4,50 +4,86 @@
     :items="permissionsMatrix"
     :items-per-page="10"
     class="elevation-1"
+    single-expand
+    show-expand
+    :expanded.sync="expanded"
   >
-    <template v-slot:body="{ items }">
-      <tbody>
-        <tr v-for="item in items" :key="item.name">
-          <td>{{ item.display }}</td>
-          <td>
-            <v-switch
-              @change="(value) => permissionChanged(`${item.name}Read`, value)"
-              :value="item[`${item.name}Read`]"
+    <template v-slot:item="{ item, expand, isExpanded }">
+      <tr>
+        <td>
+          <v-btn
+            color="primary"
+            v-if="item.specialPermissions.length > 0"
+            @click="expand(!isExpanded)"
+            >Expandir</v-btn
+          >
+        </td>
+        <td>{{ item.display }}</td>
+        <td>
+          <v-switch
+            v-if="item.hasReadPermission"
+            @change="(value) => permissionChanged(`${item.name}Read`, value)"
+            :value="item[`${item.name}Read`]"
+            :disabled="viewMode"
+          ></v-switch>
+        </td>
+        <td>
+          <v-switch
+            v-if="item.hasCreatePermission"
+            @change="(value) => permissionChanged(`${item.name}Create`, value)"
+            :value="item[`${item.name}Create`]"
+            :disabled="viewMode"
+          ></v-switch>
+        </td>
+        <td>
+          <v-switch
+            v-if="item.hasEditPermission"
+            @change="(value) => permissionChanged(`${item.name}Edit`, value)"
+            :value="item[`${item.name}Edit`]"
+            :disabled="viewMode"
+          ></v-switch>
+        </td>
+        <td>
+          <v-switch
+            v-if="item.hasDeletePermission"
+            @change="(value) => permissionChanged(`${item.name}Delete`, value)"
+            :value="item[`${item.name}Delete`]"
+            :disabled="viewMode"
+          ></v-switch>
+        </td>
+      </tr>
+    </template>
+    <template v-slot:expanded-item="{ headers, item }">
+      <tr
+        v-for="(specialPermission, index) in item.specialPermissions"
+        :key="index"
+      >
+        <td :colspan="headers.length">
+          <div class="special-permission-container">
+            <v-checkbox
+              v-model="item[specialPermission.name]"
               :disabled="viewMode"
-            ></v-switch>
-          </td>
-          <td>
-            <v-switch
               @change="
-                (value) => permissionChanged(`${item.name}Create`, value)
+                (value) => permissionChanged(specialPermission.name, value)
               "
-              :value="item[`${item.name}Create`]"
-              :disabled="viewMode"
-            ></v-switch>
-          </td>
-          <td>
-            <v-switch
-              @change="(value) => permissionChanged(`${item.name}Edit`, value)"
-              :value="item[`${item.name}Edit`]"
-              :disabled="viewMode"
-            ></v-switch>
-          </td>
-          <td>
-            <v-switch
-              @change="
-                (value) => permissionChanged(`${item.name}Delete`, value)
-              "
-              :value="item[`${item.name}Delete`]"
-              :disabled="viewMode"
-            ></v-switch>
-          </td>
-        </tr>
-      </tbody>
+            >
+              <template slot="prepend">{{
+                specialPermission.display
+              }}</template>
+            </v-checkbox>
+          </div>
+        </td>
+      </tr>
     </template>
   </v-data-table>
 </template>
 
-<style scoped></style>
+<style scoped>
+.special-permission-container {
+  display: flex;
+  justify-content: flex-end;
+}
+</style>
 
 <script>
 export default {
@@ -67,30 +103,39 @@ export default {
       headers: [
         {
           text: "Funcionalidad",
-          value: ""
+          value: "name",
+          sortable: true
         },
         {
           text: "Ver",
-          value: ""
+          value: "",
+          sortable: false
         },
         {
           text: "Crear",
-          value: ""
+          value: "",
+          sortable: false
         },
         {
           text: "Modificar",
-          value: ""
+          value: "",
+          sortable: false
         },
         {
           text: "Eliminar",
-          value: ""
+          value: "",
+          sortable: false
         }
-      ]
+      ],
+      expanded: []
     };
   },
   methods: {
     permissionChanged(permission, value) {
       this.$emit("permissionChanged", permission, !!value);
+    },
+    test(props) {
+      console.log(props);
     }
   },
   mounted() {},
@@ -98,68 +143,109 @@ export default {
     permissionsMatrix: function() {
       const functionalities = [
         {
-          display: "Lectura",
+          display: "Lecturas",
           name: "reading",
-          hasCrudPermissions: true,
-          specialPermissions: []
+          hasReadPermission: true,
+          hasCreatePermission: false,
+          hasEditPermission: false,
+          hasDeletePermission: false,
+          specialPermissions: [
+            {
+              display: "Avanzar Fase",
+              name: "advancePhase"
+            }
+          ]
         },
         {
           display: "Obras",
           name: "book",
-          hasCrudPermissions: true,
-          specialPermissions: []
-        },
-        {
-          display: "Avance de Fases",
-          name: "phase",
-          hasCrudPermissions: true,
+          hasReadPermission: true,
+          hasCreatePermission: true,
+          hasEditPermission: true,
+          hasDeletePermission: true,
           specialPermissions: []
         },
         {
           display: "Usuarios",
           name: "user",
-          hasCrudPermissions: true,
+          hasReadPermission: true,
+          hasCreatePermission: false,
+          hasEditPermission: true,
+          hasDeletePermission: true,
           specialPermissions: []
         },
         {
           display: "Eventos",
           name: "event",
-          hasCrudPermissions: true,
+          hasReadPermission: true,
+          hasCreatePermission: true,
+          hasEditPermission: true,
+          hasDeletePermission: true,
           specialPermissions: []
         },
         {
           display: "Reportes",
           name: "report",
-          hasCrudPermissions: true,
+          hasReadPermission: true,
+          hasCreatePermission: true,
+          hasEditPermission: true,
+          hasDeletePermission: true,
           specialPermissions: []
         },
         {
           display: "Roles",
           name: "role",
-          hasCrudPermissions: true,
+          hasReadPermission: true,
+          hasCreatePermission: true,
+          hasEditPermission: true,
+          hasDeletePermission: true,
           specialPermissions: []
         },
         {
           display: "Géneros",
           name: "genre",
-          hasCrudPermissions: true,
+          hasReadPermission: true,
+          hasCreatePermission: true,
+          hasEditPermission: true,
+          hasDeletePermission: true,
           specialPermissions: []
         }
       ];
 
       const matrix = functionalities.map((x) => {
-        if (x.hasCrudPermissions) {
-          const permissionLine = {
-            display: x.display,
-            name: x.name,
-            [`${x.name}Read`]: this.role[[`${x.name}Read`]],
-            [`${x.name}Create`]: this.role[[`${x.name}Create`]],
-            [`${x.name}Edit`]: this.role[[`${x.name}Edit`]],
-            [`${x.name}Delete`]: this.role[[`${x.name}Delete`]]
-          };
-          return permissionLine;
+        const {
+          hasReadPermission,
+          hasCreatePermission,
+          hasEditPermission,
+          hasDeletePermission,
+          specialPermissions
+        } = x;
+
+        const permissionLine = {
+          display: x.display,
+          name: x.name,
+          hasReadPermission,
+          hasCreatePermission,
+          hasEditPermission,
+          hasDeletePermission,
+          specialPermissions
+        };
+
+        if (hasReadPermission)
+          permissionLine[`${x.name}Read`] = this.role[[`${x.name}Read`]];
+        if (hasCreatePermission)
+          permissionLine[`${x.name}Create`] = this.role[[`${x.name}Create`]];
+        if (hasEditPermission)
+          permissionLine[`${x.name}Edit`] = this.role[[`${x.name}Edit`]];
+        if (hasDeletePermission)
+          permissionLine[`${x.name}Delete`] = this.role[[`${x.name}Delete`]];
+        if (x.specialPermissions.length > 0) {
+          x.specialPermissions.forEach(
+            (x) => (permissionLine[x.name] = this.role[x.name])
+          );
         }
-        return { display: x.display, name: x.name };
+
+        return permissionLine;
       });
       return matrix;
     }
