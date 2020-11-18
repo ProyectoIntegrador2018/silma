@@ -78,7 +78,16 @@ export const createUser = async (request, response, role) => {
 // Response with all the genres.
 export const getAllGenres = (request, response) => {
   send(response, async () => {
-    const genres = await GenreModel.find();
+    const genres = await GenreModel.aggregate([
+      {
+         $lookup: {
+           from: "subgenres",
+           localField: "_id",
+           foreignField: "genre",
+           as: 'children'
+         }
+      }
+    ]);
     return genres;
   });
 };
