@@ -1,51 +1,51 @@
 <template>
   <v-container>
-    <h1>Eventos</h1>
+    <h1>Puntos de Venta</h1>
     <div class="add-btn-container">
       <v-btn
-        v-if="hasPermission('eventCreate')"
+        v-if="hasPermission('pointOfSaleCreate')"
         color="primary"
-        @click="() => $router.push('/event/create')"
+        @click="() => $router.push('/pointofsale/create')"
         >Agregar</v-btn
       >
     </div>
     <div class="table-wrapper">
-      <Table :items="events" :headers="headers">
+      <Table :items="poS" :headers="headers">
         <template #actions="{ props }">
           <div class="actions-wrapper">
             <v-btn
-              v-if="hasPermission('eventRead')"
+              v-if="hasPermission('pointOfSaleRead')"
               small
               color="success"
               :disabled="false"
               depressed
               @click="
                 () => {
-                  $router.push(`event/view/${props._id}`);
+                  $router.push(`pointofsale/view/${props._id}`);
                 }
               "
               >Ver</v-btn
             >
             <v-btn
-              v-if="hasPermission('eventEdit')"
+              v-if="hasPermission('pointOfSaleEdit')"
               small
               color="primary"
               :disabled="false"
               depressed
               @click="
                 () => {
-                  $router.push(`event/edit/${props._id}`);
+                  $router.push(`pointofsale/edit/${props._id}`);
                 }
               "
               >Editar</v-btn
             >
             <v-btn
-              v-if="hasPermission('eventDelete')"
+              v-if="hasPermission('pointOfSaleDelete')"
               small
               color="error"
               :disabled="false"
               depressed
-              @click="() => deleteEvent(props._id)"
+              @click="() => deletePoS(props._id)"
               >Eliminar</v-btn
             >
           </div>
@@ -82,35 +82,33 @@ export default {
   data() {
     return {
       hasPermission,
-      events: [],
+      poS: [],
       headers: [
         { text: "Nombre", value: "name" },
         { text: "Descripción", value: "description" },
-        { text: "Fecha", value: "date"},
-        { text: "Hora", value: "time"},
-        { text: "Acciones", sortable: false, actions: true, align:"center" }
+        { text: "Acciones", sortable: false, actions: true, align:"center"}
       ]
     };
   },
   async mounted() {
     this.updateLoading(true);
-    await this.getEvents();
+    await this.getPoS();
     this.updateLoading(false);
   },
   methods: {
-    async getEvents() {
+    async getPoS() {
       try {
-        this.events = await getRequest("event/search", false);
+        this.poS = await getRequest("pointOfSale/search", false);
       } catch (error) {
         console.error(error);
         const message = getErrorMessage(error, Messages.SomethingWentWrong());
         snackbar(message);
       }
     },
-    async deleteEvent(id) {
+    async deletePoS(id) {
       try {
-        await deleteRequest(`event/${id}`);
-        await this.getEvents();
+        await deleteRequest(`pointOfSale/${id}`);
+        await this.getPoS();
         snackbar(Messages.CRUDOperationSuccess("eliminado"));
       } catch (error) {
         const message = getErrorMessage(error, Messages.SomethingWentWrong());
