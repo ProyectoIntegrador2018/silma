@@ -54,11 +54,7 @@ async function createAllRoles() {
       pointOfSaleCreate: true,
       pointOfSaleEdit: true,
       pointOfSaleDelete: true,
-      advancePhase: true,
-      eventRead: true,
-      eventCreate: true,
-      eventDelete: true,
-      eventEdit: true
+      advancePhase: true
     }
   ];
   const promises = roles.map((role) => createRole(role));
