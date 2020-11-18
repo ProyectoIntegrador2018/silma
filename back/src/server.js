@@ -8,6 +8,7 @@ import config from "./config/config";
 import routesErrorHandler from "./middlewares/errorHandler";
 import { createEverything } from "./scripts/dataInit";
 import { startMailJobs } from "./jobs/mailJobs";
+import { runProdDataInit } from "./scripts/prodDataInit";
 
 // Api app configuration
 const app = express();
@@ -47,6 +48,7 @@ else console.log("Db connected successfully");
 
 if (config.ENV !== "production")
   createEverything().catch((err) => console.error(err));
+else if (config.ENV === "production") runProdDataInit();
 
 // API Routes
 const router = createRoutes();

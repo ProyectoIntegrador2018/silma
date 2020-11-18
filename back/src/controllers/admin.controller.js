@@ -145,3 +145,35 @@ export const setRole = (req, res) => {
     return newRole;
   });
 };
+
+// Funcion para hacer administrador a un usuario registrado
+export const makeAdmin = (req, res) => {
+  send(res, async () => {
+    const user = req.body;
+    //Autenticar que no existe ya alguien registrado con el correo
+    const lookUserAdmin = await AdminModel.findOne({ user: user._id });
+    if (!lookUserAdmin) {
+      const newAdmin = await AdminModel.create(user);
+      // Agregar al campo de roles
+      await UserModel.updateOne(
+        { _id: user.user },
+        { $addToSet: { roles: "admin" } }
+      );
+      return newAdmin;
+    } else {
+      throw { error: "The e-mail already has a admin account" };
+    }
+  });
+};
+
+// Funcion para remover permisos de administrador
+export const removeAdmin = (req, res) => {
+  send(res, async () => {
+    const user_id = req.params.id;
+    await AdminModel.findOne({ user: user_id }).deleteOne().exec();
+    await UserModel.update(
+      { _id: user_id },
+      { $pullAll: { roles: ["admin"] } }
+    );
+  });
+};
