@@ -6,6 +6,7 @@ import { addRoleRoutes } from "./role.route";
 import { addTextRoutes } from "./text.route";
 import { addSuggestionRoutes } from "./suggestion.route";
 import { addGenreRoutes } from "./genre.route";
+import { addEventRoutes } from "./event.route";
 import {
   authUser,
   getAllGenres,
@@ -31,6 +32,7 @@ export const createRoutes = () => {
   addTextRoutes(router);
   addSuggestionRoutes(router);
   addGenreRoutes(router);
+  addEventRoutes(router);
 
   return router;
 };
