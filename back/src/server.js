@@ -7,6 +7,7 @@ import fileupload from "express-fileupload";
 import config from "./config/config";
 import routesErrorHandler from "./middlewares/errorHandler";
 import { createEverything } from "./scripts/dataInit";
+import { startMailJobs } from "./jobs/mailJobs";
 import { runProdDataInit } from "./scripts/prodDataInit";
 
 // Api app configuration
@@ -54,6 +55,9 @@ const router = createRoutes();
 // Attach error handlers to Express app
 app.use("/api", router);
 routesErrorHandler(app);
+
+// Start CRON jobs
+startMailJobs();
 
 // Launch app to listen to specified port
 app.listen(config.PORT, () => {
