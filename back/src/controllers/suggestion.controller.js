@@ -3,6 +3,7 @@ import { SuggestionModel } from "@/models/suggestion.model";
 import { TextModel } from "@/models/text.model";
 import { sendEmail } from "@/utils/mailSender";
 import { send } from "@/utils/errors";
+import { UserModel } from "@/models/user.model";
 
 //Asigna X cantindad de lectores a un libro
 export const assignReaders = async (text, amount) => {
@@ -223,6 +224,7 @@ export const rejectSuggestion = (request, response) => {
     const textPromise = TextModel.findById(suggestion.text);
     const readerPromise = ReaderModel.findById(suggestion.reader);
     const [text, reader] = await Promise.all([textPromise, readerPromise]);
+    const user = await UserModel.findById(reader.user);
     await assignReaders(text, 1);
     const newSuggestion = await changeSuggestionStatus(
       id,
@@ -234,13 +236,14 @@ export const rejectSuggestion = (request, response) => {
     reader.rejectsInARow++;
     await reader.save({ session });
 
-    // If reader has rejected over five suggestions, notify admin
+    // If reader has rejected over five suggestions, send mail
     if (reader.rejectsInARow > 5) {
       const emailData = {
-        email: "A00820365@itesm.mx",
-        subject: "Probando control de rechazos"
+        email: user.email,
+        subject: "Rechazo de lecturas"
       };
-      await sendEmail(emailData, "new_suggestion");
+      await sendEmail(emailData, "reading_rejects", { readerName: user.name });
+      console.log(`EMAIL SENT TO USER ${user.name}`);
     }
 
     return newSuggestion;
