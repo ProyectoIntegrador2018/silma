@@ -88,7 +88,7 @@ export default {
         { text: "Descripción", value: "description" },
         { text: "Fecha", value: "date"},
         { text: "Hora", value: "time"},
-        { text: "Acciones", sortable: false, actions: true }
+        { text: "Acciones", sortable: false, actions: true, align:"center" }
       ]
     };
   },

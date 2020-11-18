@@ -86,7 +86,7 @@ export default {
       headers: [
         { text: "Nombre", value: "name" },
         { text: "Descripción", value: "description" },
-        { text: "Acciones", sortable: false, actions: true }
+        { text: "Acciones", sortable: false, actions: true, align:"center"}
       ]
     };
   },
