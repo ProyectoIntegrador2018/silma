@@ -31,7 +31,7 @@ export const TextSchema = new Schema({
     type: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Genre"
+        ref: "Subgenre"
       }
     ],
     validate: [rangeRule(1, 3), "Genres length is not inside its boundries."]

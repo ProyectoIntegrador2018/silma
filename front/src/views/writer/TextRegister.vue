@@ -51,17 +51,23 @@
       </v-layout>
       <p>Seleccionar géneros (Máximo 3)</p>
       <v-layout row wrap>
-        <v-col cols="12" sm="3" v-for="genre in genres" :key="genre.name">
-          <v-switch v-model="text.genres" :value="genre._id" color="blue">
-            <template slot="label">
-              <span style="padding-right:5px;">{{ genre.name }}</span
-              ><i
-                class="glyphicon glyphicon-info-sign"
-                @mouseover="showDescription(genre)"
-              ></i>
-            </template>
-          </v-switch>
-        </v-col>
+         <v-col
+        cols="12"
+        sm="4">
+           <v-treeview
+          v-model="text.genres"
+          :items="allGenres"
+          selectable
+          >
+          <template v-slot:prepend="{ item }" id="item._id">
+          <i
+            class="glyphicon glyphicon-info-sign"
+            @mouseover="showDescription(item)"
+            @mouseleave="showGenreDescription = false"
+          ></i>
+        </template>
+          </v-treeview>
+         </v-col>
       </v-layout>
       <v-layout row wrap class="justify-center">
         <v-col cols="12" sm="12">
@@ -164,12 +170,6 @@
         <v-card-text>
           {{ genreToShowDescription.description }}
         </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue" text @click="showGenreDescription = false">
-            Cerrar
-          </v-btn>
-        </v-card-actions>
       </v-card>
     </v-dialog>
   </v-container>
@@ -187,6 +187,10 @@ import {
 } from "@/utils/constants";
 import { getRequest, postRequest } from "@/utils/requests";
 import { markdownToHTML, readChapters } from "@/utils/functions";
+import { getErrorMessage } from "../../utils/utils";
+import Messages from "../../utils/messages";
+import { snackbar } from "../../utils/events";
+import Vue from 'vue'
 
 export default {
   components: {},
@@ -211,10 +215,11 @@ export default {
       },
       isDisabled: false,
       dialogSuccess: false,
+      selectionType: 'leaf',
       dialogError: false,
       requiredRule,
       document: null,
-      genres: [],
+      allGenres: [],
       ageRanges,
       numericRule,
       data: null,
@@ -227,8 +232,16 @@ export default {
     //Funcion que obtiene todos los generos
     async getGenres() {
       const token = this.$cookies.get("token");
-      this.genres = await getRequest(`user/genres`, token);
-      return this.genres;
+       
+      this.allGenres = await getRequest(`user/genres`, token);
+      for (var i = 0; i < this.allGenres.length;i++){
+        this.allGenres[i].id = this.allGenres[i]._id
+        if(this.allGenres[i].children.length > 0){
+          for (var j = 0; j < this.allGenres[i].children.length; j++){
+            this.allGenres[i].children[j].id = this.allGenres[i].children[j]._id
+          }
+        }
+      }
     }
   },
   methods: {
@@ -248,6 +261,7 @@ export default {
       if (!this.$refs.form.validate()) {
         return;
       }
+    
       //Validacion de numero de generos del escrito
       if (this.text.genres.length < 1 || this.text.genres.length > 3) {
         this.errorMessage = errorGenresRange;
@@ -311,11 +325,22 @@ export default {
     },
     showDescription(item) {
       this.genreToShowDescription = item;
-      if (this.genreToShowDescription.description == null) {
+      if (this.genreToShowDescription.description == "") {
         this.genreToShowDescription.description =
           "Ups!, El género que buscas no cuenta con descripción.";
       }
       this.showGenreDescription = true;
+    },
+    async dataInit() {
+      const token = this.$cookies.get("token");
+      let aux = await getRequest(`texts/${this.id}`,token);
+      this.text = aux[0];
+    }
+  },
+  async mounted() {
+    if(this.$route.params.id){
+      this.id = this.$route.params.id;
+      await this.dataInit();
     }
   }
 };

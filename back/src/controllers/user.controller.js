@@ -50,7 +50,20 @@ export const getUser = (request, response) => {
 export const getUsers = (req, res) => {
   send(res, async () => {
     const users = await UserModel.find();
-    return users;
+    const readerUsersPromises = users
+      .filter((user) => user.roles.some((x) => x === "reader"))
+      .map(async (userReader) => {
+        const userReaderJSON = userReader.toJSON();
+        const reader = await ReaderModel.findOne({ user: userReader._id });
+        return {
+          ...userReaderJSON,
+          reader
+        };
+      });
+    const readerUsers = await Promise.all(readerUsersPromises);
+    return users
+      .filter((user) => !user.roles.some((x) => x === "reader"))
+      .concat(readerUsers);
   });
 };
 
@@ -78,7 +91,16 @@ export const createUser = async (request, response, role) => {
 // Response with all the genres.
 export const getAllGenres = (request, response) => {
   send(response, async () => {
-    const genres = await GenreModel.find();
+    const genres = await GenreModel.aggregate([
+      {
+         $lookup: {
+           from: "subgenres",
+           localField: "_id",
+           foreignField: "genre",
+           as: 'children'
+         }
+      }
+    ]);
     return genres;
   });
 };

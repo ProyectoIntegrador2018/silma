@@ -209,6 +209,15 @@ export default {
           hasEditPermission: true,
           hasDeletePermission: true,
           specialPermissions: []
+        },
+        {
+          display: "Puntos de Venta",
+          name: "pointOfSale",
+          hasReadPermission: true,
+          hasCreatePermission: true,
+          hasEditPermission: true,
+          hasDeletePermission: true,
+          specialPermissions: []
         }
       ];
 
