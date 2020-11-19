@@ -50,6 +50,11 @@ const routes = [
     }
   },
   {
+    path: "/Agregar_Escrito/:id",
+    name: "TextRegisterByID",
+    component: TextRegister,
+  },
+  {
     path: "/Usuarios",
     name: "Users",
     component: Users,
