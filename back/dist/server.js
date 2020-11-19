@@ -18,6 +18,8 @@ var _errorHandler = _interopRequireDefault(require("./middlewares/errorHandler")
 
 var _dataInit = require("./scripts/dataInit");
 
+var _mailJobs = require("./jobs/mailJobs");
+
 var _prodDataInit = require("./scripts/prodDataInit");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -55,7 +57,9 @@ if (_config.default.ENV !== "production") (0, _dataInit.createEverything)().catc
 var router = (0, _routes.createRoutes)(); // Attach error handlers to Express app
 
 app.use("/api", router);
-(0, _errorHandler.default)(app); // Launch app to listen to specified port
+(0, _errorHandler.default)(app); // Start CRON jobs
+
+(0, _mailJobs.startMailJobs)(); // Launch app to listen to specified port
 
 app.listen(_config.default.PORT, () => {
   console.log("Running Silma backend on port ".concat(_config.default.PORT));

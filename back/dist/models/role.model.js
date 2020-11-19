@@ -158,6 +158,22 @@ var RoleSchema = new _mongoose.Schema({
   advancePhase: {
     type: Boolean,
     default: false
+  },
+  pointOfSaleRead: {
+    type: Boolean,
+    default: false
+  },
+  pointOfSaleCreate: {
+    type: Boolean,
+    default: false
+  },
+  pointOfSaleEdit: {
+    type: Boolean,
+    default: false
+  },
+  pointOfSaleDelete: {
+    type: Boolean,
+    default: false
   }
 });
 exports.RoleSchema = RoleSchema;

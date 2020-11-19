@@ -19,11 +19,17 @@ var _suggestion = require("../models/suggestion.model");
 
 var _genre = require("../models/genre.model");
 
+var GenreLogic = _interopRequireWildcard(require("../logics/genre.logic"));
+
 var _role = _interopRequireDefault(require("../models/role.model"));
 
 var _bcrypt = _interopRequireDefault(require("bcrypt"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -70,16 +76,101 @@ function fillGenres() {
 
 function _fillGenres() {
   _fillGenres = _asyncToGenerator(function* () {
-    var genres = ["Sobrenatural (paranormal)", "Romance", "Aventura", "Fantasía épica (de héroes)", "Fantasía histórica", "Realismo mágico", "Chicas mágicas", "Fantasía tecnológica (ciencia ficción)", "Fantasía oscura", "Steampunk", "Terror", "Fantasía infantil", "Otros"];
-
-    for (var genre of genres) {
-      var obj = {
-        name: genre
-      };
-      yield _genre.GenreModel.create(obj);
-    }
-
-    return yield _genre.GenreModel.find({});
+    var genres = [{
+      name: "Sobrenatural (paranormal)",
+      description: "",
+      subgenres: [{
+        name: "Sobrenatural 1",
+        description: "Descripcion"
+      }]
+    }, {
+      name: "Romance",
+      description: "",
+      subgenres: [{
+        name: "Romance 1",
+        description: "Descripcion"
+      }]
+    }, {
+      name: "Aventura",
+      description: "",
+      subgenres: [{
+        name: "Aventura 1",
+        description: "Descripcion"
+      }]
+    }, {
+      name: "Fantasía épica (de héroes)",
+      description: "",
+      subgenres: [{
+        name: "Fantasía épica (de héroes) 1",
+        description: "Descripcion"
+      }]
+    }, {
+      name: "Fantasía histórica",
+      description: "",
+      subgenres: [{
+        name: "Fantasía histórica 1",
+        description: "Descripcion"
+      }]
+    }, {
+      name: "Realismo mágico",
+      description: "",
+      subgenres: [{
+        name: "Realismo mágico 1",
+        description: "Descripcion"
+      }]
+    }, {
+      name: "Chicas mágicas",
+      description: "",
+      subgenres: [{
+        name: "Chicas mágicas 1",
+        description: "Descripcion"
+      }]
+    }, {
+      name: "Fantasía tecnológica (ciencia ficción)",
+      description: "",
+      subgenres: [{
+        name: "Fantasía tecnológica (ciencia ficción) 1",
+        description: "Descripcion"
+      }]
+    }, {
+      name: "Fantasía oscura",
+      description: "",
+      subgenres: [{
+        name: "Fantasía oscura 1",
+        description: "Descripcion"
+      }]
+    }, {
+      name: "Steampunk",
+      description: "",
+      subgenres: [{
+        name: "Steampunk 1",
+        description: "Descripcion"
+      }]
+    }, {
+      name: "Terror",
+      description: "",
+      subgenres: [{
+        name: "Terror 1",
+        description: "Descripcion"
+      }]
+    }, {
+      name: "Fantasía infantil",
+      description: "",
+      subgenres: [{
+        name: "Fantasía infantil 1",
+        description: "Descripcion"
+      }]
+    }];
+    var promises = genres.map(genre => GenreLogic.createGenre(genre));
+    yield Promise.all(promises);
+    return yield _genre.GenreModel.aggregate([{
+      $lookup: {
+        from: "subgenres",
+        localField: "_id",
+        foreignField: "genre",
+        as: 'subgenres'
+      }
+    }]);
   });
   return _fillGenres.apply(this, arguments);
 }
@@ -181,6 +272,25 @@ function _deleteEverything() {
   return _deleteEverything.apply(this, arguments);
 }
 
+function createSuggestion(_x9, _x10) {
+  return _createSuggestion.apply(this, arguments);
+}
+
+function _createSuggestion() {
+  _createSuggestion = _asyncToGenerator(function* (reader, text) {
+    var suggestion = {
+      reader,
+      text,
+      sentDate: new Date(),
+      suggestionStatus: "Pending",
+      score: 10,
+      readingChapters: 5
+    };
+    return yield _suggestion.SuggestionModel.create(suggestion);
+  });
+  return _createSuggestion.apply(this, arguments);
+}
+
 function createEverything() {
   return _createEverything.apply(this, arguments);
 }
@@ -226,7 +336,16 @@ function _createEverything() {
       genreCreate: true,
       genreEdit: true,
       genreDelete: true,
-      advancePhase: true
+      advancePhase: true,
+      pointOfSaleRead: true,
+      pointOfSaleCreate: true,
+      pointOfSaleDelete: true,
+      pointOfSaleEdit: true,
+      advancePhase: true,
+      eventRead: true,
+      eventCreate: true,
+      eventDelete: true,
+      eventEdit: true
     });
     console.log("Role 1 created successfully");
     var admin1 = yield createAdmin({
@@ -248,8 +367,9 @@ function _createEverything() {
     }, superAdminRole._id);
     console.log("Admin 2 created successfully");
     var genres = yield fillGenres();
+    var subgenres = genres.map(genre => genre.subgenres[0]._id);
     console.log("Genres created successfully");
-    var genreIds = genres.splice(0, 3).map(x => x._id);
+    var genreIds = subgenres.splice(0, 3).map(x => x._id);
     var reader1 = yield createReader({
       name: "Reader 1",
       password: "prueba12345",
@@ -320,6 +440,8 @@ function _createEverything() {
       numberOfChapters: 30
     });
     console.log("Text 2 created successfully");
+    yield Promise.all([createSuggestion(reader1._id, text1._id), createSuggestion(reader1._id, text2._id)]);
+    console.log("Suggestions created successfully");
   });
   return _createEverything.apply(this, arguments);
 }

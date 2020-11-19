@@ -35,7 +35,7 @@ var TextSchema = new _mongoose.Schema({
   genres: {
     type: [{
       type: _mongoose.Schema.Types.ObjectId,
-      ref: "Genre"
+      ref: "Subgenre"
     }],
     validate: [(0, _validators.rangeRule)(1, 3), "Genres length is not inside its boundries."]
   },

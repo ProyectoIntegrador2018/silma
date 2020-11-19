@@ -51,6 +51,10 @@ var ReaderSchema = new _mongoose.Schema({
   lastReview: {
     type: Date,
     default: Date.now
+  },
+  rejectsInARow: {
+    type: Number,
+    default: 0
   }
 });
 exports.ReaderSchema = ReaderSchema;

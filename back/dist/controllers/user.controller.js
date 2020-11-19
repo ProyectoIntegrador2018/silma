@@ -101,7 +101,23 @@ exports.getUser = getUser;
 var getUsers = (req, res) => {
   (0, _errors.send)(res, /*#__PURE__*/_asyncToGenerator(function* () {
     var users = yield _user.UserModel.find();
-    return users;
+    var readerUsersPromises = users.filter(user => user.roles.some(x => x === "reader")).map( /*#__PURE__*/function () {
+      var _ref4 = _asyncToGenerator(function* (userReader) {
+        var userReaderJSON = userReader.toJSON();
+        var reader = yield _reader.ReaderModel.findOne({
+          user: userReader._id
+        });
+        return _objectSpread({}, userReaderJSON, {
+          reader
+        });
+      });
+
+      return function (_x) {
+        return _ref4.apply(this, arguments);
+      };
+    }());
+    var readerUsers = yield Promise.all(readerUsersPromises);
+    return users.filter(user => !user.roles.some(x => x === "reader")).concat(readerUsers);
   }));
 }; // Creates a new user with an assigned role.
 
@@ -109,7 +125,7 @@ var getUsers = (req, res) => {
 exports.getUsers = getUsers;
 
 var createUser = /*#__PURE__*/function () {
-  var _ref4 = _asyncToGenerator(function* (request, response, role) {
+  var _ref5 = _asyncToGenerator(function* (request, response, role) {
     var data = request.body;
     var user = yield _user.UserModel.findOne({
       email: data.email
@@ -138,8 +154,8 @@ var createUser = /*#__PURE__*/function () {
     };
   });
 
-  return function createUser(_x, _x2, _x3) {
-    return _ref4.apply(this, arguments);
+  return function createUser(_x2, _x3, _x4) {
+    return _ref5.apply(this, arguments);
   };
 }(); // Response with all the genres.
 
@@ -148,7 +164,14 @@ exports.createUser = createUser;
 
 var getAllGenres = (request, response) => {
   (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
-    var genres = yield _genre.GenreModel.find();
+    var genres = yield _genre.GenreModel.aggregate([{
+      $lookup: {
+        from: "subgenres",
+        localField: "_id",
+        foreignField: "genre",
+        as: 'children'
+      }
+    }]);
     return genres;
   }));
 };
@@ -160,10 +183,10 @@ var sendNotice = (req, res) => {
     var user = yield _user.UserModel.findById(req.params.id);
     yield (0, _mailSender.sendEmail)({
       email: user.email,
-      subject: "¡Tu novela fue aprobada!"
-    }, "accepted", {
+      subject: "Inactividad de cuenta"
+    }, "accountNotice", {
       name: user.name,
-      title: "Tu cuenta está a punto de ser desactivada"
+      title: "Inactividad de cuenta"
     });
     return user;
   }));

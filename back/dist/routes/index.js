@@ -21,6 +21,10 @@ var _suggestion = require("./suggestion.route");
 
 var _genre = require("./genre.route");
 
+var _pointOfsale = require("./pointOfsale.route");
+
+var _event = require("./event.route");
+
 var _user = require("../controllers/user.controller");
 
 var _jwt = require("../utils/jwt");
@@ -40,6 +44,8 @@ var createRoutes = () => {
   (0, _text.addTextRoutes)(router);
   (0, _suggestion.addSuggestionRoutes)(router);
   (0, _genre.addGenreRoutes)(router);
+  (0, _pointOfsale.addPointOfSaleRoutes)(router);
+  (0, _event.addEventRoutes)(router);
   return router;
 };
 

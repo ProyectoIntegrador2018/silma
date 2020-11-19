@@ -39,7 +39,9 @@ var getText = (request, response) => {
     var {
       id
     } = request.params;
-    var reader = yield _text.TextModel.findById(id).populate("genres");
+    var reader = yield _text.TextModel.find({
+      _id: id
+    }).populate("genres");
     return reader;
   }));
 }; // Response with all texts in a particul current phase.

@@ -9,6 +9,12 @@ var _genre = require("../models/genre.model");
 
 var _role = _interopRequireDefault(require("../models/role.model"));
 
+var GenreLogic = _interopRequireWildcard(require("../logics/genre.logic"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -25,18 +31,6 @@ function _createRole() {
     return newRole;
   });
   return _createRole.apply(this, arguments);
-}
-
-function createGenre(_x2) {
-  return _createGenre.apply(this, arguments);
-}
-
-function _createGenre() {
-  _createGenre = _asyncToGenerator(function* (genre) {
-    var newGenre = yield _genre.GenreModel.create(genre);
-    return newGenre;
-  });
-  return _createGenre.apply(this, arguments);
 }
 
 function createAllRoles() {
@@ -81,6 +75,11 @@ function _createAllRoles() {
       genreCreate: true,
       genreEdit: true,
       genreDelete: true,
+      advancePhase: true,
+      pointOfSaleRead: true,
+      pointOfSaleCreate: true,
+      pointOfSaleEdit: true,
+      pointOfSaleDelete: true,
       advancePhase: true
     }];
     var promises = roles.map(role => createRole(role));
@@ -99,59 +98,92 @@ function _createAllGenres() {
     var genres = [{
       name: "Sobrenatural (paranormal)",
       description: "",
-      subgenres: []
+      subgenres: [{
+        name: "Sobrenatural 1",
+        description: "Descripcion"
+      }]
     }, {
       name: "Romance",
       description: "",
-      subgenres: []
+      subgenres: [{
+        name: "Romance 1",
+        description: "Descripcion"
+      }]
     }, {
       name: "Aventura",
       description: "",
-      subgenres: []
+      subgenres: [{
+        name: "Aventura 1",
+        description: "Descripcion"
+      }]
     }, {
       name: "Fantasía épica (de héroes)",
       description: "",
-      subgenres: []
+      subgenres: [{
+        name: "Fantasía épica (de héroes) 1",
+        description: "Descripcion"
+      }]
     }, {
       name: "Fantasía histórica",
       description: "",
-      subgenres: []
+      subgenres: [{
+        name: "Fantasía histórica 1",
+        description: "Descripcion"
+      }]
     }, {
       name: "Realismo mágico",
       description: "",
-      subgenres: []
+      subgenres: [{
+        name: "Realismo mágico 1",
+        description: "Descripcion"
+      }]
     }, {
       name: "Chicas mágicas",
       description: "",
-      subgenres: []
+      subgenres: [{
+        name: "Chicas mágicas 1",
+        description: "Descripcion"
+      }]
     }, {
       name: "Fantasía tecnológica (ciencia ficción)",
       description: "",
-      subgenres: []
+      subgenres: [{
+        name: "Fantasía tecnológica (ciencia ficción) 1",
+        description: "Descripcion"
+      }]
     }, {
       name: "Fantasía oscura",
       description: "",
-      subgenres: []
+      subgenres: [{
+        name: "Fantasía oscura 1",
+        description: "Descripcion"
+      }]
     }, {
       name: "Steampunk",
       description: "",
-      subgenres: []
+      subgenres: [{
+        name: "Steampunk 1",
+        description: "Descripcion"
+      }]
     }, {
       name: "Terror",
       description: "",
-      subgenres: []
+      subgenres: [{
+        name: "Terror 1",
+        description: "Descripcion"
+      }]
     }, {
       name: "Fantasía infantil",
       description: "",
-      subgenres: []
-    }, {
-      name: "Otros",
-      description: "",
-      subgenres: []
+      subgenres: [{
+        name: "Fantasía infantil 1",
+        description: "Descripcion"
+      }]
     }];
-    var promises = genres.map(genre => createGenre(genre));
+    var promises = genres.map(genre => GenreLogic.createGenre(genre));
     yield Promise.all(promises);
     console.log("All genres created");
+    return yield _genre.GenreModel.find({});
   });
   return _createAllGenres.apply(this, arguments);
 }

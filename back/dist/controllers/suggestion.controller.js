@@ -15,6 +15,8 @@ var _mailSender = require("../utils/mailSender");
 
 var _errors = require("../utils/errors");
 
+var _user = require("../models/user.model");
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -268,7 +270,7 @@ var calculateBetweenDatesPoints = /*#__PURE__*/function () {
 exports.calculateBetweenDatesPoints = calculateBetweenDatesPoints;
 
 var changeSuggestionStatus = /*#__PURE__*/function () {
-  var _ref9 = _asyncToGenerator(function* (id, newStatus, previousStatus) {
+  var _ref9 = _asyncToGenerator(function* (id, newStatus, previousStatus, session) {
     var suggestion = yield _suggestion.SuggestionModel.findById(id).populate("text");
     if (!suggestion) throw {
       error: "Suggestion with id: ".concat(id, " not found")
@@ -280,7 +282,9 @@ var changeSuggestionStatus = /*#__PURE__*/function () {
         _id: suggestion._id
       }, _objectSpread({
         suggestionStatus: newStatus
-      }, suggestion._doc));
+      }, suggestion._doc), {
+        session
+      });
       return suggestion;
     } else {
       throw {
@@ -289,7 +293,7 @@ var changeSuggestionStatus = /*#__PURE__*/function () {
     }
   });
 
-  return function changeSuggestionStatus(_x14, _x15, _x16) {
+  return function changeSuggestionStatus(_x14, _x15, _x16, _x17) {
     return _ref9.apply(this, arguments);
   };
 }(); //Funcion que rechaza la sugerencia a un libro por parte de un lector
@@ -298,29 +302,72 @@ var changeSuggestionStatus = /*#__PURE__*/function () {
 exports.changeSuggestionStatus = changeSuggestionStatus;
 
 var rejectSuggestion = (request, response) => {
-  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
-    var {
-      id
-    } = request.params;
-    var suggestion = yield _suggestion.SuggestionModel.findById(id);
-    var text = yield _text.TextModel.findById(suggestion.text);
-    yield assignReaders(text, 1);
-    var newSuggestion = yield changeSuggestionStatus(id, "Rejected", "Pending");
-    return newSuggestion;
-  }));
+  (0, _errors.send)(response, /*#__PURE__*/function () {
+    var _ref10 = _asyncToGenerator(function* (session) {
+      var {
+        id
+      } = request.params;
+      var suggestion = yield _suggestion.SuggestionModel.findById(id);
+
+      var textPromise = _text.TextModel.findById(suggestion.text);
+
+      var readerPromise = _reader.ReaderModel.findById(suggestion.reader);
+
+      var [text, reader] = yield Promise.all([textPromise, readerPromise]);
+      var user = yield _user.UserModel.findById(reader.user);
+      yield assignReaders(text, 1);
+      var newSuggestion = yield changeSuggestionStatus(id, "Rejected", "Pending", session); // Update reader rejects in a row
+
+      reader.rejectsInARow++;
+      yield reader.save({
+        session
+      }); // If reader has rejected over five suggestions, send mail
+
+      if (reader.rejectsInARow > 5) {
+        var emailData = {
+          email: user.email,
+          subject: "Rechazo de lecturas"
+        };
+        yield (0, _mailSender.sendEmail)(emailData, "reading_rejects", {
+          readerName: user.name
+        });
+        console.log("EMAIL SENT TO USER ".concat(user.name));
+      }
+
+      return newSuggestion;
+    });
+
+    return function (_x18) {
+      return _ref10.apply(this, arguments);
+    };
+  }());
 }; //Funcion que acepta la sugerencia a un libro por parte de un lector
 
 
 exports.rejectSuggestion = rejectSuggestion;
 
 var acceptSuggestion = (request, response) => {
-  (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
-    var {
-      id
-    } = request.params;
-    var suggestion = yield changeSuggestionStatus(id, "Accepted", "Pending");
-    return suggestion;
-  }));
+  (0, _errors.send)(response, /*#__PURE__*/function () {
+    var _ref11 = _asyncToGenerator(function* (session) {
+      var {
+        id
+      } = request.params;
+      var suggestion = yield _suggestion.SuggestionModel.findById(id);
+      var newSuggestionPromise = changeSuggestionStatus(id, "Accepted", "Pending", session);
+
+      var readerPromise = _reader.ReaderModel.findById(suggestion.reader);
+
+      var [newSuggestion, reader] = yield Promise.all([newSuggestionPromise, readerPromise]); // Set rejects in a row to 0
+
+      reader.rejectsInARow = 0;
+      yield reader.save();
+      return newSuggestion;
+    });
+
+    return function (_x19) {
+      return _ref11.apply(this, arguments);
+    };
+  }());
 }; //Funcion que completa la sugerencia a un libro por parte de un lector
 
 
@@ -331,7 +378,7 @@ var completeSuggestion = (request, response) => {
     var {
       id
     } = request.params;
-    var suggestion = yield changeSuggestionStatus(id, "Completed", "Accepted");
+    var suggestion = yield changeSuggestionStatus(id, "Completed", "Accepted", session);
     return suggestion;
   }));
 }; //Funcion que obtiene una sugerencia de un libro para un lector
@@ -543,7 +590,7 @@ var changeReadingChapters = /*#__PURE__*/function () {
     }));
   });
 
-  return function changeReadingChapters(_x17, _x18) {
+  return function changeReadingChapters(_x20, _x21) {
     return _ref23.apply(this, arguments);
   };
 }();
