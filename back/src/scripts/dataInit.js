@@ -5,6 +5,7 @@ import { WriterModel } from "../models/writer.model";
 import { ReaderModel } from "../models/reader.model";
 import { SuggestionModel } from "../models/suggestion.model";
 import { GenreModel } from "../models/genre.model";
+import * as GenreLogic from "@/logics/genre.logic";
 import RoleModel from "../models/role.model";
 import bcrypt from "bcrypt";
 
@@ -27,25 +28,35 @@ async function createUser(user, role) {
 
 async function fillGenres() {
   const genres = [
-    "Sobrenatural (paranormal)",
-    "Romance",
-    "Aventura",
-    "Fantasía épica (de héroes)",
-    "Fantasía histórica",
-    "Realismo mágico",
-    "Chicas mágicas",
-    "Fantasía tecnológica (ciencia ficción)",
-    "Fantasía oscura",
-    "Steampunk",
-    "Terror",
-    "Fantasía infantil",
-    "Otros"
+    { name: "Sobrenatural (paranormal)", description: "", subgenres: [{name: "Sobrenatural 1", description: "Descripcion"}] },
+    { name: "Romance", description: "", subgenres: [{name: "Romance 1", description: "Descripcion"}] },
+    { name: "Aventura", description: "", subgenres: [{name: "Aventura 1", description: "Descripcion"}] },
+    { name: "Fantasía épica (de héroes)", description: "", subgenres: [{name: "Fantasía épica (de héroes) 1", description: "Descripcion"}] },
+    { name: "Fantasía histórica", description: "", subgenres: [{name: "Fantasía histórica 1", description: "Descripcion"}] },
+    { name: "Realismo mágico", description: "", subgenres: [{name: "Realismo mágico 1", description: "Descripcion"}] },
+    { name: "Chicas mágicas", description: "", subgenres: [{name: "Chicas mágicas 1", description: "Descripcion"}] },
+    {
+      name: "Fantasía tecnológica (ciencia ficción)",
+      description: "",
+      subgenres: [{name: "Fantasía tecnológica (ciencia ficción) 1", description: "Descripcion"}]
+    },
+    { name: "Fantasía oscura", description: "", subgenres: [{name: "Fantasía oscura 1", description: "Descripcion"}] },
+    { name: "Steampunk", description: "", subgenres: [{name: "Steampunk 1", description: "Descripcion"}] },
+    { name: "Terror", description: "", subgenres: [{name: "Terror 1", description: "Descripcion"}] },
+    { name: "Fantasía infantil", description: "", subgenres: [{name: "Fantasía infantil 1", description: "Descripcion"}] },
   ];
-  for (const genre of genres) {
-    const obj = { name: genre };
-    await GenreModel.create(obj);
-  }
-  return await GenreModel.find({});
+  const promises = genres.map((genre) => GenreLogic.createGenre(genre));
+  await Promise.all(promises);
+  return await GenreModel.aggregate([
+    {
+       $lookup: {
+         from: "subgenres",
+         localField: "_id",
+         foreignField: "genre",
+         as: 'subgenres'
+       }
+    }
+  ]);
 }
 
 async function createRole(role) {
@@ -195,8 +206,9 @@ export async function createEverything() {
   );
   console.log("Admin 2 created successfully");
   const genres = await fillGenres();
+  let subgenres = genres.map(genre => genre.subgenres[0]._id);
   console.log("Genres created successfully");
-  const genreIds = genres.splice(0, 3).map((x) => x._id);
+  const genreIds = subgenres.splice(0, 3).map((x) => x._id);
   const reader1 = await createReader({
     name: "Reader 1",
     password: "prueba12345",

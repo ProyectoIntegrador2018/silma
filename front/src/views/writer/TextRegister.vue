@@ -58,8 +58,6 @@
           v-model="text.genres"
           :items="allGenres"
           selectable
-          return-object
-          open-all
           >
           <template v-slot:prepend="{ item }" id="item._id">
           <i
@@ -189,6 +187,10 @@ import {
 } from "@/utils/constants";
 import { getRequest, postRequest } from "@/utils/requests";
 import { markdownToHTML, readChapters } from "@/utils/functions";
+import { getErrorMessage } from "../../utils/utils";
+import Messages from "../../utils/messages";
+import { snackbar } from "../../utils/events";
+import Vue from 'vue'
 
 export default {
   components: {},
@@ -223,8 +225,7 @@ export default {
       data: null,
       dialog: false,
       genreToShowDescription: { name: "", description: "" },
-      showGenreDescription: false,
-      selectedGenres: []
+      showGenreDescription: false
     };
   },
   asyncComputed: {
@@ -329,6 +330,17 @@ export default {
           "Ups!, El género que buscas no cuenta con descripción.";
       }
       this.showGenreDescription = true;
+    },
+    async dataInit() {
+      const token = this.$cookies.get("token");
+      let aux = await getRequest(`texts/${this.id}`,token);
+      this.text = aux[0];
+    }
+  },
+  async mounted() {
+    if(this.$route.params.id){
+      this.id = this.$route.params.id;
+      await this.dataInit();
     }
   }
 };
