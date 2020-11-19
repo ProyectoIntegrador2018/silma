@@ -30,7 +30,11 @@
         >
           <template v-slot:body="{ items }">
             <tbody>
-              <tr v-for="(item, key) in items" :key="key">
+              <tr
+                v-for="(item, key) in items"
+                :key="key"
+                :class="rowClass(item)"
+              >
                 <td>{{ item.name }}</td>
                 <td>{{ item.email }}</td>
                 <td class="center-td">
@@ -118,6 +122,10 @@
             </tbody>
           </template>
         </v-data-table>
+        <div class="info-container">
+          <div class="red-square"></div>
+          <div>Lectores que han rechazado más de 5 textos seguidos</div>
+        </div>
       </template>
     </v-card>
     <div>
@@ -137,10 +145,10 @@
                 Cancelar
               </v-btn>
               <v-spacer></v-spacer>
-              <!-- <v-btn color="primary darken-1" text @click="sendNotice()">
+              <v-btn color="primary darken-1" text @click="sendNotice()">
                 Avisar
               </v-btn>
-              <v-spacer></v-spacer> -->
+              <v-spacer></v-spacer>
               <v-btn color="red darken-1" text @click="revokeAccess()">
                 Revocar
               </v-btn>
@@ -151,6 +159,29 @@
     </div>
   </v-container>
 </template>
+
+<style scoped>
+.many-rejects-reader {
+  background: red;
+  color: white;
+}
+.many-rejects-reader:hover {
+  color: unset;
+}
+.red-square {
+  width: 20px;
+  height: 20px;
+  background: red;
+}
+.info-container {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+}
+.info-container > :first-child {
+  margin-right: 8px;
+}
+</style>
 
 <script>
 import { getRequest, deleteRequest } from "@/utils/requests";
@@ -216,6 +247,16 @@ export default {
       this.dialogStatus = false;
       await deleteRequest(`/users/DeleteUser/${this.selectedUser._id}`);
       window.location.reload();
+    },
+    rowClass(user) {
+      if (!user.isreader) return "";
+      if (
+        !user.reader ||
+        !user.reader.rejectsInARow ||
+        user.reader.rejectsInARow < 6
+      )
+        return "";
+      return "many-rejects-reader";
     }
   },
   watch: {

@@ -17,6 +17,10 @@ import RoleList from "@/views/admins/RoleList.vue";
 import RoleForm from "@/views/admins/RoleForm.vue";
 import Feedback from "@/views/admins/Feedbacks.vue";
 import { cleanAuthCookies } from "@/utils/cookies";
+import PointOfSaleList from "@/views/admins/PointOfSaleList.vue";
+import PointOfSaleForm from "@/views/admins/PointOfSaleForm.vue";
+import EventForm from "@/views/admins/EventForm.vue";
+import EventList from "@/views/admins/EventList.vue";
 
 Vue.use(VueRouter);
 // NOTE: Use 'withAccess' for pages that can only be accessed by certain users.
@@ -44,6 +48,11 @@ const routes = [
       requiresAuth: true,
       withAccess: ["writer"]
     }
+  },
+  {
+    path: "/Agregar_Escrito/:id",
+    name: "TextRegisterByID",
+    component: TextRegister,
   },
   {
     path: "/Usuarios",
@@ -191,6 +200,92 @@ const routes = [
       requiresAuth: true,
       withAccess: ["admin"],
       permission: "genreEdit"
+    },
+    props: { viewMode: false }
+  },
+  {
+    path: "/pointOfSale",
+    name: "PointOfSale",
+    component: PointOfSaleList,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+      permission: "pointOfSaleRead"
+    }
+  },
+  {
+    path: "/pointofsale/create",
+    name: "PointOfSaleCreate",
+    component: PointOfSaleForm,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+      permission: "pointOfSaleCreate"
+    },
+    props: { viewMode: false }
+  },
+  {
+    path: "/pointofsale/view/:id",
+    name: "PointOfsaleFormView",
+    component: PointOfSaleForm,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+      permission: "pointOfSaleRead"
+    },
+    props: { viewMode: true }
+  },
+  {
+    path: "/pointofsale/edit/:id",
+    name: "PointOfsaleFormEdit",
+    component: PointOfSaleForm,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+      permission: "pointOfSaleEdit"
+    },
+    props: { viewMode: false }
+  },
+  {
+    path: "/event",
+    name: "Event",
+    component: EventList,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+      permission: "eventRead"
+    }
+  },
+  {
+    path: "/event/create",
+    name: "EventCreate",
+    component: EventForm,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+      permission: "eventCreate"
+    },
+    props: { viewMode: false }
+  },
+  {
+    path: "/event/view/:id",
+    name: "EventrmView",
+    component: EventForm,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+      permission: "eventRead"
+    },
+    props: { viewMode: true }
+  },
+  {
+    path: "/event/edit/:id",
+    name: "EventFormEdit",
+    component: EventForm,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+      permission: "eventEdit"
     },
     props: { viewMode: false }
   },

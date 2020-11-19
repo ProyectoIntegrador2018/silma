@@ -17,7 +17,7 @@
     </v-alert>
 
     <br />
-    <v-btn color="primary" dark class="mb-2" href="/Agregar_Escrito"
+    <v-btn color="primary" dark class="mb-2" @click="addText()"
       >Agregar Escrito</v-btn
     >
     <!-- Tabla de escritos registrados -->
@@ -50,6 +50,52 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue" text @click="dialog = false">
+            Cerrar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="newTextDialog" persistent max-width="60%">
+      <v-card>
+        <v-card-title class="headline">
+          Agregar Texto
+        </v-card-title>
+        <div style="text-align:center">
+          <v-btn color="primary" dark class="mb-2" @click="newText()"
+          >Escrito Nuevo
+        </v-btn>
+        </div>
+        <v-card-text>
+          <Table
+            :headers="headersTextsDialog"
+            :items="rejectedTexts"
+            v-bind:isDashboard="false"
+          >
+          <template #actions="{ props }">
+          <v-row>
+            <div style="margin: 2.5px 2.5px">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  v-bind="attrs"
+                  v-on="on"
+                  small
+                  color="primary"
+                  @click="editRejectedText(props)"
+                >
+                  <v-icon color="white">mdi-file-document-edit</v-icon>
+                </v-btn>
+              </template>
+              <span>Cargar datos</span>
+              </v-tooltip>
+            </div>
+          </v-row>
+          </template>
+          </Table>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue" text @click="newTextDialog = false">
             Cerrar
           </v-btn>
         </v-card-actions>
@@ -95,7 +141,24 @@ export default {
         },
         { text: "Descripción", value: "description" }
       ],
-      dataDialog: null
+      headersTextsDialog:[
+        {
+          text: "Titulo",
+          align: "start",
+          value: "title"
+        },
+        { text: "Descripción", value: "description" },
+        {
+          text: "Número de Páginas", value: "numberOfPages", sortable: true
+        },
+        {
+          text: "Número de Capítulos", value: "numberOfChapters", sortable: true
+        },
+        { text: "Acciones", actions: true, sortable: false }
+      ],
+      dataDialog: null,
+      newTextDialog: false,
+      rejectedTexts: []
     };
   },
   asyncComputed: {
@@ -103,6 +166,7 @@ export default {
     async getTexts() {
       const token = this.$cookies.get("token");
       this.data = await getRequest(`texts/writer/${this.writer}`, token);
+      this.rejectedTexts = this.data.filter( x => x.isRejected);
     }
   },
   methods: {
@@ -111,6 +175,16 @@ export default {
         (phase) => phase.value <= item.phase
       );
       this.dialog = true;
+    },
+    addText(){
+      this.newTextDialog = true;
+    },
+    newText(){
+      this.$router.push("/Agregar_Escrito");
+    },
+    editRejectedText(item){
+      var id = item._id;
+      this.$router.push("/Agregar_Escrito/" + id);
     }
   }
 };

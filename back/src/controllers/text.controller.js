@@ -18,7 +18,7 @@ export const getAllTexts = (request, response) => {
 export const getText = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
-    const reader = await TextModel.findById(id).populate("genres");
+    const reader = await TextModel.find({_id:id}).populate("genres");
     return reader;
   });
 };
