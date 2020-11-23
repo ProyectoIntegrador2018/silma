@@ -188,7 +188,7 @@ export default {
           route: "/genres",
           hasPermission: hasPermission.bind(this)("genreRead")
         },
-        { title: "Usuarios", route: "/Usuarios", hasPermission: true },
+        { title: "Usuarios", route: "/Usuarios", hasPermission: hasPermission.bind(this)("userRead") },
         {
           title: "Roles",
           route: "/roleList",
@@ -197,12 +197,12 @@ export default {
         {
           title: "Puntos de Venta",
           route: "/pointOfSale",
-          hasPermission: true
+          hasPermission: hasPermission.bind(this)("pointOfSaleRead")
         },
         {
           title: "Eventos",
           route: "/event",
-          hasPermission: true
+          hasPermission: hasPermission.bind(this)("eventRead")
         }
       ]
     };
