@@ -58,6 +58,7 @@
           v-model="text.genres"
           :items="allGenres"
           selectable
+          v-if="refresher"
           >
           <template v-slot:prepend="{ item }" id="item._id">
           <i
@@ -225,7 +226,8 @@ export default {
       data: null,
       dialog: false,
       genreToShowDescription: { name: "", description: "" },
-      showGenreDescription: false
+      showGenreDescription: false,
+      refresher: true
     };
   },
   asyncComputed: {
@@ -335,6 +337,12 @@ export default {
       const token = this.$cookies.get("token");
       let aux = await getRequest(`texts/${this.id}`,token);
       this.text = aux[0];
+      this.refresher = false
+      this.$nextTick(() => {
+          this.text.genres = this.text.genres.map(function(x) { return x._id; });
+          this.refresher = true;
+        });
+
     }
   },
   async mounted() {
