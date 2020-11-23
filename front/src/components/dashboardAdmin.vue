@@ -33,24 +33,6 @@
       <!-- Actions -->
       <template #actions="{ props }">
         <v-row>
-          <!-- Boton avanzar fase -->
-          <div style="margin: 2.5px 2.5px">
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  v-bind="attrs"
-                  v-on="on"
-                  small
-                  color="success"
-                  :disabled="props.isRejected || props.phase == 4"
-                  @click="advancePhase(props)"
-                >
-                  <v-icon>mdi-file-move</v-icon>
-                </v-btn>
-              </template>
-              <span>Avanzar fase</span>
-            </v-tooltip>
-          </div>
           <!-- Boton para accesar a las sugerencias pertenecientes a este texto -->
           <div style="margin: 2.5px 2.5px">
             <v-tooltip bottom>
