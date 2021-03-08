@@ -47,6 +47,17 @@ Silma Web is a platform that facilitates the process for the acceptance of texts
 | Francisco Castro | a01281649@itesm.mx             | Product Owner Proxy                  |
 | Renato Sánchez    | renatosancheznevarez@gmail.com | Admin. de Configuración y deProyecto |
 
+### Mongod 
+#### (Febrero - Junio 2021)
+
+| Name           | Email                         | Role                    | 
+| -------------- | ----------------------------- | ------------------------|
+| Héctor León    | a01251806@itesm.mx            | Scrum Master            |
+|                |                               | Admin. de Proyecto      |
+|                |                               | Admin. de Configuración |
+|                |                               | Product Owner Proxy     |
+
+
 
 ### Technologies
 Front end:
