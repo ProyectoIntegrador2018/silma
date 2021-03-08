@@ -8,6 +8,7 @@ Silma Web is a platform that facilitates the process for the acceptance of texts
 * [Enviornment URLS](#Enviornment-URLS)
 * [Antlers](#Antlers)
 * [Zelda Labs](#Zelda-Labs)
+* [Mongod](#Mongod)
 * [Technologies](#Technologies)
 * [Management tools](#management-tools)
 * [Setup the project](#setup-the-project)
