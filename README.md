@@ -53,9 +53,9 @@ Silma Web is a platform that facilitates the process for the acceptance of texts
 | Name           | Email                         | Role                    | 
 | -------------- | ----------------------------- | ------------------------|
 | Héctor León    | a01251806@itesm.mx            | Scrum Master            |
-| Ulises Serrano |  a01233000@itesm.mx           | Admin. de Proyecto      |
+|                |                               | Admin. de Proyecto      |
 |                |                               | Admin. de Configuración |
-|                |                               | Product Owner Proxy     |
+| Ulises Serrano | a01233000@itesm.mx            | Product Owner Proxy     |
 
 
 
