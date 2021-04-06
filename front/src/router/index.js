@@ -21,6 +21,7 @@ import PointOfSaleList from "@/views/admins/PointOfSaleList.vue";
 import PointOfSaleForm from "@/views/admins/PointOfSaleForm.vue";
 import EventForm from "@/views/admins/EventForm.vue";
 import EventList from "@/views/admins/EventList.vue";
+import Reports from "@/views/admins/Reports.vue";
 
 Vue.use(VueRouter);
 // NOTE: Use 'withAccess' for pages that can only be accessed by certain users.
@@ -288,6 +289,17 @@ const routes = [
       permission: "eventEdit"
     },
     props: { viewMode: false }
+  },
+  {
+    path: "/reports",
+    name: "Reports",
+    component: Reports,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+      permission: "reportsRead"
+    },
+    props: { viewMode: true }
   },
   {
     path: "*",

@@ -166,6 +166,22 @@ export const RoleSchema = new Schema({
     type: Boolean,
     default: false
   },
+  reportsRead: {
+    type: Boolean,
+    default: false
+  },
+  reportsCreate: {
+    type: Boolean,
+    default: false
+  },
+  reportsEdit: {
+    type: Boolean,
+    default: false
+  },
+  reportsDelete: {
+    type: Boolean,
+    default: false
+  },
 });
 
 RoleSchema.pre("save", async function (next) {

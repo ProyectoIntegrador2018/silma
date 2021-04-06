@@ -9,7 +9,7 @@ import { UserModel } from "@/models/user.model";
 // Response with all texts with their genres.
 export const getAllTexts = (request, response) => {
   send(response, async () => {
-    const readers = await TextModel.find().populate("genres");
+    const readers = await TextModel.find().populate("genres").populate("writer");
     return readers;
   });
 };
