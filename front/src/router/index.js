@@ -22,6 +22,7 @@ import PointOfSaleForm from "@/views/admins/PointOfSaleForm.vue";
 import EventForm from "@/views/admins/EventForm.vue";
 import EventList from "@/views/admins/EventList.vue";
 import Reports from "@/views/admins/Reports.vue";
+import MyBooks from "@/views/writer/MyBooks.vue";
 
 Vue.use(VueRouter);
 // NOTE: Use 'withAccess' for pages that can only be accessed by certain users.
@@ -300,6 +301,15 @@ const routes = [
       permission: "reportsRead"
     },
     props: { viewMode: true }
+  },
+  {
+    path: "/myBooks",
+    name: "MyBooks",
+    component: MyBooks,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["writer"],
+    }
   },
   {
     path: "*",

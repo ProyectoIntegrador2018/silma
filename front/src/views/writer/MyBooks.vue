@@ -52,17 +52,18 @@
 </style>
 
 <script>
-import {
-  deleteRequest,
-  getRequest,
-  postRequest
-} from "../../utils/requestsNoErr";
+
 import { getErrorMessage } from "../../utils/utils";
 import Messages from "../../utils/messages";
 import { snackbar } from "../../utils/events";
 import reportsTable from "../../components/reportsTable";
 import list from "../../mixins/list";
 import { hasPermission } from "../../utils/utils";
+import Table from "@/components/table.vue";
+import { getRequest } from "@/utils/requests";
+import { phases } from "@/utils/constants.js";
+import form from "../../mixins/form";
+
 
 export default {
   components: {
@@ -71,8 +72,11 @@ export default {
   mixins: [list],
   data() {
     return {
+      writer: this.$cookies.get("user_id"),
+      role: this.$cookies.get("user_type"),
       hasPermission,
       dataTexts: [],
+      data: [],
       dataWriters: [],
       tab: null,
       filter: '',
@@ -86,15 +90,6 @@ export default {
         {
           tab: 'Rechazados',
           filter: 'rejected'
-        },
-        // WIP
-        // {
-        //   tab: 'Leidos',
-        //   filter: ''
-        // },
-        {
-          tab: 'Autor',
-          filter: ''
         }
       ],
       genres: [],
@@ -116,16 +111,6 @@ export default {
           }
         },
         { text: "Acciones", sortable: false, actions: true }
-      ],
-      headersForWriter: [
-        { text: "Nombre", value: "name" },
-        { text: "Seudónimo", value: "pseudonym" },
-        { text: "Email", value: "email" },
-        { text: "Teléfono", value: "phone" },
-        { text: "Año de nacimiento", value: "birthdate" },
-        { text: "Nacionalidad", value: "nationality" },
-        { text: "Suscripción", value: "isPlus" },
-
       ]
     };
   },
@@ -133,8 +118,7 @@ export default {
     this.updateLoading(true);
     this.isLoading = true;
     await this.getTexts();
-    await this.getGenres();
-    await this.composeAllWriters();
+
     this.updateLoading(false);
     this.isLoading = false;
   },
@@ -142,11 +126,12 @@ export default {
     changeFilter(newFilter) {
       this.filter = newFilter;
     },
-    //Funcion que al inicio obtiene todos los textos en proceso
-    async getTexts() {
-      const token = this.$cookies.get("token");
-      var data = await getRequest("texts/", token);
-      data.forEach((book) => {
+  //Funcion que al inicio obtiene todos los textos, del escritor actual
+  async getTexts() {
+        const token = this.$cookies.get("token");
+        this.data = await getRequest(`texts/writer/${this.writer}`, token);
+        this.rejectedTexts = this.data.filter( x => x.isRejected);
+        this.data.forEach((book) => {
         var writerName = "";
         var genreNames = "";
         book.genres.forEach((element) => {
@@ -159,39 +144,11 @@ export default {
         book.genres = genreNames;
         book.writer = book.writer.pseudonym;
       });
-      this.dataTexts = data;
-    },
-    async getGenres() {
-      try {
-        //this.genres = await getRequest("genre/search", false);
-        this.genres= [];
-      } catch (error) {
-        console.error(error);
-        const message = getErrorMessage(error, Messages.SomethingWentWrong());
-        snackbar(message);
+      this.dataTexts = this.data;
+        
       }
-    },
-    //Funcion que se encarga de formatear los escritores con todos los datos de su modelo usuario y escritor
-    async composeAllWriters() {
-      const token = this.$cookies.get("token");
-      const writers = await getRequest("writers", token);
-      var i;
-      var user;
-      var data = [];
-      for (i = 0; i < writers.length; i++) {
-        user = await getRequest("users/" + writers[i].user._id, token);
-        data.push({
-          name: user.name,
-          email: user.email,
-          phone: user.phone,
-          birthdate: user.birthdate,
-          nationality: user.nationality,
-          pseudonym: writers[i].pseudonym,
-          isPlus: writers[i].isPlus
-        });
-      }
-      this.dataWriters = data;
-    }
   }
+
+    
 };
 </script>

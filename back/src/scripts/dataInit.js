@@ -5,10 +5,11 @@ import { WriterModel } from "../models/writer.model";
 import { ReaderModel } from "../models/reader.model";
 import { SuggestionModel } from "../models/suggestion.model";
 import { GenreModel } from "../models/genre.model";
+import { SubgenreModel } from "../models/subgenre.model";
 import * as GenreLogic from "@/logics/genre.logic";
 import RoleModel from "../models/role.model";
 import bcrypt from "bcrypt";
-
+ 
 async function createUser(user, role) {
   const userFound = await UserModel.findOne({ email: user.email }).select([
     "+password"
@@ -105,6 +106,7 @@ async function deleteEverything() {
   const promiseSix = SuggestionModel.deleteMany({});
   const promiseSeven = GenreModel.deleteMany({});
   const promiseEight = RoleModel.deleteMany({});
+  const promiseNine = SubgenreModel.deleteMany({});
   await Promise.all([
     promiseOne,
     promiseTwo,
@@ -113,7 +115,8 @@ async function deleteEverything() {
     promiseFive,
     promiseSix,
     promiseSeven,
-    promiseEight
+    promiseEight,
+    promiseNine
   ]);
 }
 
@@ -131,7 +134,7 @@ async function createSuggestion(reader, text) {
 
 export async function createEverything() {
   const rolesExists = await RoleModel.find();
-  if (rolesExists.length > 0) return;
+  ///if (rolesExists.length > 0) return;
   await deleteEverything();
   const superAdminRole = await createRole({
     code: "superAdmin",
@@ -157,10 +160,10 @@ export async function createEverything() {
     eventCreate: true,
     eventEdit: true,
     eventDelete: true,
-    reportRead: true,
-    reportCreate: true,
-    reportEdit: true,
-    reportDelete: true,
+    reportsRead: true,
+    reportsCreate: true,
+    reportsEdit: true,
+    reportsDelete: true,
     roleRead: true,
     roleCreate: true,
     roleEdit: true,
@@ -188,7 +191,7 @@ export async function createEverything() {
       email: "admin1@gmail.com",
       birthdate: "12/12/2000",
       phone: "8116690319",
-      nationality: "Mexico"
+      nationality: "México"
     },
     superAdminRole._id
   );
@@ -200,7 +203,7 @@ export async function createEverything() {
       email: "admin2@gmail.com",
       birthdate: "12/12/1996",
       phone: "8116690318",
-      nationality: "Mexico"
+      nationality: "México"
     },
     superAdminRole._id
   );
@@ -215,7 +218,7 @@ export async function createEverything() {
     email: "reader1@gmail.com",
     birthdate: "12/12/2000",
     phone: "8116690319",
-    nationality: "Mexico",
+    nationality: "México",
     readingProficiency: "4 to 6",
     facebookLink: "https://www.facebook.com/reader1",
     readFrom: "12-01-2019",
@@ -229,7 +232,7 @@ export async function createEverything() {
     email: "reader2@gmail.com",
     birthdate: "12/12/1996",
     phone: "8116690319",
-    nationality: "Mexico",
+    nationality: "México",
     readingProficiency: "4 to 6",
     facebookLink: "https://www.facebook.com/reader2",
     readFrom: "12-01-2019",
@@ -243,7 +246,7 @@ export async function createEverything() {
     email: "writer1@gmail.com",
     birthdate: "12/12/2000",
     phone: "8116690319",
-    nationality: "Mexico",
+    nationality: "México",
     pseudonym: "writer1"
   });
   console.log("Writer 1 created successfully");
@@ -253,7 +256,7 @@ export async function createEverything() {
     email: "writer2@gmail.com",
     birthdate: "12/12/1996",
     phone: "8116690319",
-    nationality: "Mexico",
+    nationality: "México",
     pseudonym: "writer2"
   });
   console.log("Writer 2 created successfully");
@@ -273,7 +276,7 @@ export async function createEverything() {
     genres: genreIds,
     ageRange: "10-12",
     title: "Text B",
-    registerNumber: "123asd",
+    registerNumber: "12345asd",
     description: "asd zxc qwe asd zxc asd zxc qwe asd zxc",
     numberOfPages: 120,
     numberOfChapters: 30
@@ -281,9 +284,39 @@ export async function createEverything() {
 
   console.log("Text 2 created successfully");
 
+  const text3 = await createText({
+    writer: writer1._id,
+    genres: genreIds,
+    ageRange: "10-12",
+    title: "Text C",
+    registerNumber: "1234asd",
+    description: "asd zxc qwe asd zxc asd zxc qwe asd zxc",
+    numberOfPages: 120,
+    numberOfChapters: 30,
+    isRejected: true
+  });
+
+  console.log("Text 3 created successfully");
+
+  const text4 = await createText({
+    writer: writer2._id,
+    genres: genreIds,
+    ageRange: "10-12",
+    title: "Text D",
+    registerNumber: "1234asd",
+    description: "asd zxc qwe asd zxc asd zxc qwe asd zxc",
+    numberOfPages: 120,
+    numberOfChapters: 30,
+    isRejected: true
+  });
+
+  console.log("Text 4 created successfully");
+
   await Promise.all([
     createSuggestion(reader1._id, text1._id),
-    createSuggestion(reader1._id, text2._id)
+    createSuggestion(reader1._id, text2._id),
+    createSuggestion(reader1._id, text3._id),
+    createSuggestion(reader1._id, text4._id)  
   ]);
 
   console.log("Suggestions created successfully");

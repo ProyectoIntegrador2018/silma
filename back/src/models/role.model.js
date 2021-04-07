@@ -98,19 +98,19 @@ export const RoleSchema = new Schema({
     type: Boolean,
     default: false
   },
-  reportRead: {
+  reportsRead: {
     type: Boolean,
     default: false
   },
-  reportCreate: {
+  reportsCreate: {
     type: Boolean,
     default: false
   },
-  reportEdit: {
+  reportsEdit: {
     type: Boolean,
     default: false
   },
-  reportDelete: {
+  reportsDelete: {
     type: Boolean,
     default: false
   },
@@ -163,22 +163,6 @@ export const RoleSchema = new Schema({
     default: false
   },
   pointOfSaleDelete: {
-    type: Boolean,
-    default: false
-  },
-  reportsRead: {
-    type: Boolean,
-    default: false
-  },
-  reportsCreate: {
-    type: Boolean,
-    default: false
-  },
-  reportsEdit: {
-    type: Boolean,
-    default: false
-  },
-  reportsDelete: {
     type: Boolean,
     default: false
   },

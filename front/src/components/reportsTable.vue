@@ -1,52 +1,43 @@
 <template>
-  <div>
-    <v-data-table
-      :headers="formattedHeaders"
-      :items="items"
-      :options.sync="pagination"
-      :loading="loading"
-      item-key="_id"
-      class="elevation-1"
-    >
-      <template #body="props">
-        <tr v-for="item in props.items" :key="item._id">
-          <td v-for="header in displayedHeaders" :key="header.value">
-            <div v-if="header.text == 'Fase'">
-              <div v-if="!admin && isDashboard">
-                {{ faseOptions[item.phase].label }}
+ <div>
+    <div>
+      <v-data-table
+        :headers="formattedHeaders"
+        :items="items"
+        :loading="loading"
+        :options.sync="pagination"
+        item-key="_id"
+        class="elevation-1"
+      >
+        <template #body="props">
+          <tr v-for="item in props.items" :key="item._id">
+            <td v-for="header in displayedHeaders" :key="header.value">
+              <div v-if="header.text == 'Fase'">
+                  {{ faseOptions[item.phase].label }}
               </div>
-              <div v-if="!admin && !isDashboard">
+              <div
+                v-if="header.text != 'Fase'"
+                class="text-truncate"
+                :style="{ width: header.width }"
+              >
                 <slot
-                  :name="header.value"
-                  :value="item[header.value]"
-                  :props="item"
                   >{{ item[header.value] }}
                 </slot>
               </div>
-            </div>
-            <div
-              v-if="header.text != 'Fase'"
-              class="text-truncate"
-              :style="{ width: header.width }"
-            >
-              <slot
-                :name="header.value"
-                :value="item[header.value]"
-                :props="item"
-                >{{ item[header.value] }}
-              </slot>
-            </div>
-          </td>
-          <td class="text-xs-center">
-            <slot name="actions" :props="item"></slot>
-          </td>
-        </tr>
-      </template>
-    </v-data-table>
-    <div class="text-xs-center pt-2" v-if="withPagination">
-      <v-options v-model="pagination.page" :length="pages" circle></v-options>
+            </td>
+            <td class="text-xs-center">
+              <slot name="actions" :props="item"></slot>
+            </td>
+          </tr>
+        </template>
+      </v-data-table>
+      <div class="text-xs-center pt-2" v-if="withPagination">
+        <v-options v-model="pagination.page" :length="pages" circle></v-options>
+      </div>
     </div>
-  </div>
+
+ </div>
+
 </template>
 
 <script>

@@ -82,7 +82,7 @@ export const getTextsOfWriter = (request, response) => {
     const { writer } = request.params;
     const writerText = await WriterModel.findOne({user: writer});
     const writerID = writerText._id;
-    const texts = await TextModel.find({writer: writerID});
+    const texts = await TextModel.find({writer: writerID}).populate("genres").populate("writer");
     return texts;
   });
 };
