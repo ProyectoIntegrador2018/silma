@@ -23,6 +23,7 @@ import EventForm from "@/views/admins/EventForm.vue";
 import EventList from "@/views/admins/EventList.vue";
 import Reports from "@/views/admins/Reports.vue";
 import MyBooks from "@/views/writer/MyBooks.vue";
+import ReadBooks from "@/views/reader/ReadBooks.vue";
 
 Vue.use(VueRouter);
 // NOTE: Use 'withAccess' for pages that can only be accessed by certain users.
@@ -309,6 +310,15 @@ const routes = [
     meta: {
       requiresAuth: true,
       withAccess: ["writer"],
+    }
+  },
+  {
+    path: "/readBooks",
+    name: "ReadBooks",
+    component: ReadBooks,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["reader"],
     }
   },
   {

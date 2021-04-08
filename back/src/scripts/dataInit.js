@@ -132,6 +132,18 @@ async function createSuggestion(reader, text) {
   return await SuggestionModel.create(suggestion);
 }
 
+async function createSuggestionCompleted(reader, text) {
+  const suggestion = {
+    reader,
+    text,
+    sentDate: new Date(),
+    suggestionStatus: "Completed",
+    score: 10,
+    readingChapters: 5
+  };
+  return await SuggestionModel.create(suggestion);
+}
+
 export async function createEverything() {
   const rolesExists = await RoleModel.find();
   ///if (rolesExists.length > 0) return;
@@ -312,11 +324,28 @@ export async function createEverything() {
 
   console.log("Text 4 created successfully");
 
+  const text5 = await createText({
+    writer: writer2._id,
+    genres: genreIds,
+    ageRange: "10-12",
+    title: "Text E",
+    registerNumber: "1234asd",
+    description: "asd zxc qwe asd zxc asd zxc qwe asd zxc",
+    numberOfPages: 160,
+    numberOfChapters: 40,
+    isRejected: true
+  });
+
+  console.log("Text 5 created successfully");
+
+
   await Promise.all([
     createSuggestion(reader1._id, text1._id),
     createSuggestion(reader1._id, text2._id),
     createSuggestion(reader1._id, text3._id),
-    createSuggestion(reader1._id, text4._id)  
+    createSuggestion(reader1._id, text4._id),
+
+    createSuggestionCompleted(reader1._id, text5._id)    
   ]);
 
   console.log("Suggestions created successfully");
