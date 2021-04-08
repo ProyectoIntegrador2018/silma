@@ -30,7 +30,8 @@ export const postRequest = async (
   endpoint,
   data,
   token = undefined,
-  withFiles = false
+  withFiles = false,
+  params,
 ) => {
   try {
     const headerFile = withFiles
@@ -38,6 +39,7 @@ export const postRequest = async (
       : {};
     const headerToken = token ? { Authorization: `Bearer ${token}` } : {};
     const response = await axios.post(`${apiHost}/${endpoint}`, data, {
+      params: params,
       headers: { ...headerFile, ...headerToken }
     });
     return response.data;
@@ -52,7 +54,8 @@ export const patchRequest = async (
   endpoint,
   data,
   token = undefined,
-  withFiles = false
+  withFiles = false,
+  params
 ) => {
   try {
     const headerFile = withFiles
@@ -60,6 +63,7 @@ export const patchRequest = async (
       : {};
     const headerToken = token ? { Authorization: `Bearer ${token}` } : {};
     const response = await axios.patch(`${apiHost}/${endpoint}`, data, {
+      params: params,
       headers: { ...headerFile, ...headerToken }
     });
     return response.data;

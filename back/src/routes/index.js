@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { addWriterRoutes } from "./writer.route";
+import { addInventoryRoutes } from "./inventory.route";
 import { addAdminRoutes } from "./admin.route";
 import { addReaderRoutes } from "./reader.route";
 import { addRoleRoutes } from "./role.route";
@@ -35,6 +36,6 @@ export const createRoutes = () => {
   addGenreRoutes(router);
   addPointOfSaleRoutes(router);
   addEventRoutes(router);
-
+  addInventoryRoutes(router);
   return router;
 };
