@@ -14,6 +14,11 @@ export const facebookRule = (entry) =>
   /^((https:\/\/www\.)|(www\.))?(facebook\.com\/){1}(.)+/.test(entry) ||
   "Perfil de facebook inválido";
 
+export const linkRule = (entry) =>
+  //eslint-disable-next-line
+  (entry !== undefined && !!entry.match(/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/)) ||
+  "Link invalido, ocupa tener http o https"
+
 export const passwordMinRule = (entry) =>
   /.{8,}/.test(entry) || "Mínimo 8 caracteres";
 

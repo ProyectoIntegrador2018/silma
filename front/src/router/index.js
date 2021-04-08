@@ -4,6 +4,7 @@ import RegisterReader from "@/views/reader/ReaderRegister.vue";
 import RegisterWriter from "@/views/writer/WriterRegister.vue";
 import LogIn from "@/views/login/LogIn.vue";
 import Dashboard from "@/views/dashboards/Dashboard.vue";
+import Inventory from "@/views/inventory/Inventory.vue";
 import PageNotFound from "@/views/PageNotFound.vue";
 import Users from "@/views/admins/Users.vue";
 import RoleSet from "@/views/admins/RoleSet.vue";
@@ -41,6 +42,11 @@ const routes = [
     path: "/Iniciar_Sesion",
     name: "LogIn",
     component: LogIn
+  },
+  {
+    path: "/inventario/:id",
+    name: "Inventario",
+    component: Inventory,
   },
   {
     path: "/Agregar_Escrito",
