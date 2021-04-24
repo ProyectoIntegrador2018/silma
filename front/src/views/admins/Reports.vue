@@ -32,7 +32,17 @@
                     </reportsTable>
                   </div>
                   <div v-if="item.tab == 'Autor'">
-                    <reportsTable  :items="dataWriters" :headers="headersForWriter" :loading="isLoading">
+                    <v-select
+                      v-model="selectedWriter"
+                      :items="dataWriters"
+                      item-text="name"
+                      item-value="pseudonym"
+                      label="Selecciona un Autor"
+                      @input="changeFilter('writer')"
+                    ></v-select>
+                  </div>
+                  <div v-if="item.tab == 'Autor'">
+                    <reportsTable  :items="filteredDataTexts" :headers="headers" :loading="isLoading">
                     </reportsTable>
                   </div>
                 </div>
@@ -78,6 +88,8 @@ export default {
       filter: '',
       rejectedFilter: false,
       isLoading: false,
+      selectedWriter: null,
+      filteredDataTexts: null,
       items: [
         {
           tab: 'Registrados',
@@ -92,15 +104,21 @@ export default {
         //   tab: 'Leidos',
         //   filter: ''
         // },
-        {
+         {
           tab: 'Autor',
-          filter: ''
-        }
+          filter: 'writer'
+         }
       ],
       genres: [],
       headers: [
         { text: "Título", value: "title" },
-        { text: "Autor", value: "writer" },
+        { text: "Autor",
+          value: "writer",
+          filter: value => {
+           if (this.filter === "writer" ) return true
+
+            return value }
+          },
         { text: "Generos", value: "genres" },
         { text: "Páginas", value: "numberOfPages" },
         { text: "Capitulos", value: "numberOfChapters" },
@@ -140,6 +158,9 @@ export default {
   },
   methods: {
     changeFilter(newFilter) {
+      if(newFilter=== "writer"){
+        this.filteredDataTexts=this.dataTexts.filter(val => {return val.writer === this.selectedWriter})
+      }
       this.filter = newFilter;
     },
     //Funcion que al inicio obtiene todos los textos en proceso
