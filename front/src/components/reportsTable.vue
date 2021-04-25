@@ -15,6 +15,10 @@
               <div v-if="header.text == 'Fase'">
                   {{ faseOptions[item.phase].label }}
               </div>
+              <div v-if="header.text == 'Acciones'">
+                <div style="margin: 2.5px 2.5px" v-if="item.go">
+                </div>
+              </div>
               <div
                 v-if="header.text != 'Fase'"
                 class="text-truncate"
@@ -24,9 +28,27 @@
                   >{{ item[header.value] }}
                 </slot>
               </div>
+
             </td>
             <td class="text-xs-center">
-              <slot name="actions" :props="item"></slot>
+              <slot name="actions">
+                  <div style="margin: 2.5px 2.5px" v-if="item.go">
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                          v-bind="attrs"
+                          v-on="on"
+                          small
+                          icon 
+                          @click="goTo(item.go)"
+                        >
+                          <v-icon>mdi-arrow-right</v-icon>
+                        </v-btn>
+                      </template>
+                    <span>Ir a inventario</span>
+                    </v-tooltip>
+                  </div>
+              </slot>
             </td>
           </tr>
         </template>
@@ -94,6 +116,9 @@ export default {
     },
     seeTextDetails(item) {
       this.$emit("textDetails", item);
+    },
+    goTo(link){
+      this.$router.push(link)
     }
   }
 };

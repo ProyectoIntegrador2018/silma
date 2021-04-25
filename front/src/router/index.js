@@ -20,6 +20,7 @@ import Feedback from "@/views/admins/Feedbacks.vue";
 import { cleanAuthCookies } from "@/utils/cookies";
 import PointOfSaleList from "@/views/admins/PointOfSaleList.vue";
 import PointOfSaleForm from "@/views/admins/PointOfSaleForm.vue";
+import Inventories from "@/views/admins/Inventories.vue";
 import EventForm from "@/views/admins/EventForm.vue";
 import EventList from "@/views/admins/EventList.vue";
 import Reports from "@/views/admins/Reports.vue";
@@ -48,6 +49,11 @@ const routes = [
     path: "/inventario/:id",
     name: "Inventario",
     component: Inventory,
+  },
+  {
+    path: "/inventarios",
+    name: "Inventarios",
+    component: Inventories,
   },
   {
     path: "/Agregar_Escrito",

@@ -18,6 +18,10 @@ export const RoleSchema = new Schema({
     type: Boolean,
     default: false
   },
+  inventoriesRead: {
+    type: Boolean,
+    default: true
+  },
   readingRead: {
     type: Boolean,
     default: false

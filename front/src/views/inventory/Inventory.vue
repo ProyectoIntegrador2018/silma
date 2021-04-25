@@ -216,6 +216,8 @@ export default {
         const token = this.$cookies.get("token");
         try{
           const inventory = await getRequest(`inventoryByWriter/`+this.writerId, token);
+          console.log(this.writerId)
+          console.log(inventory)
           this.inventoryId = inventory._id
           this.items = inventory.items
         }
@@ -230,16 +232,25 @@ export default {
           }
           var dataItem = this.itemData
           const token = this.$cookies.get("token");
-          const writerId = this.$cookies.get("user_id");
-          const id = this.inventoryId
+          let inventoryId = this.inventoryId
           const itemId = this.currentItem
           try{
               let results
-              if(!this.edit) results = await postRequest("inventory/addItems", dataItem, token, false, {writerId, id});
-              else results = await patchRequest("inventory/editItem", dataItem, token, false, {itemId, id});
+              if(!inventoryId){
+                const writerId = this.$cookies.get("user_id");
+                const inventory = await postRequest("inventory", dataItem, token, false, {writerId});
+                this.inventoryId = inventory._id
+                inventoryId = inventory._id
+              }
+              if(!this.edit) results = await postRequest("product", dataItem, token, false, {inventoryId});
+              else results = await patchRequest("product/edit", dataItem, token, false, {id: itemId});
               console.log(results)
-              this.inventoryId = results._id
-              this.items = results.items
+              if(this.items !== undefined){
+                const itemIndex = this.items.findIndex((el) => el._id === results._id);
+                if(itemIndex !== -1) this.items[itemIndex] = results
+                else this.items.push(results)
+              }
+              else this.items = [results]
           }
           catch(error){
               console.log(error)
@@ -267,10 +278,10 @@ export default {
 
       async deleteItem(itemId){
           try{
-            const id = this.inventoryId;
             const token = this.$cookies.get("token");
-            const results = await patchRequest("inventory/removeItem", {}, token, false, {itemId, id});
-            this.items = results.items
+            const inventoryId = this.inventoryId
+            const results = await patchRequest("product/delete", {}, token, false, {id: itemId, inventoryId});
+            this.items = this.items.filter((item) => item._id != itemId)
           }
           catch(error){
               console.log(error)

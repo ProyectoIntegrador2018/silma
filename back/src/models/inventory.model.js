@@ -4,14 +4,7 @@ import beautifyUnique from "mongoose-beautiful-unique-validation";
 export const InventorySchema = new Schema({
   writer: { type: Schema.Types.ObjectId, ref: "Writer" },
   items: [
-    {
-       name: String,
-       description: String,
-       price: Number,
-       stock: Number,
-       image: String,
-       link: String
-    }
+    { type: Schema.Types.ObjectId, ref: "Product" },
   ],
 });
 InventorySchema.plugin(beautifyUnique);

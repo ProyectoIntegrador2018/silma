@@ -56,6 +56,7 @@ async function createSuperAdminRole(token) {
     code: "superAdmin",
     name: "Super Administrador",
     isBaseRole: true,
+    inventoriesRead: true,
     readingRead: true,
     readingCreate: true,
     readingEdit: true,

@@ -204,6 +204,11 @@ export default {
           hasPermission: hasPermission.bind(this)("pointOfSaleRead")
         },
         {
+          title: "Inventarios",
+          route: "/inventarios",
+          hasPermission: hasPermission.bind(this)("inventoriesRead")
+        },
+        {
           title: "Reportes",
           route: "/reports",
           hasPermission: hasPermission.bind(this)("reportsRead")
