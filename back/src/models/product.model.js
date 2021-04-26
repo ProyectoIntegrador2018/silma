@@ -7,7 +7,8 @@ export const ProductSchema = new Schema({
     price: {type: Number},
     stock: {type: Number},
     image: {type: String},
-    link: {type: String} 
+    link: {type: String},
+    inventory: {type: Schema.Types.ObjectId, ref: "Inventory"}
 });
 ProductSchema.plugin(beautifyUnique);
 

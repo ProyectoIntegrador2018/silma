@@ -23,8 +23,9 @@ export const getProduct = (request, response) => {
 //Funcion que crea un usuario y lector que no está registrado
 export const createProduct = (request, response)  => {
   send(response, async () => {
-    const data = request.body;
     const {inventoryId} = request.query;
+    const data = {...request.body, inventory: inventoryId};
+
     console.log(inventoryId)
     try {
       const newProduct = await ProductModel.create(data);
