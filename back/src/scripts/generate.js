@@ -84,7 +84,11 @@ async function createSuperAdminRole(token) {
     roleRead: true,
     roleCreate: true,
     roleEdit: true,
-    roleDelete: true
+    roleDelete: true,
+    saleRead: true,
+    saleCreate: true,
+    saleEdit: true,
+    saleDelete: true
   };
   await axios.post("http://localhost:3000/api/role", form, {
     headers: { Authorization: "Bearer " + token }

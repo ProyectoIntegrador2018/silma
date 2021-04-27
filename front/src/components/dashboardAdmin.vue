@@ -217,6 +217,11 @@ export default {
           title: "Eventos",
           route: "/event",
           hasPermission: hasPermission.bind(this)("eventRead")
+        },
+        {
+          title: "Ventas",
+          route: "/sales",
+          hasPermission: hasPermission.bind(this)("saleRead")
         }
       ]
     };

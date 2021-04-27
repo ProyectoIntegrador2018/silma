@@ -10,6 +10,7 @@ import { addSuggestionRoutes } from "./suggestion.route";
 import { addGenreRoutes } from "./genre.route";
 import { addPointOfSaleRoutes } from "./pointOfsale.route";
 import { addEventRoutes } from "./event.route";
+import { addSaleRoutes } from "./sale.route";
 import {
   authUser,
   getAllGenres,
@@ -37,6 +38,7 @@ export const createRoutes = () => {
   addGenreRoutes(router);
   addPointOfSaleRoutes(router);
   addEventRoutes(router);
+  addSaleRoutes(router);
   addInventoryRoutes(router);
   addProductRoutes(router);
   return router;

@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h1>Inventraios</h1>
+    <h1>Inventarios</h1>
     <template>
       <v-card>
         <v-card flat>

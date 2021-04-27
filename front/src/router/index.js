@@ -21,6 +21,8 @@ import { cleanAuthCookies } from "@/utils/cookies";
 import PointOfSaleList from "@/views/admins/PointOfSaleList.vue";
 import PointOfSaleForm from "@/views/admins/PointOfSaleForm.vue";
 import Inventories from "@/views/admins/Inventories.vue";
+import SalesList from "@/views/admins/SalesList.vue";
+import SalesForm from "@/views/admins/SalesForm.vue";
 import EventForm from "@/views/admins/EventForm.vue";
 import EventList from "@/views/admins/EventList.vue";
 import Reports from "@/views/admins/Reports.vue";
@@ -332,6 +334,49 @@ const routes = [
       requiresAuth: true,
       withAccess: ["reader"],
     }
+  },
+  {
+    path: "/sales",
+    name: "Sales",
+    component: SalesList,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+      permission: "saleRead"
+    }
+  },
+  {
+    path: "/sales/create",
+    name: "SalesCreate",
+    component: SalesForm,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+      permission: "saleCreate"
+    },
+    props: { viewMode: false }
+  },
+  {
+    path: "/sales/view/:id",
+    name: "salesFormView",
+    component: SalesForm,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+      permission: "saleRead"
+    },
+    props: { viewMode: true }
+  },
+  {
+    path: "/sales/edit/:id",
+    name: "salesFormEdit",
+    component: SalesForm,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+      permission: "saleEdit"
+    },
+    props: { viewMode: false }
   },
   {
     path: "*",

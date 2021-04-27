@@ -193,7 +193,11 @@ export async function createEverything() {
     eventRead: true,
     eventCreate: true,
     eventDelete: true,
-    eventEdit: true
+    eventEdit: true,
+    saleRead: true,
+    saleCreate: true,
+    saleEdit: true,
+    saleDelete: true
   });
   console.log("Role 1 created successfully");
   const admin1 = await createAdmin(
