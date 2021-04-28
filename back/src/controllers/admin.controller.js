@@ -73,6 +73,19 @@ export const getFeedback = (request, response) => {
   });
 };
 
+const phaseDateUtil = (datesPerPhase, newPhase, oldPhase) =>{
+  if(oldPhase < newPhase){
+    for(let i=oldPhase+1; i<=newPhase; i++){
+      datesPerPhase[i] = new Date();
+    }
+  }
+  else{
+    for(let i=oldPhase; i>newPhase; i--){
+      datesPerPhase[i] = null;
+    }
+  }
+  return datesPerPhase;
+}
 //Funcion que avanza la fase del texto del cual recibe su ID
 export const movePhase = (request, response) => {
   send(response, async () => {
@@ -82,7 +95,7 @@ export const movePhase = (request, response) => {
     const newPhase = request.body.phase;
     const phase = await TextModel.updateOne(
       { _id: id },
-      { $set: { phase: newPhase } },
+      { $set: { phase: newPhase, datesPerPhase: phaseDateUtil(text.datesPerPhase, newPhase, text.phase)}},
       function (err, res) {
         if (err) throw err;
       }

@@ -29,6 +29,8 @@ import Reports from "@/views/admins/Reports.vue";
 import MyBooks from "@/views/writer/MyBooks.vue";
 import ReadBooks from "@/views/reader/ReadBooks.vue";
 import SalesReports from "@/views/admins/SalesReports.vue";
+import TimesPhase from "@/views/admins/TimesPhase.vue";
+
 
 Vue.use(VueRouter);
 // NOTE: Use 'withAccess' for pages that can only be accessed by certain users.
@@ -47,16 +49,6 @@ const routes = [
     path: "/Iniciar_Sesion",
     name: "LogIn",
     component: LogIn
-  },
-  {
-    path: "/inventario/:id",
-    name: "Inventario",
-    component: Inventory,
-  },
-  {
-    path: "/inventarios",
-    name: "Inventarios",
-    component: Inventories,
   },
   {
     path: "/Agregar_Escrito",
@@ -306,6 +298,33 @@ const routes = [
       permission: "eventEdit"
     },
     props: { viewMode: false }
+  },
+  {
+    path: "/inventario/:id",
+    name: "Inventario",
+    component: Inventory,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["writer", "admin"]
+    }
+  },
+  {
+    path: "/inventarios",
+    name: "Inventarios",
+    component: Inventories,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"]
+    }
+  },
+  {
+    path: "/tiempos",
+    name: "Tiempos",
+    component: TimesPhase,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+    },
   },
   {
     path: "/reports",
