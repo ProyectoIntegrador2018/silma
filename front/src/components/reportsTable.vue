@@ -13,7 +13,7 @@
           <tr v-for="item in props.items" :key="item._id">
             <td v-for="header in displayedHeaders" :key="header.value">
               <div v-if="header.text == 'Fase'">
-                  {{ faseOptions[item.phase].label }}
+                  {{item.phase !== 9 ? faseOptions[item.phase].label : "Total" }}
               </div>
               <div v-if="header.text == 'Acciones'">
                 <div style="margin: 2.5px 2.5px" v-if="item.go">
@@ -30,7 +30,7 @@
               </div>
 
             </td>
-            <td class="text-xs-center">
+            <td class="text-xs-center" v-if="item.go">
               <slot name="actions">
                   <div style="margin: 2.5px 2.5px" v-if="item.go">
                     <v-tooltip bottom>

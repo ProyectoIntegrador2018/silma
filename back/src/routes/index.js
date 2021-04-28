@@ -11,6 +11,7 @@ import { addGenreRoutes } from "./genre.route";
 import { addPointOfSaleRoutes } from "./pointOfsale.route";
 import { addEventRoutes } from "./event.route";
 import { addSaleRoutes } from "./sale.route";
+import { addBenchmarkRoutes } from "./benchamarks.route";
 import {
   authUser,
   getAllGenres,
@@ -41,5 +42,6 @@ export const createRoutes = () => {
   addSaleRoutes(router);
   addInventoryRoutes(router);
   addProductRoutes(router);
+  addBenchmarkRoutes(router)
   return router;
 };

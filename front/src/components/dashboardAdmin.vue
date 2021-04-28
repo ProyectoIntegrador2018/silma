@@ -214,6 +214,11 @@ export default {
           hasPermission: hasPermission.bind(this)("reportsRead")
         },
         {
+          title: "Tiempos en Fase",
+          route: "/tiempos",
+          hasPermission: hasPermission.bind(this)("reportsRead")
+        },
+        {
           title: "Eventos",
           route: "/event",
           hasPermission: hasPermission.bind(this)("eventRead")
@@ -248,6 +253,7 @@ export default {
         });
         book.genres = genreNames;
       });
+      console.log(data)
       this.dataTexts = data;
     },
     seeSuggestions(item) {

@@ -73,6 +73,7 @@ export default {
       const token = this.$cookies.get("token");
       var data = await getRequest("inventories", token);
       data.forEach((inventory) => {
+        console.log(inventory)
         inventory.go = "/inventario/"+inventory.writer.user
         inventory.writer = inventory.writer.pseudonym;
         inventory.products = inventory.items.length
