@@ -28,6 +28,7 @@ import EventList from "@/views/admins/EventList.vue";
 import Reports from "@/views/admins/Reports.vue";
 import MyBooks from "@/views/writer/MyBooks.vue";
 import ReadBooks from "@/views/reader/ReadBooks.vue";
+import SalesReports from "@/views/admins/SalesReports.vue";
 
 Vue.use(VueRouter);
 // NOTE: Use 'withAccess' for pages that can only be accessed by certain users.
@@ -316,6 +317,16 @@ const routes = [
       permission: "reportsRead"
     },
     props: { viewMode: true }
+  },
+  {
+    path: "/salesReports",
+    name: "SalesReports",
+    component: SalesReports,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+      permission: "saleRead"
+    }
   },
   {
     path: "/myBooks",

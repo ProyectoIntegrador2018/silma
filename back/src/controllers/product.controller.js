@@ -5,7 +5,10 @@ import { InventoryModel } from "@/models/inventory.model";
 //Obtiene todos los productos
 export const getProducts = (request, response) => {
   send(response, async () => {
-    const products = await ProductModel.find();
+    const products = await ProductModel.find().populate({ 
+      path : 'inventory', 
+      populate : { path: 'writer'}
+    });
     return products;
   });
 };
@@ -75,6 +78,7 @@ export const editProduct = (request, response) => {
         product.stock = data.stock;
         product.image = data.image;
         product.link = data.link;
+        product.category = data.category;
         product.save()
         return product
       } catch {

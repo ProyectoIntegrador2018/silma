@@ -8,6 +8,10 @@ import { GenreModel } from "../models/genre.model";
 import { SubgenreModel } from "../models/subgenre.model";
 import * as GenreLogic from "@/logics/genre.logic";
 import RoleModel from "../models/role.model";
+import { ProductModel } from "../models/product.model";
+import { InventoryModel } from "../models/inventory.model";
+import { SaleModel } from "../models/sale.model";
+import { EventModel } from "../models/event.model";
 import bcrypt from "bcrypt";
  
 async function createUser(user, role) {
@@ -97,6 +101,26 @@ async function createText(text) {
   return textModel;
 }
 
+async function createProduct(product) {
+  const productModel = await ProductModel.create(product);
+  return productModel;
+}
+
+async function createInventory(inventory) {
+  const inventoryModel = await InventoryModel.create(inventory);
+  return inventoryModel;
+}
+
+async function createEvent(event) {
+  const eventModel = await EventModel.create(event);
+  return eventModel;
+}
+
+async function createSale(sale) {
+  const saleModel = await SaleModel.create(sale);
+  return saleModel;
+}
+
 async function deleteEverything() {
   const promiseOne = UserModel.deleteMany({});
   const promiseTwo = AdminModel.deleteMany({});
@@ -107,6 +131,10 @@ async function deleteEverything() {
   const promiseSeven = GenreModel.deleteMany({});
   const promiseEight = RoleModel.deleteMany({});
   const promiseNine = SubgenreModel.deleteMany({});
+  const promiseTen = ProductModel.deleteMany({});
+  const promiseEleven = InventoryModel.deleteMany({});
+  const promiseTwelve = SaleModel.deleteMany({});
+  const promiseThirteen = EventModel.deleteMany({});
   await Promise.all([
     promiseOne,
     promiseTwo,
@@ -116,7 +144,11 @@ async function deleteEverything() {
     promiseSix,
     promiseSeven,
     promiseEight,
-    promiseNine
+    promiseNine,
+    promiseTen,
+    promiseEleven,
+    promiseTwelve,
+    promiseThirteen
   ]);
 }
 
@@ -342,6 +374,151 @@ export async function createEverything() {
 
   console.log("Text 5 created successfully");
 
+  var inventory1 = await createInventory({
+    writer: writer1._id,
+    items: [
+    ],
+  });
+
+  console.log("Inventory 1 created successfully");
+
+  const product1 = await createProduct({
+    name: "Sticker 1",
+    description: "Sticker 1 for Book",
+    price: 123,
+    stock: 10,
+    link: "https://semantic-ui.com/images/wireframe/image.png",
+    category: "Merchandise",
+  
+    inventory: inventory1._id
+  });
+
+  console.log("Product 1 created successfully");
+
+  const product2 = await createProduct({
+    name: "Book 1",
+    description: "Book 1",
+    price: 123,
+    stock: 10,
+    link: "https://semantic-ui.com/images/wireframe/image.png",
+    category: "Book",
+  
+    inventory: inventory1._id
+  });
+
+  console.log("Product 2 created successfully");
+
+  inventory1.items.push(product1)
+  inventory1.items.push(product2)
+  inventory1.save()
+
+  console.log("Inventory 1 updated successfully");
+
+  var inventory2 = await createInventory({
+    writer: writer2._id,
+    items: [
+    ],
+  });
+
+  console.log("Inventory 2 created successfully");
+
+  const product3 = await createProduct({
+    name: "Sticker 2",
+    description: "Sticker 2 for Book",
+    price: 123,
+    stock: 10,
+    link: "https://semantic-ui.com/images/wireframe/image.png",
+    category: "Merchandise",
+  
+    inventory: inventory2._id
+  });
+
+  console.log("Product 3 created successfully");
+
+  const product4 = await createProduct({
+    name: "Book 2",
+    description: "Book 2",
+    price: 123,
+    stock: 10,
+    link: "https://semantic-ui.com/images/wireframe/image.png",
+    category: "Book",
+  
+    inventory: inventory2._id
+  });
+
+  console.log("Product 4 created successfully");
+
+  inventory2.items.push(product3)
+  inventory2.items.push(product4)
+  inventory2.save()
+
+  console.log("Inventory 2 updated successfully");
+
+
+  const event1 = await createEvent({
+    name: "asd",
+    description: "asd",
+    place: "asd",
+    date: "2021-04-28",
+    time:"15:00"
+  });
+  
+  console.log("Event 1 created successfully");
+
+  const sale1 = await createSale({
+    createdBy: admin1._id, 
+    event: event1,
+    items: [
+      {
+        productId: product1,
+        name: "Sticker 1",
+        price: 123,
+        numberOfItems: 1,
+        subtotal: 123
+      },
+      {
+        productId: product2,
+        name: "Book 1",
+        price: 123,
+        numberOfItems: 1,
+        subtotal: 123
+      },
+      {
+        productId: product3,
+        name: "Sticker 2",
+        price: 123,
+        numberOfItems: 1,
+        subtotal: 123
+      }
+    ],
+    total: 369
+  });
+
+  console.log("Sale 1 created successfully");
+
+  const sale2 = await createSale({
+    createdBy: admin1._id, 
+    event: event1,
+    items: [
+      {
+        productId: product2,
+        name: "Book 1",
+        price: 123,
+        numberOfItems: 3,
+        subtotal: 123
+      },
+      {
+        productId: product3,
+        name: "Sticker 2",
+        price: 123,
+        numberOfItems: 5,
+        subtotal: 123
+      }
+    ],
+    total: 984
+  });
+
+  console.log("Sale 2 created successfully");
 
   await Promise.all([
     createSuggestion(reader1._id, text1._id),

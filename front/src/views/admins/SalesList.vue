@@ -94,7 +94,7 @@ export default {
         { text: "Evento", value: "event" },
         // { text: "Productos", value: "items" },
         { text: "Total", value: "total" },
-        { text: "Acciones", sortable: false, actions: true, align:"center"}
+        { text: "Acciones", sortable: false, actions: true, align: "center" }
       ]
     };
   },
@@ -108,7 +108,7 @@ export default {
       try {
         const token = this.$cookies.get("token");
         this.sales = await getRequest("sale/search", {}, token);
-        console.log(this.sales)
+        console.log(this.sales);
       } catch (error) {
         console.error(error);
         const message = getErrorMessage(error, Messages.SomethingWentWrong());

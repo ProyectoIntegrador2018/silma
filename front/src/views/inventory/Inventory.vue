@@ -71,6 +71,28 @@
                         ></v-text-field>
                       </v-col>
                     </v-layout>
+
+                    <!-------Select the cathegory of the product (Book/Merchandise) ---------->
+                    <v-layout row wrap>
+                      <v-col
+                      cols="12"
+                      sm="6"
+                      >
+                        <v-autocomplete
+                          v-model="itemData.category"
+                          :items="categories"
+                          item-text="label"
+                          item-value="value"
+                          label="Categoria"
+                          clearable
+                          required
+                          :rules="[() => itemData.category !== null || 'Este campo es requerido', requiredRule]"
+                          :disabled="viewMode"
+                          outlined
+                        ></v-autocomplete>
+                      </v-col>
+                    </v-layout>
+
                   </v-form>
               </v-container>
             </v-card-text>
@@ -182,6 +204,20 @@ export default {
   },
   data() {
     return {
+      category: {
+        label: "Libro",
+        value: "Book"
+      },
+      categories: [
+        {
+          label: "Libro",
+          value: "Book"
+        },
+        {
+          label: "Mercancía",
+          value: "Merchandise"
+        }
+      ],
       inventoryId: undefined,
       userId: null,
       writerId: null,
@@ -264,7 +300,8 @@ export default {
           description: item.description,
           price: item.price,
           stock: item.stock,
-          link: item.link
+          link: item.link,
+          category: item.category
         }
         this.edit = true
         this.currentItem = item._id
@@ -305,7 +342,6 @@ export default {
 </script>
 
 <style scoped>
-
 .itemsContainer{
   display: flex;
   flex-direction: row;

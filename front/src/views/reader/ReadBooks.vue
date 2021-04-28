@@ -46,18 +46,10 @@
 </style>
 
 <script>
-
-import { getErrorMessage } from "../../utils/utils";
-import Messages from "../../utils/messages";
-import { snackbar } from "../../utils/events";
 import reportsTable from "../../components/reportsTable";
 import list from "../../mixins/list";
 import { hasPermission } from "../../utils/utils";
-import Table from "@/components/table.vue";
 import { getRequest } from "@/utils/requests";
-import { phases } from "@/utils/constants.js";
-import form from "../../mixins/form";
-
 
 export default {
   components: {
@@ -67,15 +59,12 @@ export default {
   data() {
     return {
       reader: this.$cookies.get("user_id"),
-      role: this.$cookies.get("user_type"),
       hasPermission,
       dataTexts: [],
       data: [],
-      dataWriters: [],
       tab: null,
       filter: '',
       token: [],
-      rejectedFilter: false,
       isLoading: false,
       items: [
           {
@@ -163,19 +152,10 @@ export default {
           isRejected : suggestion.text.isRejected,
           readBook : readBook,
           suggestionStatus : suggestion.suggestionStatus
-
-
           }
         );
-
       });
-
-        
     }
-  
-
   }
-
-    
 };
 </script>

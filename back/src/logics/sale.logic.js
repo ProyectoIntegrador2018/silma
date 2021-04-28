@@ -1,7 +1,7 @@
 import { SaleModel } from "@/models/sale.model";
 
 export async function searchSales(query) {
-  const sale = await SaleModel.find().populate("event");
+  const sale = await SaleModel.find().populate("event").populate("items.productId");
   return sale;
 }
 

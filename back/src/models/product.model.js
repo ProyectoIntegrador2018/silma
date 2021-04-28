@@ -8,6 +8,10 @@ export const ProductSchema = new Schema({
     stock: {type: Number},
     image: {type: String},
     link: {type: String},
+    category: {
+        type: String,
+        enum: ["Book", "Merchandise"]
+      },
     inventory: {type: Schema.Types.ObjectId, ref: "Inventory"}
 });
 ProductSchema.plugin(beautifyUnique);
