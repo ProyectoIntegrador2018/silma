@@ -30,6 +30,7 @@ import MyBooks from "@/views/writer/MyBooks.vue";
 import ReadBooks from "@/views/reader/ReadBooks.vue";
 import SalesReports from "@/views/admins/SalesReports.vue";
 import TimesPhase from "@/views/admins/TimesPhase.vue";
+import MySales from "@/views/writer/MySales.vue";
 
 
 Vue.use(VueRouter);
@@ -351,6 +352,15 @@ const routes = [
     path: "/myBooks",
     name: "MyBooks",
     component: MyBooks,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["writer"],
+    }
+  },
+  {
+    path: "/mySales",
+    name: "MySales",
+    component: MySales,
     meta: {
       requiresAuth: true,
       withAccess: ["writer"],

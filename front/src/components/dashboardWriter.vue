@@ -188,9 +188,12 @@ export default {
       rejectedTexts: [],
       writerTask: [
         {
-          title: "Mis libros",
+          title: "Mis Libros",
           route: "/myBooks"
-          //hasPermission: true
+        },
+        {
+          title: "Mis Ventas",
+          route: "/mySales"
         }]
     };
   },

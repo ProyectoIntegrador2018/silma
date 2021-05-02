@@ -90,6 +90,7 @@ export default {
       isLoading: false,
       selectedWriter: null,
       filteredDataTexts: null,
+      token: this.$cookies.get("token"),
       items: [
         {
           tab: 'Registrados',
@@ -99,11 +100,6 @@ export default {
           tab: 'Rechazados',
           filter: 'rejected'
         },
-        // WIP
-        // {
-        //   tab: 'Leidos',
-        //   filter: ''
-        // },
          {
           tab: 'Autor',
           filter: 'writer'
@@ -159,14 +155,14 @@ export default {
   methods: {
     changeFilter(newFilter) {
       if(newFilter=== "writer"){
-        this.filteredDataTexts=this.dataTexts.filter(val => {return val.writer === this.selectedWriter})
+        this.filteredDataTexts=this.dataTexts.filter(val => {return val.writer === this.selectedWriter});
       }
       this.filter = newFilter;
     },
     //Funcion que al inicio obtiene todos los textos en proceso
     async getTexts() {
-      const token = this.$cookies.get("token");
-      var data = await getRequest("texts/", token);
+      this.token = this.$cookies.get("token");
+      var data = await getRequest("texts/", this.token);
       data.forEach((book) => {
         var writerName = "";
         var genreNames = "";
@@ -194,13 +190,13 @@ export default {
     },
     //Funcion que se encarga de formatear los escritores con todos los datos de su modelo usuario y escritor
     async composeAllWriters() {
-      const token = this.$cookies.get("token");
-      const writers = await getRequest("writers", token);
+      this.token = this.$cookies.get("token");
+      const writers = await getRequest("writers", this.token);
       var i;
       var user;
       var data = [];
       for (i = 0; i < writers.length; i++) {
-        user = await getRequest("users/" + writers[i].user._id, token);
+        user = await getRequest("users/" + writers[i].user._id, this.token);
         data.push({
           name: user.name,
           email: user.email,

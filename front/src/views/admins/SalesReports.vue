@@ -35,6 +35,18 @@
                     <reportsTable :items="filteredSalesMerch" :headers="headers" :loading="isLoading">
                     </reportsTable>
                   </div>
+                  <div v-if="item.tab == 'Ventas por Autor'" >
+                    <v-select
+                      v-model="selectedWriter"
+                      :items="dataWriters"
+                      item-text="name"
+                      item-value="_id"
+                      label="Selecciona un Autor"
+                      @input="changeFilter('writer')"
+                    ></v-select>
+                    <reportsTable :items="filteredSalesAutor" :headers="headers" :loading="isLoading">
+                    </reportsTable>
+                  </div>
                 </div>
               </v-card-text>
             </v-card>
@@ -70,6 +82,9 @@ export default {
     return {
       hasPermission,
       products: [],
+      dataWriters: [],
+      writers: [],
+      selectedWriter: null,
       tab: null,
       filter: '',
       isLoading: false,
@@ -81,20 +96,35 @@ export default {
         {
           tab: 'Ventas por Mercancía',
           filter: 'Merch'
+        },
+        {
+          tab: 'Ventas por Autor',
+          filter: 'writer'
         }
       ],
       salesBooks: [],
+      filteredSalesAutor: [],
       filteredSalesBooks: [],
       filteredSalesMerch: [],
       headers: [
         { text: "Título", value: "title" },
-        { text: "Autor", value: "writer" },
+        { text: "Autor", 
+          value: "writer",
+          filter: value => {
+           if (this.filter === "writer" ) return true
+
+            return value } 
+        },
         { text: "Cantidad", value: "quantity" },
         { text: "Total", value: "total" },
         { text: "Categoria", value: "category" }
       ],
       sales: [],
-      token: []
+      token: this.$cookies.get("token"),
+      aux1: [],
+      aux2: [],
+      aux3: [],
+      aux4: [],
     };
   },
   async mounted() {
@@ -103,14 +133,24 @@ export default {
     await this.getSales();
     await this.getProducts();
     await this.getSalesProducts();
+    await this.composeAllWriters();
     this.updateLoading(false);
     this.isLoading = false;
   },
   methods: {
+    changeFilter(newFilter) {
+      this.aux1 = this.selectedWriter;
+
+      if(newFilter=== "writer"){
+        this.filteredSalesAutor=this.salesBooks.filter(val => {return val.writerObject._id === this.selectedWriter});
+        this.aux2 = this.salesBooks[0].writerObject;
+        this.aux3 = this.selectedWriter;
+      }
+      this.filter = newFilter;
+    },
     //Funcion que regresa todas las ventas
     async getSales() {
       try {
-        this.token = this.$cookies.get("token");
         this.sales = await getRequest("sale/search", {}, this.role);
         console.log(this.sales)
       } catch (error) {
@@ -122,8 +162,7 @@ export default {
     //Funcion que regresa todos los productos
     async getProducts() {
       try {
-        const token = this.$cookies.get("token");
-        this.products = await getRequest("products", {}, token);
+        this.products = await getRequest("products", {}, this.token);
       } catch (error) {
         console.error(error);
         const message = getErrorMessage(error, Messages.SomethingWentWrong());
@@ -136,6 +175,7 @@ export default {
         var auxProtuct = {
           title: "",
           writer: "",
+          writerObject: {},
           quantity: 0,
           total: 0,
           category: ""
@@ -143,6 +183,7 @@ export default {
         this.products.forEach((product) => {
             auxProtuct.title = product.name;
             auxProtuct.writer = product.inventory.writer.pseudonym;
+            auxProtuct.writerObject = product.inventory.writer;
             auxProtuct.quantity = 0;
             auxProtuct.total = 0;
             auxProtuct.category = product.category;
@@ -157,6 +198,7 @@ export default {
             this.salesBooks.push({
               title: auxProtuct.title,
               writer: auxProtuct.writer,
+              writerObject: auxProtuct.writerObject,
               quantity: auxProtuct.quantity,
               total: auxProtuct.total,
               category: auxProtuct.category
@@ -172,6 +214,27 @@ export default {
 
       //ventas de los libros
       this.filteredSalesBooks=this.salesBooks.filter(val => {return val.category === "Book"})
+    },
+    //Funcion que se encarga de formatear los escritores con todos los datos de su modelo usuario y escritor
+    async composeAllWriters() {
+      this.writers = await getRequest("writers", this.token);
+      var i;
+      var user;
+      var data = [];
+      for (i = 0; i < this.writers.length; i++) {
+        user = await getRequest("users/" + this.writers[i].user._id, this.token);
+        data.push({
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          birthdate: user.birthdate,
+          nationality: user.nationality,
+          pseudonym: this.writers[i].pseudonym,
+          isPlus: this.writers[i].isPlu,
+          _id: this.writers[i]._id
+        });
+      }
+      this.dataWriters = data;
     }
   }    
 };

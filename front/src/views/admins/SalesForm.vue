@@ -310,7 +310,7 @@ export default {
     },
     autocompleteProduct(index, id) {
       this.product = this.products[this.products.findIndex(x => x._id === id)];
-      this.items[index]._id = this.product._id;
+      this.items[index].productId = this.product._id;
       this.items[index].name = this.product.name;
       this.items[index].price = this.product.price;
       this.items[index].stock = this.product.stock;

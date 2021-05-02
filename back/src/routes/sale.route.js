@@ -3,7 +3,8 @@ import {
     getSaleById,
     createSale,
     updateSale,
-    deleteSale
+    deleteSale,
+    searchSalesByWriterId
   } from "@/controllers/sale.controller";
   import { verifyToken } from "@/utils/jwt";
   
@@ -13,5 +14,6 @@ import {
     router.post("/sale", verifyToken(["admin"], "saleCreate"), createSale);
     router.patch("/sale/:id", verifyToken(["admin"], "saleEdit"), updateSale);
     router.delete("/sale/:id", verifyToken(["admin"], "saleDelete"), deleteSale);
+    router.get("/saleByWriter/:id", verifyToken(["writer"]), searchSalesByWriterId);
   };
   

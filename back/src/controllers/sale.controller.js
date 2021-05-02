@@ -8,6 +8,16 @@ export const searchSales = (request, response) => {
   });
 };
 
+export const searchSalesByWriterId = (request, response) => {
+  send(response, async () => {
+    const id = request.params.id;
+    const sale = await SaleLogic.searchSalesByWriterId(id);
+
+
+    return sale;
+  });
+};
+
 export const getSaleById = (request, response) => {
   send(response, async () => {
     const id = request.params.id;
