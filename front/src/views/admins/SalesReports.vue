@@ -58,11 +58,55 @@
                       @input="changeFilter('event')"
                     ></v-select>
                     <div v-if="item.tab == 'Ventas por Evento'">
-                      <reportsTable
-                        :items="filteredSalesEvent"
-                        :headers="headersSalesEvent"
-                        :loading="isLoading"
+                      <reportsTable :items="filteredSalesEvent" :headers="headersSalesEvent" :loading="isLoading">
+                      </reportsTable>
+                    </div>
+                  </div>
+                  <div v-if="item.tab == 'Ventas por Fecha'" >
+                    <v-menu
+                      ref="menu"
+                      v-model="menu"
+                      :close-on-content-click="false"
+                      :return-value.sync="selectedDate"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="auto"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                          v-model="selectedDate"
+                          label="Selecciona una fecha"
+                          prepend-icon="mdi-calendar"
+                          readonly
+                          v-bind="attrs"
+                          v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker
+                        v-model="selectedDate"
+                        locale="es"
+                        no-title
+                        scrollable
                       >
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          text
+                          color="primary"
+                          @click="menu = false"
+                        >
+                          Cancel
+                        </v-btn>
+                        <v-btn
+                          text
+                          color="primary"
+                          @click="save(selectedDate)"
+                        >
+                          OK
+                        </v-btn>
+                      </v-date-picker>
+                    </v-menu>
+                    <div v-if="item.tab == 'Ventas por Fecha'">
+                      <reportsTable :items="filteredSalesDate" :headers="headersSalesEvent" :loading="isLoading">
                       </reportsTable>
                     </div>
                   </div>
@@ -106,6 +150,8 @@ export default {
       writers: [],
       selectedWriter: null,
       selectedEvent: null,
+      selectedDate: new Date().toISOString().substr(0, 10),
+      menu: false,
       tab: null,
       filter: '',
       isLoading: false,
@@ -125,6 +171,10 @@ export default {
         {
           tab: 'Ventas por Evento',
           filter: 'event'
+        },
+        {
+          tab: 'Ventas por Fecha',
+          filter: 'date'
         }
       ],
       salesBooks: [],
@@ -132,6 +182,7 @@ export default {
       filteredSalesBooks: [],
       filteredSalesMerch: [],
       filteredSalesEvent: [],
+      filteredSalesDate: [],
       headers: [
         { text: "Título", value: "title" },
         { text: "Autor", 
@@ -148,7 +199,8 @@ export default {
       headersSalesEvent: [
         { text: "Evento", value: "event" },
         { text: "Cantidad", value: "quantity" },
-        { text: "Total", value: "total" }
+        { text: "Total", value: "total" },
+        { text: "Fecha", value: "date" }
       ],
       sales: [],
       token: this.$cookies.get("token"),
@@ -170,6 +222,10 @@ export default {
     this.isLoading = false;
   },
   methods: {
+    save (selectedDate) {
+      this.$refs.menu[0].save(selectedDate)
+      this.changeFilter("date")
+    },
     changeFilter(newFilter) {
       this.aux1 = this.selectedWriter;
 
@@ -184,6 +240,15 @@ export default {
         }
         else {
           this.filteredSalesEvent = this.sales.filter(val => {return val.event === this.selectedEvent});
+        }
+      }
+      else if (newFilter === "date") {
+        if (!this.selectedDate) {
+          this.filteredSalesDate = this.sales
+        }
+        else {
+          this.filteredSalesDate = this.sales.filter(val => {return val.date === this.selectedDate});
+          console.log('hola')
         }
       }
       this.filter = newFilter;

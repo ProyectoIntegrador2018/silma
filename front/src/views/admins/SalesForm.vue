@@ -2,17 +2,75 @@
   <v-container>
     <h1>Ventas</h1>
     <v-form ref="form" v-model="valid" class="main-container">
-      <v-select
-        v-model="selectedEvent"
-        :items="events"
-        item-text="name"
-        item-value="_id"
-        label="Evento"
-        :rules="[(x) => !!x || Messages.RequiredField()]"
-        :disabled="viewMode"
-        outlined
-      >
-      </v-select>
+      <v-row>
+        <v-col
+          class="text-left"
+          cols="12"
+          md="6"
+        >
+          <v-select
+            v-model="selectedEvent"
+            :items="events"
+            item-text="name"
+            item-value="_id"
+            label="Evento"
+            :rules="[(x) => !!x || Messages.RequiredField()]"
+            :disabled="viewMode"
+            outlined
+          >
+          </v-select>
+        </v-col>
+
+        <v-col
+          class="text-left"
+          cols="12"
+          md="6"
+        >
+          <v-menu
+            ref="menu"
+            v-model="menu"
+            :close-on-content-click="false"
+            :return-value.sync="selectedDate"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="selectedDate"
+                label="Fecha de la venta"
+                prepend-inner-icon="mdi-calendar"
+                readonly
+                outlined
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              v-model="selectedDate"
+              locale="es"
+              no-title
+              scrollable
+            >
+              <v-spacer></v-spacer>
+              <v-btn
+                text
+                color="primary"
+                @click="menu = false"
+              >
+                Cancel
+              </v-btn>
+              <v-btn
+                text
+                color="primary"
+                @click="$refs.menu.save(selectedDate)"
+              >
+                OK
+              </v-btn>
+            </v-date-picker>
+          </v-menu>
+        </v-col>
+      </v-row>
 
       <!-- Add Item -->
       <template>
@@ -193,6 +251,8 @@ export default {
       Messages,
       modalInViewMode: false,
       selectedEvent: null,
+      selectedDate: new Date().toISOString().substr(0, 10),
+      menu: false,
       id: "",
       total: 0,
       sale: {},
@@ -282,7 +342,8 @@ export default {
         createdBy: this.$cookies.get("user_id"),
         event: this.selectedEvent,
         items: this.items,
-        total: this.total
+        total: this.total,
+        date: this.selectedDate
       }
       await postRequest("sale", this.sale, false);
     },

@@ -25,6 +25,9 @@ export const SaleSchema = new Schema({
   total: {
     type: Number,
     required: true
+  },
+  date: {
+    type: String
   }
 });
 SaleSchema.plugin(beautifyUnique);
