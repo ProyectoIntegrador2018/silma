@@ -316,7 +316,17 @@ export async function createEverything() {
     registerNumber: "123asd",
     description: "asd zxc qwe asd zxc asd zxc qwe asd zxc",
     numberOfPages: 120,
-    numberOfChapters: 50
+    numberOfChapters: 50,
+    datesPerPhase:{
+      2 :new Date("2021-05-19T16:00:00Z"),
+      3: new Date("2021-05-20T20:00:00Z"),
+      4: new Date("2021-05-21T12:00:00Z"),
+      5: new Date("2021-05-22T15:00:00Z"),
+      6: new Date("2021-05-24T10:00:00Z"),
+      7: new Date("2021-05-25T07:00:00Z"),
+      8: new Date("2021-05-26T09:00:00Z"),
+      9: new Date("2021-05-27T14:00:00Z"),
+    }
   });
   console.log("Text 1 created successfully");
   const text2 = await createText({
@@ -327,7 +337,17 @@ export async function createEverything() {
     registerNumber: "12345asd",
     description: "asd zxc qwe asd zxc asd zxc qwe asd zxc",
     numberOfPages: 120,
-    numberOfChapters: 30
+    numberOfChapters: 30,
+    datesPerPhase:{
+      2 :new Date("2021-05-19T16:00:00Z"),
+      3: new Date("2021-05-19T23:00:00Z"),
+      4: new Date("2021-05-20T12:00:00Z"),
+      5: new Date("2021-05-25T11:00:00Z"),
+      6: new Date("2021-05-27T07:00:00Z"),
+      7: new Date("2021-05-27T20:00:00Z"),
+      8: new Date("2021-05-28T11:00:00Z"),
+      9: new Date("2021-05-29T13:00:00Z"),
+    }
   });
 
   console.log("Text 2 created successfully");
@@ -355,7 +375,16 @@ export async function createEverything() {
     description: "asd zxc qwe asd zxc asd zxc qwe asd zxc",
     numberOfPages: 120,
     numberOfChapters: 30,
-    isRejected: true
+    datesPerPhase:{
+      2 :new Date("2021-05-20T12:00:00Z"),
+      3: new Date("2021-05-20T18:00:00Z"),
+      4: new Date("2021-05-21T18:00:00Z"),
+      5: new Date("2021-05-22T23:00:00Z"),
+      6: new Date("2021-05-25T10:00:00Z"),
+      7: new Date("2021-05-26T01:00:00Z"),
+      8: new Date("2021-05-26T12:00:00Z"),
+      9: new Date("2021-05-27T11:00:00Z"),
+    }
   });
 
   console.log("Text 4 created successfully");

@@ -27,9 +27,20 @@
             <v-card flat>
               <v-card-text>
                 <div class="table-wrapper">
-                  <div v-if="item.tab != 'Autor'">
+                 
+                  <div v-if="item.tab != 'Autor' && item.tab != 'Fase'">
                     <reportsTable :items="dataTexts" :headers="headers" :loading="isLoading">
                     </reportsTable>
+                  </div>
+                    <div v-if="item.tab == 'Fase'">
+                    <v-select
+                      v-model="selectedPhase"
+                      :items="dataPhases"
+                      item-text="label"
+                      item-value="value"
+                      label="Selecciona la fase"
+                      @input="changeFilter('phase')"
+                    ></v-select>
                   </div>
                   <div v-if="item.tab == 'Autor'">
                     <v-select
@@ -41,7 +52,7 @@
                       @input="changeFilter('writer')"
                     ></v-select>
                   </div>
-                  <div v-if="item.tab == 'Autor'">
+                  <div v-if="item.tab == 'Autor' || item.tab == 'Fase'">
                     <reportsTable  :items="filteredDataTexts" :headers="headers" :loading="isLoading">
                     </reportsTable>
                   </div>
@@ -73,6 +84,7 @@ import { snackbar } from "../../utils/events";
 import reportsTable from "../../components/reportsTable";
 import list from "../../mixins/list";
 import { hasPermission } from "../../utils/utils";
+import { phases } from "@/utils/constants.js";
 
 export default {
   components: {
@@ -84,11 +96,13 @@ export default {
       hasPermission,
       dataTexts: [],
       dataWriters: [],
+      dataPhases: phases,
       tab: null,
       filter: '',
       rejectedFilter: false,
       isLoading: false,
       selectedWriter: null,
+      selectedPhase: null,
       filteredDataTexts: null,
       token: this.$cookies.get("token"),
       items: [
@@ -99,6 +113,15 @@ export default {
         {
           tab: 'Rechazados',
           filter: 'rejected'
+        },
+        // WIP
+        // {
+        //   tab: 'Leidos',
+        //   filter: ''
+        // },
+        {
+          tab: 'Fase',
+          filter: 'phase'
         },
          {
           tab: 'Autor',
@@ -118,7 +141,12 @@ export default {
         { text: "Generos", value: "genres" },
         { text: "Páginas", value: "numberOfPages" },
         { text: "Capitulos", value: "numberOfChapters" },
-        { text: "Fase", value: "phase" },
+        { text: "Fase", value: "phase",
+          filter: value => {
+           if (this.filter === "phase" ) return true
+
+            return value }
+        },
         { text: "Rango de Edades", value: "ageRange" },
         {
           text: "Rechazado",
@@ -156,6 +184,10 @@ export default {
     changeFilter(newFilter) {
       if(newFilter=== "writer"){
         this.filteredDataTexts=this.dataTexts.filter(val => {return val.writer === this.selectedWriter});
+      }
+      else if(newFilter=="phase"){
+        console.log(this.dataTexts)
+        this.filteredDataTexts=this.dataTexts.filter(val => {return val.phase === this.selectedPhase})
       }
       this.filter = newFilter;
     },
