@@ -1,5 +1,6 @@
 import {
     getTimeBenchmarks,
+    getTimeBenchmarksByWriter,
     getEventById,
     createEvent,
     updateEvent,
@@ -9,5 +10,6 @@ import { verifyToken } from "@/utils/jwt";
 
 export const addBenchmarkRoutes = (router) => {
     router.get("/timeBenchmarks", verifyToken(["admin"]), getTimeBenchmarks);
+    router.get("/timeBenchmarksByWriter", verifyToken(["admin"]), getTimeBenchmarksByWriter);
 };
   

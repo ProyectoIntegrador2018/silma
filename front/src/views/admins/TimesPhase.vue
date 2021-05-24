@@ -2,6 +2,15 @@
   <v-container>
     <h1>Tiempos</h1>
     <template>
+      <v-select
+        v-model="defaultWriter"
+        :items="writers"
+        item-text="label"
+        item-value="label"
+         @change="onChange"
+        style="max-width:35%;"
+      >
+      </v-select>
       <v-card>
         <v-tabs
           v-model="tab"
@@ -77,6 +86,9 @@ export default {
       filter: '',
       rejectedFilter: false,
       isLoading: false,
+      defaultWriter: {label: 'General'},
+      writers: [{label: 'General'}],
+      writersData: {},
       items: [
         {
           tab: 'Tabla',
@@ -154,15 +166,32 @@ export default {
     async getTimes() {
       const token = this.$cookies.get("token");
       var data = await getRequest("timeBenchmarks", token);
+      const dataPhase = Object.values(data).map((value, key) =>{
+        let parsedData = this.parseBenchmarksRead(value)
+        return {...parsedData, phase: key}
+      })
+      this.dataTimesTable = dataPhase;
+      this.parseDataGraph(data)
+      this.writersData = {'General': data}
+
+      var dataW = await getRequest("timeBenchmarksByWriter", token);
+      Object.keys(dataW).forEach((key, index) =>{ 
+        this.writers.push({label:key})
+      });
+      this.writersData = {...this.writersData, ...dataW}
+      console.log(this.writersData)
+    },
+
+    onChange(writer){
+      console.log(writer)
+      const data = this.writersData[writer]
       console.log(data)
       const dataPhase = Object.values(data).map((value, key) =>{
         let parsedData = this.parseBenchmarksRead(value)
         return {...parsedData, phase: key}
       })
       this.dataTimesTable = dataPhase;
-      console.log(this.dataTimesGraph)
       this.parseDataGraph(data)
-      console.log(this.dataTimesGraph)
     },
 
     parseBenchmarksRead(values){
@@ -174,23 +203,70 @@ export default {
       return time;
     },
     parseDataGraph(data){
-      Object.values(data).map((value, key) =>{
-        let parsedBenchmarks = this.parseBenchmarksGraph(value)
+      Object.assign(this.dataTimesGraph, resetGraph());
+      console.log(this.dataTimesGraph)
+      Object.values(data).forEach((value, key) =>{
+        const parsedBenchmarks = this.parseBenchmarksGraph(value)
         if(key < 9){
-          Object.keys(value).map((attr, ind) =>{ 
+          Object.keys(value).forEach((attr, ind) =>{ 
             this.dataTimesGraph[attr].datasets[0].data.push(parsedBenchmarks[attr])
           })
         }
       })
     },
     parseBenchmarksGraph(values){
-      let time = {}
+      const time = {}
       time.avg = values.avg == null ? 0 : values.avg.toFixed(2);
       time.max = values.max == Number.MIN_VALUE ?  0 : values.max.toFixed(2);
       time.min = values.min == Number.MAX_VALUE ?  0 : values.min.toFixed(2);
       time.total = values.total == 0 ?  0 : values.total.toFixed(2);
       return time;
     },
+
   }
 };
+  function resetGraph(){
+    return {
+      min:{
+        labels: chartLabels,
+        datasets: [
+          {
+            label: 'min',
+            data: [],
+            backgroundColor: chartColors
+          }
+        ]
+      },
+      max:{
+        labels: chartLabels,
+        datasets: [
+          {
+            label: 'max',
+            data: [],
+            backgroundColor: chartColors
+          }
+        ]
+      },
+      avg:{
+        labels: chartLabels,
+        datasets: [
+          {
+            label: 'avg',
+            data: [],
+            backgroundColor: chartColors
+          }
+        ]
+      },
+      total:{
+        labels: chartLabels,
+        datasets: [
+          {
+            label: 'total',
+            data: [],
+            backgroundColor: chartColors
+          }
+        ]
+      }
+    }
+  }
 </script>

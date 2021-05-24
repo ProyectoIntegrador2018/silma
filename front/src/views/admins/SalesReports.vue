@@ -47,6 +47,69 @@
                     <reportsTable :items="filteredSalesAutor" :headers="headers" :loading="isLoading">
                     </reportsTable>
                   </div>
+                  <div v-if="item.tab == 'Ventas por Evento'" >
+                    <v-select
+                      v-model="selectedEvent"
+                      :items="dataEvents"
+                      item-text="name"
+                      item-value="name"
+                      clearable
+                      label="Selecciona un Evento"
+                      @input="changeFilter('event')"
+                    ></v-select>
+                    <div v-if="item.tab == 'Ventas por Evento'">
+                      <reportsTable :items="filteredSalesEvent" :headers="headersSalesEvent" :loading="isLoading">
+                      </reportsTable>
+                    </div>
+                  </div>
+                  <div v-if="item.tab == 'Ventas por Fecha'" >
+                    <v-menu
+                      ref="menu"
+                      v-model="menu"
+                      :close-on-content-click="false"
+                      :return-value.sync="selectedDate"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="auto"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                          v-model="selectedDate"
+                          label="Selecciona una fecha"
+                          prepend-icon="mdi-calendar"
+                          readonly
+                          v-bind="attrs"
+                          v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker
+                        v-model="selectedDate"
+                        locale="es"
+                        no-title
+                        scrollable
+                      >
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          text
+                          color="primary"
+                          @click="menu = false"
+                        >
+                          Cancel
+                        </v-btn>
+                        <v-btn
+                          text
+                          color="primary"
+                          @click="save(selectedDate)"
+                        >
+                          OK
+                        </v-btn>
+                      </v-date-picker>
+                    </v-menu>
+                    <div v-if="item.tab == 'Ventas por Fecha'">
+                      <reportsTable :items="filteredSalesDate" :headers="headersSalesEvent" :loading="isLoading">
+                      </reportsTable>
+                    </div>
+                  </div>
                 </div>
               </v-card-text>
             </v-card>
@@ -83,8 +146,12 @@ export default {
       hasPermission,
       products: [],
       dataWriters: [],
+      dataEvents: [],
       writers: [],
       selectedWriter: null,
+      selectedEvent: null,
+      selectedDate: new Date().toISOString().substr(0, 10),
+      menu: false,
       tab: null,
       filter: '',
       isLoading: false,
@@ -100,12 +167,22 @@ export default {
         {
           tab: 'Ventas por Autor',
           filter: 'writer'
+        },
+        {
+          tab: 'Ventas por Evento',
+          filter: 'event'
+        },
+        {
+          tab: 'Ventas por Fecha',
+          filter: 'date'
         }
       ],
       salesBooks: [],
       filteredSalesAutor: [],
       filteredSalesBooks: [],
       filteredSalesMerch: [],
+      filteredSalesEvent: [],
+      filteredSalesDate: [],
       headers: [
         { text: "Título", value: "title" },
         { text: "Autor", 
@@ -118,6 +195,12 @@ export default {
         { text: "Cantidad", value: "quantity" },
         { text: "Total", value: "total" },
         { text: "Categoria", value: "category" }
+      ],
+      headersSalesEvent: [
+        { text: "Evento", value: "event" },
+        { text: "Cantidad", value: "quantity" },
+        { text: "Total", value: "total" },
+        { text: "Fecha", value: "date" }
       ],
       sales: [],
       token: this.$cookies.get("token"),
@@ -132,12 +215,17 @@ export default {
     this.isLoading = true;
     await this.getSales();
     await this.getProducts();
+    await this.getEvents();
     await this.getSalesProducts();
     await this.composeAllWriters();
     this.updateLoading(false);
     this.isLoading = false;
   },
   methods: {
+    save (selectedDate) {
+      this.$refs.menu[0].save(selectedDate)
+      this.changeFilter("date")
+    },
     changeFilter(newFilter) {
       this.aux1 = this.selectedWriter;
 
@@ -145,6 +233,23 @@ export default {
         this.filteredSalesAutor=this.salesBooks.filter(val => {return val.writerObject._id === this.selectedWriter});
         this.aux2 = this.salesBooks[0].writerObject;
         this.aux3 = this.selectedWriter;
+      } 
+      else if (newFilter === "event") {
+        if (!this.selectedEvent) {
+          this.filteredSalesEvent = this.sales
+        }
+        else {
+          this.filteredSalesEvent = this.sales.filter(val => {return val.event === this.selectedEvent});
+        }
+      }
+      else if (newFilter === "date") {
+        if (!this.selectedDate) {
+          this.filteredSalesDate = this.sales
+        }
+        else {
+          this.filteredSalesDate = this.sales.filter(val => {return val.date === this.selectedDate});
+          console.log('hola')
+        }
       }
       this.filter = newFilter;
     },
@@ -152,7 +257,17 @@ export default {
     async getSales() {
       try {
         this.sales = await getRequest("sale/search", {}, this.role);
-        console.log(this.sales)
+        this.sales.forEach((sale) => {
+          if (sale.event != null) {
+            sale.event = sale.event.name  
+          } else {
+            sale.event = "N/A"
+          }
+          sale.quantity = 0
+          sale.items.forEach((product) => {
+            sale.quantity += product.numberOfItems
+          })
+        })
       } catch (error) {
         console.error(error);
         const message = getErrorMessage(error, Messages.SomethingWentWrong());
@@ -163,6 +278,16 @@ export default {
     async getProducts() {
       try {
         this.products = await getRequest("products", {}, this.token);
+      } catch (error) {
+        console.error(error);
+        const message = getErrorMessage(error, Messages.SomethingWentWrong());
+        snackbar(message);
+      }
+    },
+    //Funcion que regresa todos los eventos
+    async getEvents() {
+      try {
+        this.dataEvents = await getRequest("event/search", false);
       } catch (error) {
         console.error(error);
         const message = getErrorMessage(error, Messages.SomethingWentWrong());
