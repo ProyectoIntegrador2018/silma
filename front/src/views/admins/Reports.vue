@@ -27,7 +27,7 @@
             <v-card flat>
               <v-card-text>
                 <div class="table-wrapper">
-                  <div v-if="item.tab != 'Autor'">
+                  <div v-if="item.tab != 'Autor' && item.tab != 'Reporte Por Edades'">
                     <reportsTable :items="dataTexts" :headers="headers" :loading="isLoading">
                     </reportsTable>
                   </div>
@@ -43,6 +43,20 @@
                   </div>
                   <div v-if="item.tab == 'Autor'">
                     <reportsTable  :items="filteredDataTexts" :headers="headers" :loading="isLoading">
+                    </reportsTable>
+                  </div>
+                   <div v-if="item.tab == 'Reporte Por Edades'">
+                    <v-select
+                      v-model="selectedAutorOrReader"
+                      :items="dataAuthorOrReader"
+                      item-text="text"
+                      item-value="value"
+                      label="Selecciona Reporte de Edad por Autor o Lector"
+                      @input="changeFilter(selectedAutorOrReader)"
+                    ></v-select>
+                  </div>
+                  <div v-if="item.tab == 'Reporte Por Edades' && selectedAutorOrReader != null">
+                    <reportsTable  :items="ageDataText" :headers="headersForAge" :loading="isLoading">
                     </reportsTable>
                   </div>
                 </div>
@@ -89,7 +103,9 @@ export default {
       rejectedFilter: false,
       isLoading: false,
       selectedWriter: null,
+      selectedAutorOrReader: null,
       filteredDataTexts: null,
+      ageDataText: null,
       token: this.$cookies.get("token"),
       items: [
         {
@@ -103,6 +119,10 @@ export default {
          {
           tab: 'Autor',
           filter: 'writer'
+         },
+         {
+          tab: 'Reporte Por Edades',
+          filter: ''
          }
       ],
       genres: [],
@@ -140,7 +160,18 @@ export default {
         { text: "Nacionalidad", value: "nationality" },
         { text: "Suscripción", value: "isPlus" },
 
+      ],
+      headersForAge:[
+       {text: "Nombre", value: "name"},
+       {text: "Email", value: "email"},
+       {text: "Edad", value: "birthdate"},
+       {text: "Nacionalidad", value: "nationality"}, 
+      ],
+      dataAuthorOrReader:[
+       {text: "Autor", value: "author"},
+       {text: "Lector", value: "reader"}, 
       ]
+      
     };
   },
   async mounted() {
@@ -154,10 +185,21 @@ export default {
   },
   methods: {
     changeFilter(newFilter) {
+      console.log(newFilter)
       if(newFilter=== "writer"){
         this.filteredDataTexts=this.dataTexts.filter(val => {return val.writer === this.selectedWriter});
       }
+      else if (newFilter=== "author"){
+        this.calculateBirthDate();
+        this.ageDataText=this.dataWriters;
+        console.log(this.dataWriters)
+      }
       this.filter = newFilter;
+    },
+    calculateBirthDate() {
+      this.dataWriters.forEach((writer) => {
+        writer.birthdate= Math.floor((new Date() - new Date(writer.birthdate)) / 1000 /60 /60 /24 /365.25);
+      })
     },
     //Funcion que al inicio obtiene todos los textos en proceso
     async getTexts() {
