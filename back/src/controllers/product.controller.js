@@ -88,42 +88,42 @@ export const editProduct = (request, response) => {
       }
     });
   };
-  // Uploads to aws the text document of a particular text.
-  export const uploadImage = (request, response) => {
-    send(response, async () => {
-      const { id, inventoryId } = request.query
-      try {
-        const busboy = new Busboy({ headers: request.headers });
-        var s3 = new AWS.S3({
-          params: { Bucket: config.AWS_BUCKET + "/Images", Key: "", Body: "" }
-        });
-        var fileN;
-        busboy.on("file", function (fieldname, file, filename, encoding, mimetype) {
-          // Setting up S3 upload parameters
-          fileN = filename;
-          const params = {
-            Bucket: config.AWS_BUCKET,
-            Key: id+'/'+filename, // File name you want to save as in S3
-            Body: file,
-            ACL:'public-read'
-          };
-          s3.upload(params, function(err, data) {
-            if (err) {
-                throw err;
-            }
-            console.log(`File uploaded successfully. ${data.Location}`);
-          });
-        });
-        busboy.on("finish", function () {
-            const product = await ProductModel.findById(id)
-            product.image = 'https://'+config.AWS_BUCKET+'.s3.amazonaws.com/Images/'+id+'/'+fileN;
-            product.save()
-            return product
-        });
-        req.pipe(busboy);
-      }catch (error) {
-        console.error(error);
-        return res.status(500);
-      }
-    });
-  };
+  // // Uploads to aws the text document of a particular text.
+  // export const uploadImage = (request, response) => {
+  //   send(response, async () => {
+  //     const { id, inventoryId } = request.query
+  //     try {
+  //       const busboy = new Busboy({ headers: request.headers });
+  //       var s3 = new AWS.S3({
+  //         params: { Bucket: config.AWS_BUCKET + "/Images", Key: "", Body: "" }
+  //       });
+  //       var fileN;
+  //       busboy.on("file", function (fieldname, file, filename, encoding, mimetype) {
+  //         // Setting up S3 upload parameters
+  //         fileN = filename;
+  //         const params = {
+  //           Bucket: config.AWS_BUCKET,
+  //           Key: id+'/'+filename, // File name you want to save as in S3
+  //           Body: file,
+  //           ACL:'public-read'
+  //         };
+  //         s3.upload(params, function(err, data) {
+  //           if (err) {
+  //               throw err;
+  //           }
+  //           console.log(`File uploaded successfully. ${data.Location}`);
+  //         });
+  //       });
+  //       busboy.on("finish", function () {
+  //           const product = await ProductModel.findById(id)
+  //           product.image = 'https://'+config.AWS_BUCKET+'.s3.amazonaws.com/Images/'+id+'/'+fileN;
+  //           product.save()
+  //           return product
+  //       });
+  //       req.pipe(busboy);
+  //     }catch (error) {
+  //       console.error(error);
+  //       return res.status(500);
+  //     }
+  //   });
+  // };
