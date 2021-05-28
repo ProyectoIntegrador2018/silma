@@ -256,16 +256,7 @@ export async function createEverything() {
     rolesExists[0]._id
   );
   console.log("Admin 2 created successfully");
-  const genres = await GenreModel.aggregate([
-    {
-       $lookup: {
-         from: "subgenres",
-         localField: "_id",
-         foreignField: "genre",
-         as: 'subgenres'
-       }
-    }
-  ]);
+  const genres = await fillGenres();
   let subgenres = genres.map(genre => genre.subgenres[0]._id);
   console.log("Genres created successfully");
   const genreIds = subgenres.splice(0, 3).map((x) => x._id);
