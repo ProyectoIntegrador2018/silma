@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.uploadDocument = exports.getDocument = void 0;
+exports.getImage = exports.uploadDocument = exports.getDocument = void 0;
 
 var _config = _interopRequireDefault(require("../config/config"));
 
@@ -66,6 +66,37 @@ var uploadDocument = /*#__PURE__*/function () {
   return function uploadDocument(_x2, _x3) {
     return _ref2.apply(this, arguments);
   };
-}();
+}(); //Funcion que obtiene una imagen de AWS S3
+
 
 exports.uploadDocument = uploadDocument;
+
+var getImage = /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator(function* (id) {
+    var params = {
+      Bucket: _config.default.AWS_BUCKET + "/Images",
+      Key: id + ".png"
+    };
+    var s3 = new AWS.S3({
+      credentials: {
+        secretAccessKey: _config.default.AWS_SECRET_ACCESS_KEY,
+        accessKeyId: _config.default.AWS_ACCESS_KEY_ID
+      }
+    });
+    return new Promise((resolve, reject) => {
+      s3.getObject(params, function (err, data) {
+        if (err) {
+          reject(err);
+        }
+
+        resolve(data);
+      });
+    });
+  });
+
+  return function getImage(_x4) {
+    return _ref3.apply(this, arguments);
+  };
+}();
+
+exports.getImage = getImage;

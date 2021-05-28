@@ -27,6 +27,10 @@ var RoleSchema = new _mongoose.Schema({
     type: Boolean,
     default: false
   },
+  inventoriesRead: {
+    type: Boolean,
+    default: true
+  },
   readingRead: {
     type: Boolean,
     default: false
@@ -107,19 +111,19 @@ var RoleSchema = new _mongoose.Schema({
     type: Boolean,
     default: false
   },
-  reportRead: {
+  reportsRead: {
     type: Boolean,
     default: false
   },
-  reportCreate: {
+  reportsCreate: {
     type: Boolean,
     default: false
   },
-  reportEdit: {
+  reportsEdit: {
     type: Boolean,
     default: false
   },
-  reportDelete: {
+  reportsDelete: {
     type: Boolean,
     default: false
   },
@@ -172,6 +176,22 @@ var RoleSchema = new _mongoose.Schema({
     default: false
   },
   pointOfSaleDelete: {
+    type: Boolean,
+    default: false
+  },
+  saleRead: {
+    type: Boolean,
+    default: false
+  },
+  saleCreate: {
+    type: Boolean,
+    default: false
+  },
+  saleEdit: {
+    type: Boolean,
+    default: false
+  },
+  saleDelete: {
     type: Boolean,
     default: false
   }

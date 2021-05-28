@@ -464,7 +464,23 @@ var getAllSuggestionsFromReaderDashboard = (request, response) => {
     });
     var suggestions = yield _suggestion.SuggestionModel.find({
       reader: reader
-    });
+    }).populate({
+      path: 'text',
+      populate: {
+        path: 'writer'
+      } //WIP
+      //select :  '_id genres writer  ageRange title description numberOfPages numberOfChapters -phase -isRejected'
+
+    }).populate({
+      path: 'text',
+      populate: {
+        path: 'genres'
+      }
+    }); //WIP
+    //select :  '_id genres writer  ageRange title description numberOfPages numberOfChapters -phase -isRejected'
+    //WIP
+    //, { genres: 1, writer: 1, phase: 0 ,isRejected: 0 , ageRange: 1, title: 1,description: 1,numberOfPages: 1, numberOfChapters: 1}
+
     return suggestions;
   }));
 }; //Obtiene todas las sugerencias de un texto

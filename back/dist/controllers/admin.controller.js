@@ -98,10 +98,24 @@ var getFeedback = (request, response) => {
     var feedback = yield _feedback.FeedbackModel.findById(id);
     return feedback;
   }));
-}; //Funcion que avanza la fase del texto del cual recibe su ID
-
+};
 
 exports.getFeedback = getFeedback;
+
+var phaseDateUtil = (datesPerPhase, newPhase, oldPhase) => {
+  if (oldPhase < newPhase) {
+    for (var i = oldPhase + 1; i <= newPhase; i++) {
+      datesPerPhase[i] = new Date();
+    }
+  } else {
+    for (var _i = oldPhase; _i > newPhase; _i--) {
+      datesPerPhase[_i] = null;
+    }
+  }
+
+  return datesPerPhase;
+}; //Funcion que avanza la fase del texto del cual recibe su ID
+
 
 var movePhase = (request, response) => {
   (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
@@ -114,7 +128,8 @@ var movePhase = (request, response) => {
       _id: id
     }, {
       $set: {
-        phase: newPhase
+        phase: newPhase,
+        datesPerPhase: phaseDateUtil(text.datesPerPhase, newPhase, text.phase)
       }
     }, function (err, res) {
       if (err) throw err;

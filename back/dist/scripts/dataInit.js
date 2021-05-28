@@ -19,9 +19,19 @@ var _suggestion = require("../models/suggestion.model");
 
 var _genre = require("../models/genre.model");
 
+var _subgenre = require("../models/subgenre.model");
+
 var GenreLogic = _interopRequireWildcard(require("../logics/genre.logic"));
 
 var _role = _interopRequireDefault(require("../models/role.model"));
+
+var _product = require("../models/product.model");
+
+var _inventory = require("../models/inventory.model");
+
+var _sale = require("../models/sale.model");
+
+var _event = require("../models/event.model");
 
 var _bcrypt = _interopRequireDefault(require("bcrypt"));
 
@@ -245,6 +255,54 @@ function _createText() {
   return _createText.apply(this, arguments);
 }
 
+function createProduct(_x9) {
+  return _createProduct.apply(this, arguments);
+}
+
+function _createProduct() {
+  _createProduct = _asyncToGenerator(function* (product) {
+    var productModel = yield _product.ProductModel.create(product);
+    return productModel;
+  });
+  return _createProduct.apply(this, arguments);
+}
+
+function createInventory(_x10) {
+  return _createInventory.apply(this, arguments);
+}
+
+function _createInventory() {
+  _createInventory = _asyncToGenerator(function* (inventory) {
+    var inventoryModel = yield _inventory.InventoryModel.create(inventory);
+    return inventoryModel;
+  });
+  return _createInventory.apply(this, arguments);
+}
+
+function createEvent(_x11) {
+  return _createEvent.apply(this, arguments);
+}
+
+function _createEvent() {
+  _createEvent = _asyncToGenerator(function* (event) {
+    var eventModel = yield _event.EventModel.create(event);
+    return eventModel;
+  });
+  return _createEvent.apply(this, arguments);
+}
+
+function createSale(_x12) {
+  return _createSale.apply(this, arguments);
+}
+
+function _createSale() {
+  _createSale = _asyncToGenerator(function* (sale) {
+    var saleModel = yield _sale.SaleModel.create(sale);
+    return saleModel;
+  });
+  return _createSale.apply(this, arguments);
+}
+
 function deleteEverything() {
   return _deleteEverything.apply(this, arguments);
 }
@@ -267,12 +325,22 @@ function _deleteEverything() {
 
     var promiseEight = _role.default.deleteMany({});
 
-    yield Promise.all([promiseOne, promiseTwo, promiseThree, promiseFour, promiseFive, promiseSix, promiseSeven, promiseEight]);
+    var promiseNine = _subgenre.SubgenreModel.deleteMany({});
+
+    var promiseTen = _product.ProductModel.deleteMany({});
+
+    var promiseEleven = _inventory.InventoryModel.deleteMany({});
+
+    var promiseTwelve = _sale.SaleModel.deleteMany({});
+
+    var promiseThirteen = _event.EventModel.deleteMany({});
+
+    yield Promise.all([promiseOne, promiseTwo, promiseThree, promiseFour, promiseFive, promiseSix, promiseSeven, promiseEight, promiseNine, promiseTen, promiseEleven, promiseTwelve, promiseThirteen]);
   });
   return _deleteEverything.apply(this, arguments);
 }
 
-function createSuggestion(_x9, _x10) {
+function createSuggestion(_x13, _x14) {
   return _createSuggestion.apply(this, arguments);
 }
 
@@ -291,14 +359,33 @@ function _createSuggestion() {
   return _createSuggestion.apply(this, arguments);
 }
 
+function createSuggestionCompleted(_x15, _x16) {
+  return _createSuggestionCompleted.apply(this, arguments);
+}
+
+function _createSuggestionCompleted() {
+  _createSuggestionCompleted = _asyncToGenerator(function* (reader, text) {
+    var suggestion = {
+      reader,
+      text,
+      sentDate: new Date(),
+      suggestionStatus: "Completed",
+      score: 10,
+      readingChapters: 5
+    };
+    return yield _suggestion.SuggestionModel.create(suggestion);
+  });
+  return _createSuggestionCompleted.apply(this, arguments);
+}
+
 function createEverything() {
   return _createEverything.apply(this, arguments);
 }
 
 function _createEverything() {
   _createEverything = _asyncToGenerator(function* () {
-    var rolesExists = yield _role.default.find();
-    if (rolesExists.length > 0) return;
+    var rolesExists = yield _role.default.find(); ///if (rolesExists.length > 0) return;
+
     yield deleteEverything();
     var superAdminRole = yield createRole({
       code: "superAdmin",
@@ -324,10 +411,10 @@ function _createEverything() {
       eventCreate: true,
       eventEdit: true,
       eventDelete: true,
-      reportRead: true,
-      reportCreate: true,
-      reportEdit: true,
-      reportDelete: true,
+      reportsRead: true,
+      reportsCreate: true,
+      reportsEdit: true,
+      reportsDelete: true,
       roleRead: true,
       roleCreate: true,
       roleEdit: true,
@@ -345,7 +432,11 @@ function _createEverything() {
       eventRead: true,
       eventCreate: true,
       eventDelete: true,
-      eventEdit: true
+      eventEdit: true,
+      saleRead: true,
+      saleCreate: true,
+      saleEdit: true,
+      saleDelete: true
     });
     console.log("Role 1 created successfully");
     var admin1 = yield createAdmin({
@@ -354,7 +445,7 @@ function _createEverything() {
       email: "admin1@gmail.com",
       birthdate: "12/12/2000",
       phone: "8116690319",
-      nationality: "Mexico"
+      nationality: "México"
     }, superAdminRole._id);
     console.log("Admin 1 created successfully");
     var admin2 = yield createAdmin({
@@ -363,7 +454,7 @@ function _createEverything() {
       email: "admin2@gmail.com",
       birthdate: "12/12/1996",
       phone: "8116690318",
-      nationality: "Mexico"
+      nationality: "México"
     }, superAdminRole._id);
     console.log("Admin 2 created successfully");
     var genres = yield fillGenres();
@@ -376,7 +467,7 @@ function _createEverything() {
       email: "reader1@gmail.com",
       birthdate: "12/12/2000",
       phone: "8116690319",
-      nationality: "Mexico",
+      nationality: "México",
       readingProficiency: "4 to 6",
       facebookLink: "https://www.facebook.com/reader1",
       readFrom: "12-01-2019",
@@ -390,7 +481,7 @@ function _createEverything() {
       email: "reader2@gmail.com",
       birthdate: "12/12/1996",
       phone: "8116690319",
-      nationality: "Mexico",
+      nationality: "México",
       readingProficiency: "4 to 6",
       facebookLink: "https://www.facebook.com/reader2",
       readFrom: "12-01-2019",
@@ -404,7 +495,7 @@ function _createEverything() {
       email: "writer1@gmail.com",
       birthdate: "12/12/2000",
       phone: "8116690319",
-      nationality: "Mexico",
+      nationality: "México",
       pseudonym: "writer1"
     });
     console.log("Writer 1 created successfully");
@@ -414,7 +505,7 @@ function _createEverything() {
       email: "writer2@gmail.com",
       birthdate: "12/12/1996",
       phone: "8116690319",
-      nationality: "Mexico",
+      nationality: "México",
       pseudonym: "writer2"
     });
     console.log("Writer 2 created successfully");
@@ -426,7 +517,17 @@ function _createEverything() {
       registerNumber: "123asd",
       description: "asd zxc qwe asd zxc asd zxc qwe asd zxc",
       numberOfPages: 120,
-      numberOfChapters: 50
+      numberOfChapters: 50,
+      datesPerPhase: {
+        2: new Date("2021-05-19T16:00:00Z"),
+        3: new Date("2021-05-20T20:00:00Z"),
+        4: new Date("2021-05-21T12:00:00Z"),
+        5: new Date("2021-05-22T15:00:00Z"),
+        6: new Date("2021-05-24T10:00:00Z"),
+        7: new Date("2021-05-25T07:00:00Z"),
+        8: new Date("2021-05-26T09:00:00Z"),
+        9: new Date("2021-05-27T14:00:00Z")
+      }
     });
     console.log("Text 1 created successfully");
     var text2 = yield createText({
@@ -434,13 +535,178 @@ function _createEverything() {
       genres: genreIds,
       ageRange: "10-12",
       title: "Text B",
-      registerNumber: "123asd",
+      registerNumber: "12345asd",
       description: "asd zxc qwe asd zxc asd zxc qwe asd zxc",
       numberOfPages: 120,
-      numberOfChapters: 30
+      numberOfChapters: 30,
+      datesPerPhase: {
+        2: new Date("2021-05-19T16:00:00Z"),
+        3: new Date("2021-05-19T23:00:00Z"),
+        4: new Date("2021-05-20T12:00:00Z"),
+        5: new Date("2021-05-25T11:00:00Z"),
+        6: new Date("2021-05-27T07:00:00Z"),
+        7: new Date("2021-05-27T20:00:00Z"),
+        8: new Date("2021-05-28T11:00:00Z"),
+        9: new Date("2021-05-29T13:00:00Z")
+      }
     });
     console.log("Text 2 created successfully");
-    yield Promise.all([createSuggestion(reader1._id, text1._id), createSuggestion(reader1._id, text2._id)]);
+    var text3 = yield createText({
+      writer: writer1._id,
+      genres: genreIds,
+      ageRange: "10-12",
+      title: "Text C",
+      registerNumber: "1234asd",
+      description: "asd zxc qwe asd zxc asd zxc qwe asd zxc",
+      numberOfPages: 120,
+      numberOfChapters: 30,
+      isRejected: true
+    });
+    console.log("Text 3 created successfully");
+    var text4 = yield createText({
+      writer: writer2._id,
+      genres: genreIds,
+      ageRange: "10-12",
+      title: "Text D",
+      registerNumber: "1234asd",
+      description: "asd zxc qwe asd zxc asd zxc qwe asd zxc",
+      numberOfPages: 120,
+      numberOfChapters: 30,
+      datesPerPhase: {
+        2: new Date("2021-05-20T12:00:00Z"),
+        3: new Date("2021-05-20T18:00:00Z"),
+        4: new Date("2021-05-21T18:00:00Z"),
+        5: new Date("2021-05-22T23:00:00Z"),
+        6: new Date("2021-05-25T10:00:00Z"),
+        7: new Date("2021-05-26T01:00:00Z"),
+        8: new Date("2021-05-26T12:00:00Z"),
+        9: new Date("2021-05-27T11:00:00Z")
+      }
+    });
+    console.log("Text 4 created successfully");
+    var text5 = yield createText({
+      writer: writer2._id,
+      genres: genreIds,
+      ageRange: "10-12",
+      title: "Text E",
+      registerNumber: "1234asd",
+      description: "asd zxc qwe asd zxc asd zxc qwe asd zxc",
+      numberOfPages: 160,
+      numberOfChapters: 40,
+      isRejected: true
+    });
+    console.log("Text 5 created successfully");
+    var inventory1 = yield createInventory({
+      writer: writer1._id,
+      items: []
+    });
+    console.log("Inventory 1 created successfully");
+    var product1 = yield createProduct({
+      name: "Sticker 1",
+      description: "Sticker 1 for Book",
+      price: 123,
+      stock: 10,
+      link: "https://semantic-ui.com/images/wireframe/image.png",
+      category: "Merchandise",
+      inventory: inventory1._id
+    });
+    console.log("Product 1 created successfully");
+    var product2 = yield createProduct({
+      name: "Book 1",
+      description: "Book 1",
+      price: 123,
+      stock: 10,
+      link: "https://semantic-ui.com/images/wireframe/image.png",
+      category: "Book",
+      inventory: inventory1._id
+    });
+    console.log("Product 2 created successfully");
+    inventory1.items.push(product1);
+    inventory1.items.push(product2);
+    inventory1.save();
+    console.log("Inventory 1 updated successfully");
+    var inventory2 = yield createInventory({
+      writer: writer2._id,
+      items: []
+    });
+    console.log("Inventory 2 created successfully");
+    var product3 = yield createProduct({
+      name: "Sticker 2",
+      description: "Sticker 2 for Book",
+      price: 123,
+      stock: 10,
+      link: "https://semantic-ui.com/images/wireframe/image.png",
+      category: "Merchandise",
+      inventory: inventory2._id
+    });
+    console.log("Product 3 created successfully");
+    var product4 = yield createProduct({
+      name: "Book 2",
+      description: "Book 2",
+      price: 123,
+      stock: 10,
+      link: "https://semantic-ui.com/images/wireframe/image.png",
+      category: "Book",
+      inventory: inventory2._id
+    });
+    console.log("Product 4 created successfully");
+    inventory2.items.push(product3);
+    inventory2.items.push(product4);
+    inventory2.save();
+    console.log("Inventory 2 updated successfully");
+    var event1 = yield createEvent({
+      name: "asd",
+      description: "asd",
+      place: "asd",
+      date: "2021-04-28",
+      time: "15:00"
+    });
+    console.log("Event 1 created successfully");
+    var sale1 = yield createSale({
+      createdBy: admin1._id,
+      event: event1,
+      items: [{
+        productId: product1,
+        name: "Sticker 1",
+        price: 123,
+        numberOfItems: 1,
+        subtotal: 123
+      }, {
+        productId: product2,
+        name: "Book 1",
+        price: 123,
+        numberOfItems: 1,
+        subtotal: 123
+      }, {
+        productId: product3,
+        name: "Sticker 2",
+        price: 123,
+        numberOfItems: 1,
+        subtotal: 123
+      }],
+      total: 369
+    });
+    console.log("Sale 1 created successfully");
+    var sale2 = yield createSale({
+      createdBy: admin1._id,
+      event: event1,
+      items: [{
+        productId: product2,
+        name: "Book 1",
+        price: 123,
+        numberOfItems: 3,
+        subtotal: 123
+      }, {
+        productId: product3,
+        name: "Sticker 2",
+        price: 123,
+        numberOfItems: 5,
+        subtotal: 123
+      }],
+      total: 984
+    });
+    console.log("Sale 2 created successfully");
+    yield Promise.all([createSuggestion(reader1._id, text1._id), createSuggestion(reader1._id, text2._id), createSuggestion(reader1._id, text3._id), createSuggestion(reader1._id, text4._id), createSuggestionCompleted(reader1._id, text5._id)]);
     console.log("Suggestions created successfully");
   });
   return _createEverything.apply(this, arguments);

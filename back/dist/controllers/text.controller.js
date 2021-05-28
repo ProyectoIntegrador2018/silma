@@ -26,7 +26,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 // Response with all texts with their genres.
 var getAllTexts = (request, response) => {
   (0, _errors.send)(response, /*#__PURE__*/_asyncToGenerator(function* () {
-    var readers = yield _text.TextModel.find().populate("genres");
+    var readers = yield _text.TextModel.find().populate("genres").populate("writer");
     return readers;
   }));
 }; // Response with a particular text based on its id.
@@ -134,7 +134,7 @@ var getTextsOfWriter = (request, response) => {
     var writerID = writerText._id;
     var texts = yield _text.TextModel.find({
       writer: writerID
-    });
+    }).populate("genres").populate("writer");
     return texts;
   }));
 }; // Rejects a particular text and sends an email to the writer with a pdf file.

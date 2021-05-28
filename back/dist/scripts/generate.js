@@ -89,6 +89,7 @@ function _createSuperAdminRole() {
       code: "superAdmin",
       name: "Super Administrador",
       isBaseRole: true,
+      inventoriesRead: true,
       readingRead: true,
       readingCreate: true,
       readingEdit: true,
@@ -116,7 +117,11 @@ function _createSuperAdminRole() {
       roleRead: true,
       roleCreate: true,
       roleEdit: true,
-      roleDelete: true
+      roleDelete: true,
+      saleRead: true,
+      saleCreate: true,
+      saleEdit: true,
+      saleDelete: true
     };
     yield _axios.default.post("http://localhost:3000/api/role", form, {
       headers: {

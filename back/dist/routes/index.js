@@ -9,6 +9,10 @@ var _express = require("express");
 
 var _writer = require("./writer.route");
 
+var _inventory = require("./inventory.route");
+
+var _product = require("./product.route");
+
 var _admin = require("./admin.route");
 
 var _reader = require("./reader.route");
@@ -24,6 +28,10 @@ var _genre = require("./genre.route");
 var _pointOfsale = require("./pointOfsale.route");
 
 var _event = require("./event.route");
+
+var _sale = require("./sale.route");
+
+var _benchamarks = require("./benchamarks.route");
 
 var _user = require("../controllers/user.controller");
 
@@ -46,6 +54,10 @@ var createRoutes = () => {
   (0, _genre.addGenreRoutes)(router);
   (0, _pointOfsale.addPointOfSaleRoutes)(router);
   (0, _event.addEventRoutes)(router);
+  (0, _sale.addSaleRoutes)(router);
+  (0, _inventory.addInventoryRoutes)(router);
+  (0, _product.addProductRoutes)(router);
+  (0, _benchamarks.addBenchmarkRoutes)(router);
   return router;
 };
 
