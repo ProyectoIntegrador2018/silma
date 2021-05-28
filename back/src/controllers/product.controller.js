@@ -3,6 +3,7 @@ import { send } from "@/utils/errors";
 import { InventoryModel } from "@/models/inventory.model";
 import config from "../config/config";
 const AWS = require("aws-sdk");
+import { getImage } from "@/controllers/aws.controller";
 
 //Obtiene todos los productos
 export const getProducts = (request, response) => {
@@ -88,42 +89,51 @@ export const editProduct = (request, response) => {
       }
     });
   };
-  // // Uploads to aws the text document of a particular text.
-  // export const uploadImage = (request, response) => {
-  //   send(response, async () => {
-  //     const { id, inventoryId } = request.query
-  //     try {
-  //       const busboy = new Busboy({ headers: request.headers });
-  //       var s3 = new AWS.S3({
-  //         params: { Bucket: config.AWS_BUCKET + "/Images", Key: "", Body: "" }
-  //       });
-  //       var fileN;
-  //       busboy.on("file", function (fieldname, file, filename, encoding, mimetype) {
-  //         // Setting up S3 upload parameters
-  //         fileN = filename;
-  //         const params = {
-  //           Bucket: config.AWS_BUCKET,
-  //           Key: id+'/'+filename, // File name you want to save as in S3
-  //           Body: file,
-  //           ACL:'public-read'
-  //         };
-  //         s3.upload(params, function(err, data) {
-  //           if (err) {
-  //               throw err;
-  //           }
-  //           console.log(`File uploaded successfully. ${data.Location}`);
-  //         });
-  //       });
-  //       busboy.on("finish", function () {
-  //           const product = await ProductModel.findById(id)
-  //           product.image = 'https://'+config.AWS_BUCKET+'.s3.amazonaws.com/Images/'+id+'/'+fileN;
-  //           product.save()
-  //           return product
-  //       });
-  //       req.pipe(busboy);
-  //     }catch (error) {
-  //       console.error(error);
-  //       return res.status(500);
-  //     }
-  //   });
-  // };
+
+  // Response with the text document of a particular text.
+  export const retrieveImage = (request, response) => {
+    send(response, async () => {
+      try {
+        const { id } = request.params;
+        console.log(id)
+        var image = await getImage(id);
+        let data = Buffer.from(image.Body).toString('base64');
+        return { file : data};
+      } catch (err) {
+        response.status(404).send({ message: "File does not exist" });
+      }
+    });
+  };
+  // Uploads to aws the text document of a particular text.
+  export const uploadImage = (request, response) => {
+    send(response, async () => {
+      const { id } = request.params
+      try {
+        var s3 = new AWS.S3({credentials:{secretAccessKey: config.AWS_SECRET_ACCESS_KEY, accessKeyId: config.AWS_ACCESS_KEY_ID},
+          params: { Bucket: config.AWS_BUCKET + "/Images", Key: "", Body: "" }
+        });
+        console.log(s3)
+        var fileN;
+        const image = request.files.image;
+        console.log(image)
+        // Setting up S3 upload parameters
+        fileN = id+'.png';
+        const params = {
+          Key: fileN, // File name you want to save as in S3
+          Body: image.data,
+        };
+        s3.upload(params, async function(err, data) {
+          if (err) {
+              throw err;
+          }
+          console.log(`File uploaded successfully. ${data.Location}`);
+          const product = await ProductModel.findById(id)
+          product.image = fileN;
+          product.save()
+        });
+      }catch (error) {
+        console.error(error);
+        return res.status(500);
+      }
+    });
+  };

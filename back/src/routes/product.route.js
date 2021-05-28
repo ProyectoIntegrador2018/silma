@@ -4,6 +4,8 @@ import {
     createProduct,
     editProduct,
     deleteProduct,
+    uploadImage,
+    retrieveImage,
   } from "@/controllers/product.controller";
   import { verifyToken } from "@/utils/jwt";
   
@@ -11,6 +13,8 @@ import {
     router.get("/products", verifyToken(["admin"]), getProducts);
     router.get("/product/:id", verifyToken(), getProduct);
     router.post("/product", verifyToken(["writer", "admin"]), createProduct);
+    router.post("/productImage/:id", verifyToken(["writer", "admin"]), uploadImage);
+    router.get("/productImage/:id", verifyToken(["writer", "admin"]), retrieveImage);
     router.patch(
         "/product/edit",
         verifyToken(["writer", "admin"]),

@@ -63,6 +63,16 @@
                     </v-layout>
                     <v-layout row wrap>
                       <v-col cols="12" sm="6">
+                        <v-file-input
+                          accept="image/png, image/jpeg, image/bmp"
+                          label="Subir Imagen"
+                          prepend-icon="mdi-camera"
+                          v-model="image"
+                        ></v-file-input>
+                      </v-col>
+                    </v-layout>
+                    <v-layout row wrap>
+                      <v-col cols="12" sm="6">
                         <v-text-field
                         outlined
                         :rules="[requiredRule, linkRule]"
@@ -139,7 +149,7 @@
 
               <v-img
               height="250"
-              src="https://semantic-ui.com/images/wireframe/image.png"
+              :src="item.image !== undefined ? item.image : 'https://semantic-ui.com/images/wireframe/image.png'"
               
               ></v-img>
 
@@ -178,7 +188,7 @@
                 <v-btn
                   color="deep-purple lighten-2"
                   text
-                  @click="goTo(item.link)"
+                  @click="goTo(item.link ? item.link : item.image)"
                   >
                     Ver producto
                 </v-btn>
@@ -231,6 +241,7 @@ export default {
         stock: null,
         link: ""
       },
+      image: null,
       currentItem: undefined,
       dialogSuccess: false,
       dialogError: false,
@@ -252,21 +263,36 @@ export default {
         const token = this.$cookies.get("token");
         try{
           const inventory = await getRequest(`inventoryByWriter/`+this.writerId, token);
-          console.log(this.writerId)
-          console.log(inventory)
           this.inventoryId = inventory._id
-          this.items = inventory.items
+          Promise.all(inventory.items.map(async (item) =>{
+            if(item.image) var image  = await getRequest(`productImage/${item._id}`,token)
+            console.log(image)
+            return {...item, image: image ? 'data:image/png;base64, '+image.file : undefined}
+          })).then((items) => this.items = items)
         }
         catch(error){
           console.log(error)
         }
       },
 
+
+      async getImage() {
+        return new Promise((resolve, reject) => {
+          var fr = new FileReader();
+          fr.onerror = reject;
+          fr.onload = () => {
+            resolve(fr.result);
+          };
+          fr.readAsDataURL(this.image);
+        });
+      },
+
+
       async addOrEditItem(){
           if (!this.$refs.form.validate()) {
               return;
           }
-          var dataItem = this.itemData
+          var dataItem = {...this.itemData, image: undefined}
           const token = this.$cookies.get("token");
           let inventoryId = this.inventoryId
           const itemId = this.currentItem
@@ -280,7 +306,14 @@ export default {
               }
               if(!this.edit) results = await postRequest("product", dataItem, token, false, {inventoryId});
               else results = await patchRequest("product/edit", dataItem, token, false, {id: itemId});
-              console.log(results)
+              if(this.image){
+                let pid = itemId ? itemId : results._id
+                let formData = new FormData();
+                formData.append('image', this.image);
+                results.image = await this.getImage()
+                await postRequest(`productImage/${pid}`, formData, token, true);
+              }
+             
               if(this.items !== undefined){
                 const itemIndex = this.items.findIndex((el) => el._id === results._id);
                 if(itemIndex !== -1) this.items[itemIndex] = results
@@ -334,7 +367,14 @@ export default {
           this.edit = false
       },
       goTo(link){
-        window.open(link, '_blank')
+        if(linkRule(link))
+          window.open(link, '_blank')
+        else{
+          var image = new Image();
+          image.src = link
+          var w = window.open("");
+          w.document.write(image.outerHTML);
+        }
       }
 
   }

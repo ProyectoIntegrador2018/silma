@@ -27,9 +27,7 @@
             <v-card flat>
               <v-card-text>
                 <div class="table-wrapper">
-                  <div v-if="item.tab != 'Autor' && item.tab != 'Reporte Por Edades'">
-                 
-                  <div v-if="item.tab != 'Autor' && item.tab != 'Fase'">
+                  <div v-if="item.tab != 'Autor' && item.tab != 'Fase'  && item.tab != 'Reporte Por Edades'">
                     <reportsTable :items="dataTexts" :headers="headers" :loading="isLoading">
                     </reportsTable>
                   </div>

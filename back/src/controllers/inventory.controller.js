@@ -15,7 +15,6 @@ export const getInventory = (request, response) => {
   send(response, async () => {
     const { id } = request.params;
     const inventory = await InventoryModel.findById(id).populate("writer").populate("items");
-    console.log(inventory)
     return inventory;
   });
 };
