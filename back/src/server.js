@@ -48,7 +48,7 @@ else console.log("Db connected successfully");
 
 if (config.ENV == "production")
   createEverything().catch((err) => console.error(err));
-else if (config.ENV === "production") runProdDataInit();
+// else if (config.ENV === "production") runProdDataInit();
 
 // API Routes
 const router = createRoutes();
