@@ -178,59 +178,60 @@ async function createSuggestionCompleted(reader, text) {
 
 export async function createEverything() {
   const rolesExists = await RoleModel.find();
-  ///if (rolesExists.length > 0) return;
-  // await deleteEverythiconst superAdminRole = await createRole({
-  //   code: "superAdmin",
-  //   name: "Super Administrador",
-  //   isBaseRole: true,
-  //   readingRead: true,
-  //   readingCreate: true,
-  //   readingEdit: true,
-  //   readingDelete: true,
-  //   bookRead: true,
-  //   bookCreate: true,
-  //   bookEdit: true,
-  //   bookDelete: true,
-  //   phaseRead: true,
-  //   phaseCreate: true,
-  //   phaseEdit: true,
-  //   phaseDelete: true,
-  //   userRead: true,
-  //   userCreate: true,
-  //   userEdit: true,
-  //   userDelete: true,
-  //   eventRead: true,
-  //   eventCreate: true,
-  //   eventEdit: true,
-  //   eventDelete: true,
-  //   reportsRead: true,
-  //   reportsCreate: true,
-  //   reportsEdit: true,
-  //   reportsDelete: true,
-  //   roleRead: true,
-  //   roleCreate: true,
-  //   roleEdit: true,
-  //   roleDelete: true,
-  //   genreRead: true,
-  //   genreCreate: true,
-  //   genreEdit: true,
-  //   genreDelete: true,
-  //   advancePhase: true,
-  //   pointOfSaleRead: true,
-  //   pointOfSaleCreate: true,
-  //   pointOfSaleDelete: true,
-  //   pointOfSaleEdit: true,
-  //   advancePhase: true,
-  //   eventRead: true,
-  //   eventCreate: true,
-  //   eventDelete: true,
-  //   eventEdit: true,
-  //   saleRead: true,
-  //   saleCreate: true,
-  //   saleEdit: true,
-  //   saleDelete: true
-  // });ng();
-  // 
+  // /if (rolesExists.length > 0) return;
+  await deleteEverything()
+  const  superAdminRole = await createRole({
+    code: "superAdmin",
+    name: "Super Administrador",
+    isBaseRole: true,
+    readingRead: true,
+    readingCreate: true,
+    readingEdit: true,
+    readingDelete: true,
+    bookRead: true,
+    bookCreate: true,
+    bookEdit: true,
+    bookDelete: true,
+    phaseRead: true,
+    phaseCreate: true,
+    phaseEdit: true,
+    phaseDelete: true,
+    userRead: true,
+    userCreate: true,
+    userEdit: true,
+    userDelete: true,
+    eventRead: true,
+    eventCreate: true,
+    eventEdit: true,
+    eventDelete: true,
+    reportsRead: true,
+    reportsCreate: true,
+    reportsEdit: true,
+    reportsDelete: true,
+    roleRead: true,
+    roleCreate: true,
+    roleEdit: true,
+    roleDelete: true,
+    genreRead: true,
+    genreCreate: true,
+    genreEdit: true,
+    genreDelete: true,
+    advancePhase: true,
+    pointOfSaleRead: true,
+    pointOfSaleCreate: true,
+    pointOfSaleDelete: true,
+    pointOfSaleEdit: true,
+    advancePhase: true,
+    eventRead: true,
+    eventCreate: true,
+    eventDelete: true,
+    eventEdit: true,
+    saleRead: true,
+    saleCreate: true,
+    saleEdit: true,
+    saleDelete: true
+  });
+  
   console.log("Role 1 created successfully");
   const admin1 = await createAdmin(
     {
@@ -241,7 +242,7 @@ export async function createEverything() {
       phone: "8116690319",
       nationality: "México"
     },
-    rolesExists[0]._id
+    superAdminRole._id
   );
   console.log("Admin 1 created successfully");
   const admin2 = await createAdmin(
@@ -253,7 +254,7 @@ export async function createEverything() {
       phone: "8116690318",
       nationality: "México"
     },
-    rolesExists[0]._id
+    superAdminRole._id
   );
   console.log("Admin 2 created successfully");
   const genres = await fillGenres();
