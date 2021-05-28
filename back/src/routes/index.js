@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { addWriterRoutes } from "./writer.route";
+import { addInventoryRoutes } from "./inventory.route";
+import { addProductRoutes } from "./product.route";
 import { addAdminRoutes } from "./admin.route";
 import { addReaderRoutes } from "./reader.route";
 import { addRoleRoutes } from "./role.route";
@@ -8,6 +10,8 @@ import { addSuggestionRoutes } from "./suggestion.route";
 import { addGenreRoutes } from "./genre.route";
 import { addPointOfSaleRoutes } from "./pointOfsale.route";
 import { addEventRoutes } from "./event.route";
+import { addSaleRoutes } from "./sale.route";
+import { addBenchmarkRoutes } from "./benchamarks.route";
 import {
   authUser,
   getAllGenres,
@@ -35,6 +39,9 @@ export const createRoutes = () => {
   addGenreRoutes(router);
   addPointOfSaleRoutes(router);
   addEventRoutes(router);
-
+  addSaleRoutes(router);
+  addInventoryRoutes(router);
+  addProductRoutes(router);
+  addBenchmarkRoutes(router)
   return router;
 };

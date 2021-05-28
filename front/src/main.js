@@ -6,6 +6,7 @@ import vuetify from "@/plugins/vuetify";
 import vueCookies from "vue-cookies";
 import AsyncComputed from "vue-async-computed";
 import axios from "axios";
+import moment from "moment";
 import { cleanAuthCookies } from "./utils/cookies";
 
 Vue.config.productionTip = false;
@@ -33,6 +34,8 @@ axios.interceptors.response.use(
     return error;
   }
 );
+
+Vue.prototype.moment = moment
 
 new Vue({
   vuetify,

@@ -13,7 +13,9 @@ const config = Object.freeze({
   EMAIL_PORT: process.env.EMAIL_PORT,
   EMAIL_USER: process.env.EMAIL_USER,
   EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
-  AWS_BUCKET: process.env.AWS_BUCKET
+  AWS_BUCKET: process.env.AWS_BUCKET || 'silmaprod',
+  AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+  AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY
 });
 
 export default config;

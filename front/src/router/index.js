@@ -4,6 +4,7 @@ import RegisterReader from "@/views/reader/ReaderRegister.vue";
 import RegisterWriter from "@/views/writer/WriterRegister.vue";
 import LogIn from "@/views/login/LogIn.vue";
 import Dashboard from "@/views/dashboards/Dashboard.vue";
+import Inventory from "@/views/inventory/Inventory.vue";
 import PageNotFound from "@/views/PageNotFound.vue";
 import Users from "@/views/admins/Users.vue";
 import RoleSet from "@/views/admins/RoleSet.vue";
@@ -19,8 +20,18 @@ import Feedback from "@/views/admins/Feedbacks.vue";
 import { cleanAuthCookies } from "@/utils/cookies";
 import PointOfSaleList from "@/views/admins/PointOfSaleList.vue";
 import PointOfSaleForm from "@/views/admins/PointOfSaleForm.vue";
+import Inventories from "@/views/admins/Inventories.vue";
+import SalesList from "@/views/admins/SalesList.vue";
+import SalesForm from "@/views/admins/SalesForm.vue";
 import EventForm from "@/views/admins/EventForm.vue";
 import EventList from "@/views/admins/EventList.vue";
+import Reports from "@/views/admins/Reports.vue";
+import MyBooks from "@/views/writer/MyBooks.vue";
+import ReadBooks from "@/views/reader/ReadBooks.vue";
+import SalesReports from "@/views/admins/SalesReports.vue";
+import TimesPhase from "@/views/admins/TimesPhase.vue";
+import MySales from "@/views/writer/MySales.vue";
+
 
 Vue.use(VueRouter);
 // NOTE: Use 'withAccess' for pages that can only be accessed by certain users.
@@ -286,6 +297,124 @@ const routes = [
       requiresAuth: true,
       withAccess: ["admin"],
       permission: "eventEdit"
+    },
+    props: { viewMode: false }
+  },
+  {
+    path: "/inventario/:id",
+    name: "Inventario",
+    component: Inventory,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["writer", "admin"]
+    }
+  },
+  {
+    path: "/inventarios",
+    name: "Inventarios",
+    component: Inventories,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"]
+    }
+  },
+  {
+    path: "/tiempos",
+    name: "Tiempos",
+    component: TimesPhase,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+    },
+  },
+  {
+    path: "/reports",
+    name: "Reports",
+    component: Reports,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+      permission: "reportsRead"
+    },
+    props: { viewMode: true }
+  },
+  {
+    path: "/salesReports",
+    name: "SalesReports",
+    component: SalesReports,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+      permission: "saleRead"
+    }
+  },
+  {
+    path: "/myBooks",
+    name: "MyBooks",
+    component: MyBooks,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["writer"],
+    }
+  },
+  {
+    path: "/mySales",
+    name: "MySales",
+    component: MySales,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["writer"],
+    }
+  },
+  {
+    path: "/readBooks",
+    name: "ReadBooks",
+    component: ReadBooks,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["reader"],
+    }
+  },
+  {
+    path: "/sales",
+    name: "Sales",
+    component: SalesList,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+      permission: "saleRead"
+    }
+  },
+  {
+    path: "/sales/create",
+    name: "SalesCreate",
+    component: SalesForm,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+      permission: "saleCreate"
+    },
+    props: { viewMode: false }
+  },
+  {
+    path: "/sales/view/:id",
+    name: "salesFormView",
+    component: SalesForm,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+      permission: "saleRead"
+    },
+    props: { viewMode: true }
+  },
+  {
+    path: "/sales/edit/:id",
+    name: "salesFormEdit",
+    component: SalesForm,
+    meta: {
+      requiresAuth: true,
+      withAccess: ["admin"],
+      permission: "saleEdit"
     },
     props: { viewMode: false }
   },

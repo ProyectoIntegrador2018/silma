@@ -188,7 +188,11 @@ export default {
           route: "/genres",
           hasPermission: hasPermission.bind(this)("genreRead")
         },
-        { title: "Usuarios", route: "/Usuarios", hasPermission: hasPermission.bind(this)("userRead") },
+        {
+          title: "Usuarios",
+          route: "/Usuarios",
+          hasPermission: hasPermission.bind(this)("userRead")
+        },
         {
           title: "Roles",
           route: "/roleList",
@@ -198,6 +202,31 @@ export default {
           title: "Puntos de Venta",
           route: "/pointOfSale",
           hasPermission: hasPermission.bind(this)("pointOfSaleRead")
+        },
+        {
+          title: "Inventarios",
+          route: "/inventarios",
+          hasPermission: hasPermission.bind(this)("inventoriesRead")
+        },
+        {
+          title: "Reportes",
+          route: "/reports",
+          hasPermission: hasPermission.bind(this)("reportsRead")
+        },
+        {
+          title: "Reportes de Ventas",
+          route: "/salesReports",
+          hasPermission: hasPermission.bind(this)("saleRead")
+        },
+        {
+          title: "Ventas",
+          route: "/sales",
+          hasPermission: hasPermission.bind(this)("saleRead")
+        },
+        {
+          title: "Tiempos en Fase",
+          route: "/tiempos",
+          hasPermission: hasPermission.bind(this)("reportsRead")
         },
         {
           title: "Eventos",
@@ -229,6 +258,7 @@ export default {
         });
         book.genres = genreNames;
       });
+      console.log(data)
       this.dataTexts = data;
     },
     seeSuggestions(item) {

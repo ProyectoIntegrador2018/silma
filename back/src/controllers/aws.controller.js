@@ -32,3 +32,18 @@ export const uploadDocument = async (id, data) => {
     }
   });
 };
+
+
+//Funcion que obtiene una imagen de AWS S3
+export const getImage = async (id) => {
+  const params = { Bucket: config.AWS_BUCKET + "/Images", Key: id + ".png" };
+  var s3 = new AWS.S3({credentials:{secretAccessKey: config.AWS_SECRET_ACCESS_KEY, accessKeyId: config.AWS_ACCESS_KEY_ID},});
+  return new Promise((resolve, reject) => {
+    s3.getObject(params, function(err, data) {
+      if (err) {
+        reject(err);
+      }
+      resolve(data);
+    });
+  });
+};

@@ -6,7 +6,9 @@ Silma Web is a platform that facilitates the process for the acceptance of texts
 
 * [Client Information](#Client-Information)
 * [Enviornment URLS](#Enviornment-URLS)
-* [Antlers](#antlers)
+* [Antlers](#Antlers)
+* [Zelda Labs](#Zelda-Labs)
+* [Mongod](#Mongod)
 * [Technologies](#Technologies)
 * [Management tools](#management-tools)
 * [Setup the project](#setup-the-project)
@@ -26,7 +28,8 @@ Silma Web is a platform that facilitates the process for the acceptance of texts
 * **Production** - [Silma Heroku App](https://silma.herokuapp.com/)
 
 
-### Antlers (Febrero - Junio 2020)
+### Antlers 
+#### (Febrero - Junio 2020)
 
 | Name           | Email                         | Role                    | 
 | -------------- | ----------------------------- | ------------------------|
@@ -36,13 +39,25 @@ Silma Web is a platform that facilitates the process for the acceptance of texts
 | Alfredo Ávila  | a00818666@itesm.mx            | Product Owner Proxy     |
 
 
-### Zelda Labs (Agosto - Diciembre 2020)
+### Zelda Labs
+#### (Agosto - Diciembre 2020)
 
 | Name             | Email                          | Role                                 | 
 | ---------------- | ------------------------------ | -------------------------------------|
 | Jorge Iribe      | A00820365@itesm.mx             | Scrum Master                         |
 | Francisco Castro | a01281649@itesm.mx             | Product Owner Proxy                  |
-| Renato Sánche    | renatosancheznevarez@gmail.com | Admin. de Configuración y deProyecto |
+| Renato Sánchez    | renatosancheznevarez@gmail.com | Admin. de Configuración y deProyecto |
+
+### Mongod 
+#### (Febrero - Junio 2021)
+
+| Name           | Email                         | Role                    | 
+| -------------- | ----------------------------- | ------------------------|
+| Héctor León    | a01251806@itesm.mx            | Scrum Master            |
+| Luis Bravo     | a01282014@itesm.mx            | Admin. de Proyecto      |
+| Jesús Ángeles  | a01730938@itesm.mx            | Admin. de Configuración |
+| Ulises Serrano | a01233000@itesm.mx            | Product Owner Proxy     |
+
 
 
 ### Technologies
@@ -125,14 +140,8 @@ This will create 2 admins, 2 readers, 2 writers, 2 texts and suggestions.
 
 ### Restoring the database
 
-Intialize Mongo DB on a terminal and type:
+- Make sure MongoDB is running in Replica Set mode
+- Drop the database
+- Restart the server. 
 
-`use mongodb://localhost/silma`
-
-Drop the following collections:
-```
- db.users.drop()
- db.admins.drop()
- db.writers.drop()
- db.readers.drop()
-```
+The server will automatically run the datainit and fill the DB with the mock data.

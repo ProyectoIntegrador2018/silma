@@ -9,7 +9,7 @@ import { UserModel } from "@/models/user.model";
 // Response with all texts with their genres.
 export const getAllTexts = (request, response) => {
   send(response, async () => {
-    const readers = await TextModel.find().populate("genres");
+    const readers = await TextModel.find().populate("genres").populate("writer");
     return readers;
   });
 };
@@ -82,7 +82,7 @@ export const getTextsOfWriter = (request, response) => {
     const { writer } = request.params;
     const writerText = await WriterModel.findOne({user: writer});
     const writerID = writerText._id;
-    const texts = await TextModel.find({writer: writerID});
+    const texts = await TextModel.find({writer: writerID}).populate("genres").populate("writer");
     return texts;
   });
 };
