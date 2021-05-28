@@ -385,59 +385,59 @@ function createEverything() {
 function _createEverything() {
   _createEverything = _asyncToGenerator(function* () {
     var rolesExists = yield _role.default.find(); ///if (rolesExists.length > 0) return;
+    // await deleteEverythiconst superAdminRole = await createRole({
+    //   code: "superAdmin",
+    //   name: "Super Administrador",
+    //   isBaseRole: true,
+    //   readingRead: true,
+    //   readingCreate: true,
+    //   readingEdit: true,
+    //   readingDelete: true,
+    //   bookRead: true,
+    //   bookCreate: true,
+    //   bookEdit: true,
+    //   bookDelete: true,
+    //   phaseRead: true,
+    //   phaseCreate: true,
+    //   phaseEdit: true,
+    //   phaseDelete: true,
+    //   userRead: true,
+    //   userCreate: true,
+    //   userEdit: true,
+    //   userDelete: true,
+    //   eventRead: true,
+    //   eventCreate: true,
+    //   eventEdit: true,
+    //   eventDelete: true,
+    //   reportsRead: true,
+    //   reportsCreate: true,
+    //   reportsEdit: true,
+    //   reportsDelete: true,
+    //   roleRead: true,
+    //   roleCreate: true,
+    //   roleEdit: true,
+    //   roleDelete: true,
+    //   genreRead: true,
+    //   genreCreate: true,
+    //   genreEdit: true,
+    //   genreDelete: true,
+    //   advancePhase: true,
+    //   pointOfSaleRead: true,
+    //   pointOfSaleCreate: true,
+    //   pointOfSaleDelete: true,
+    //   pointOfSaleEdit: true,
+    //   advancePhase: true,
+    //   eventRead: true,
+    //   eventCreate: true,
+    //   eventDelete: true,
+    //   eventEdit: true,
+    //   saleRead: true,
+    //   saleCreate: true,
+    //   saleEdit: true,
+    //   saleDelete: true
+    // });ng();
+    // 
 
-    yield deleteEverything();
-    var superAdminRole = yield createRole({
-      code: "superAdmin",
-      name: "Super Administrador",
-      isBaseRole: true,
-      readingRead: true,
-      readingCreate: true,
-      readingEdit: true,
-      readingDelete: true,
-      bookRead: true,
-      bookCreate: true,
-      bookEdit: true,
-      bookDelete: true,
-      phaseRead: true,
-      phaseCreate: true,
-      phaseEdit: true,
-      phaseDelete: true,
-      userRead: true,
-      userCreate: true,
-      userEdit: true,
-      userDelete: true,
-      eventRead: true,
-      eventCreate: true,
-      eventEdit: true,
-      eventDelete: true,
-      reportsRead: true,
-      reportsCreate: true,
-      reportsEdit: true,
-      reportsDelete: true,
-      roleRead: true,
-      roleCreate: true,
-      roleEdit: true,
-      roleDelete: true,
-      genreRead: true,
-      genreCreate: true,
-      genreEdit: true,
-      genreDelete: true,
-      advancePhase: true,
-      pointOfSaleRead: true,
-      pointOfSaleCreate: true,
-      pointOfSaleDelete: true,
-      pointOfSaleEdit: true,
-      advancePhase: true,
-      eventRead: true,
-      eventCreate: true,
-      eventDelete: true,
-      eventEdit: true,
-      saleRead: true,
-      saleCreate: true,
-      saleEdit: true,
-      saleDelete: true
-    });
     console.log("Role 1 created successfully");
     var admin1 = yield createAdmin({
       name: "Admin 1",
@@ -446,7 +446,7 @@ function _createEverything() {
       birthdate: "12/12/2000",
       phone: "8116690319",
       nationality: "México"
-    }, superAdminRole._id);
+    }, rolesExists[0]._id);
     console.log("Admin 1 created successfully");
     var admin2 = yield createAdmin({
       name: "Admin 2",
@@ -455,7 +455,7 @@ function _createEverything() {
       birthdate: "12/12/1996",
       phone: "8116690318",
       nationality: "México"
-    }, superAdminRole._id);
+    }, rolesExists[0]._id);
     console.log("Admin 2 created successfully");
     var genres = yield fillGenres();
     var subgenres = genres.map(genre => genre.subgenres[0]._id);
@@ -519,14 +519,14 @@ function _createEverything() {
       numberOfPages: 120,
       numberOfChapters: 50,
       datesPerPhase: {
-        2: new Date("2021-05-19T16:00:00Z"),
-        3: new Date("2021-05-20T20:00:00Z"),
-        4: new Date("2021-05-21T12:00:00Z"),
-        5: new Date("2021-05-22T15:00:00Z"),
-        6: new Date("2021-05-24T10:00:00Z"),
-        7: new Date("2021-05-25T07:00:00Z"),
-        8: new Date("2021-05-26T09:00:00Z"),
-        9: new Date("2021-05-27T14:00:00Z")
+        2: new Date("2021-05-29T16:00:00Z"),
+        3: new Date("2021-05-30T20:00:00Z"),
+        4: new Date("2021-05-31T12:00:00Z"),
+        5: new Date("2021-06-02T15:00:00Z"),
+        6: new Date("2021-06-04T10:00:00Z"),
+        7: new Date("2021-06-05T07:00:00Z"),
+        8: new Date("2021-06-06T09:00:00Z"),
+        9: new Date("2021-06-07T14:00:00Z")
       }
     });
     console.log("Text 1 created successfully");
@@ -540,14 +540,14 @@ function _createEverything() {
       numberOfPages: 120,
       numberOfChapters: 30,
       datesPerPhase: {
-        2: new Date("2021-05-19T16:00:00Z"),
-        3: new Date("2021-05-19T23:00:00Z"),
-        4: new Date("2021-05-20T12:00:00Z"),
-        5: new Date("2021-05-25T11:00:00Z"),
-        6: new Date("2021-05-27T07:00:00Z"),
-        7: new Date("2021-05-27T20:00:00Z"),
-        8: new Date("2021-05-28T11:00:00Z"),
-        9: new Date("2021-05-29T13:00:00Z")
+        2: new Date("2021-05-29T16:00:00Z"),
+        3: new Date("2021-05-29T23:00:00Z"),
+        4: new Date("2021-05-30T12:00:00Z"),
+        5: new Date("2021-06-02T11:00:00Z"),
+        6: new Date("2021-06-07T07:00:00Z"),
+        7: new Date("2021-06-07T20:00:00Z"),
+        8: new Date("2021-06-08T11:00:00Z"),
+        9: new Date("2021-06-09T13:00:00Z")
       }
     });
     console.log("Text 2 created successfully");
@@ -573,14 +573,14 @@ function _createEverything() {
       numberOfPages: 120,
       numberOfChapters: 30,
       datesPerPhase: {
-        2: new Date("2021-05-20T12:00:00Z"),
-        3: new Date("2021-05-20T18:00:00Z"),
-        4: new Date("2021-05-21T18:00:00Z"),
-        5: new Date("2021-05-22T23:00:00Z"),
-        6: new Date("2021-05-25T10:00:00Z"),
-        7: new Date("2021-05-26T01:00:00Z"),
-        8: new Date("2021-05-26T12:00:00Z"),
-        9: new Date("2021-05-27T11:00:00Z")
+        2: new Date("2021-05-29T12:00:00Z"),
+        3: new Date("2021-05-29T18:00:00Z"),
+        4: new Date("2021-05-31T18:00:00Z"),
+        5: new Date("2021-06-04T23:00:00Z"),
+        6: new Date("2021-06-05T10:00:00Z"),
+        7: new Date("2021-06-06T01:00:00Z"),
+        8: new Date("2021-06-06T12:00:00Z"),
+        9: new Date("2021-06-07T11:00:00Z")
       }
     });
     console.log("Text 4 created successfully");
