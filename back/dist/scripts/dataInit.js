@@ -457,7 +457,14 @@ function _createEverything() {
       nationality: "México"
     }, rolesExists[0]._id);
     console.log("Admin 2 created successfully");
-    var genres = yield fillGenres();
+    var genres = yield _genre.GenreModel.aggregate([{
+      $lookup: {
+        from: "subgenres",
+        localField: "_id",
+        foreignField: "genre",
+        as: 'subgenres'
+      }
+    }]);
     var subgenres = genres.map(genre => genre.subgenres[0]._id);
     console.log("Genres created successfully");
     var genreIds = subgenres.splice(0, 3).map(x => x._id);
