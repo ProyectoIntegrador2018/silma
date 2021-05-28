@@ -46,7 +46,7 @@ const db = mongoose.connection;
 if (!db) console.log("Error connecting db");
 else console.log("Db connected successfully");
 
-if (config.ENV !== "production")
+if (config.ENV == "production")
   createEverything().catch((err) => console.error(err));
 else if (config.ENV === "production") runProdDataInit();
 
