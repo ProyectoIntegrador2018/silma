@@ -333,9 +333,25 @@ export const phases = [
     label: "Maquetado",
     description: "Se trabaja en los interiores del libro."
   },
-  {
-    value: 9,
-    label: "Impresion",
-    description: "Se manda a imprimir un primer tiraje."
-  }
 ];
+
+export const chartLabels = [
+  "Enviar Texto",
+  "Lectura Editorial",
+  "Entrevista con el autor",
+  "Tallereo",
+  "Correcciones",
+  "Portada",
+  "Maquetado"
+]
+
+export const chartColors = [
+  "#003f5c",
+  "#2f4b7c",
+  "#665191",
+  "#a05195",
+  "#d45087",
+  "#f95d6a",
+  "#ff7c43",
+  "#ffa600"
+]

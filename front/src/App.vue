@@ -5,7 +5,7 @@
       class="global-loading"
       indeterminate
     ></v-progress-linear>
-    <v-toolbar v-if="userId" color="blue darken-3" dark max-height="65">
+    <v-toolbar v-if="userId" color="blue darken-3" dark max-height="65" >
       <!-- Home button -->
       <v-btn icon @click="navigate()">
         <v-icon>{{
@@ -13,20 +13,30 @@
         }}</v-icon>
       </v-btn>
       <!-- User name -->
-      <v-toolbar-title style="width: 300px" class="ml-0 pl-4">
+      <v-toolbar-items class="d-none d-sm-block" v-if="role == 'writer'">
+        <v-btn 
+        text
+        @click="goTo('/inventario/'+userId)">Inventario </v-btn>
+
+      </v-toolbar-items>
+      <v-toolbar-items class="d-sm-none" v-if="role == 'writer'">
+        <v-btn 
+        text
+        @click="goTo('/inventario/'+userId)">Inv.. </v-btn>
+      </v-toolbar-items>
+      <v-spacer />
+      <v-toolbar-title style="margin-right: 16px;">
         <span class="hidden-sm-and-down">{{ this.name }}</span>
       </v-toolbar-title>
-      <v-spacer />
       <typeOfUserSelection />
-      <!-- Log out -->
       <v-btn
-        outlined
-        small
-        text
-        @click="logOut()"
-        style="margin-left: 16px; height: 48px;"
-        >Cerrar Sesión</v-btn
-      >
+      outlined
+      small
+      text
+      @click="logOut()"
+      style="margin-left: 0.5em; height: 48px; width: auto; word-wrap: break-word;"
+      >Cerrar Sesión</v-btn>
+      <!-- Log out -->
     </v-toolbar>
     <div class="main-container">
       <router-view />
@@ -94,6 +104,9 @@ export default {
     snackbar(message) {
       this.snackbarMessage = message;
       this.showSnackbar = true;
+    },
+    goTo(link){
+      this.$router.push(link)
     }
   },
   mounted() {
@@ -143,5 +156,9 @@ export default {
 
 .center-td {
   text-align: center;
+}
+
+.toolbarItem{
+  margin: 0 auto;
 }
 </style>

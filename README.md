@@ -8,6 +8,7 @@ Silma Web is a platform that facilitates the process for the acceptance of texts
 * [Enviornment URLS](#Enviornment-URLS)
 * [Antlers](#Antlers)
 * [Zelda Labs](#Zelda-Labs)
+* [Mongod](#Mongod)
 * [Technologies](#Technologies)
 * [Management tools](#management-tools)
 * [Setup the project](#setup-the-project)
@@ -46,6 +47,17 @@ Silma Web is a platform that facilitates the process for the acceptance of texts
 | Jorge Iribe      | A00820365@itesm.mx             | Scrum Master                         |
 | Francisco Castro | a01281649@itesm.mx             | Product Owner Proxy                  |
 | Renato Sánchez    | renatosancheznevarez@gmail.com | Admin. de Configuración y deProyecto |
+
+### Mongod 
+#### (Febrero - Junio 2021)
+
+| Name           | Email                         | Role                    | 
+| -------------- | ----------------------------- | ------------------------|
+| Héctor León    | a01251806@itesm.mx            | Scrum Master            |
+| Luis Bravo     | a01282014@itesm.mx            | Admin. de Proyecto      |
+| Jesús Ángeles  | a01730938@itesm.mx            | Admin. de Configuración |
+| Ulises Serrano | a01233000@itesm.mx            | Product Owner Proxy     |
+
 
 
 ### Technologies

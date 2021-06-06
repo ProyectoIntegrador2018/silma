@@ -33,6 +33,33 @@
     <v-container v-else>
       <h2>No tienes lecturas ni sugerencias por el momento</h2>
     </v-container>
+
+
+    <!-- Reportes del lector -->
+    <div class="my-2" align="right">
+      <div class="btns-wrapper">
+        <v-menu offset-y open-on-hover>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn color="primary" v-bind="attrs" v-on="on">
+              <v-icon left>mdi-account-cog</v-icon>
+              MIS REPORTES
+            </v-btn>
+          </template>
+          <v-list>
+            <template v-for="(item, index) in readerTask">
+              <v-list-item
+                v-if="true"
+                :key="index"
+                :href="`${item.route}`"
+              >
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              </v-list-item>
+            </template>
+          </v-list>
+        </v-menu>
+      </div>
+    </div>
+
     <h2>Tus Historial de lecturas</h2>
     <br />
     <Table :headers="headers" :items="data"> </Table>
@@ -71,7 +98,13 @@ export default {
       status: true,
       errorMessage: "",
       errorServerRegister,
-      token: ""
+      token: "",
+      readerTask: [
+        {
+          title: "Mis lecturas",
+          route: "/readBooks"
+          //hasPermission: true
+        }]
     };
   },
   async created() {
@@ -142,7 +175,7 @@ export default {
       var text;
       var data = [];
       for (i = 0; i < this.history.length; i++) {
-        text = await getRequest("/texts/" + this.history[i].text, this.token);
+        text = await getRequest("/texts/" + this.history[i].text._id, this.token);
         data.push({
           title: text.title,
           sentDate: moment(new Date(this.history[i].sentDate)).format(

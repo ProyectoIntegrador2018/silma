@@ -5,10 +5,15 @@ import { WriterModel } from "../models/writer.model";
 import { ReaderModel } from "../models/reader.model";
 import { SuggestionModel } from "../models/suggestion.model";
 import { GenreModel } from "../models/genre.model";
+import { SubgenreModel } from "../models/subgenre.model";
 import * as GenreLogic from "@/logics/genre.logic";
 import RoleModel from "../models/role.model";
+import { ProductModel } from "../models/product.model";
+import { InventoryModel } from "../models/inventory.model";
+import { SaleModel } from "../models/sale.model";
+import { EventModel } from "../models/event.model";
 import bcrypt from "bcrypt";
-
+ 
 async function createUser(user, role) {
   const userFound = await UserModel.findOne({ email: user.email }).select([
     "+password"
@@ -96,6 +101,26 @@ async function createText(text) {
   return textModel;
 }
 
+async function createProduct(product) {
+  const productModel = await ProductModel.create(product);
+  return productModel;
+}
+
+async function createInventory(inventory) {
+  const inventoryModel = await InventoryModel.create(inventory);
+  return inventoryModel;
+}
+
+async function createEvent(event) {
+  const eventModel = await EventModel.create(event);
+  return eventModel;
+}
+
+async function createSale(sale) {
+  const saleModel = await SaleModel.create(sale);
+  return saleModel;
+}
+
 async function deleteEverything() {
   const promiseOne = UserModel.deleteMany({});
   const promiseTwo = AdminModel.deleteMany({});
@@ -105,6 +130,11 @@ async function deleteEverything() {
   const promiseSix = SuggestionModel.deleteMany({});
   const promiseSeven = GenreModel.deleteMany({});
   const promiseEight = RoleModel.deleteMany({});
+  const promiseNine = SubgenreModel.deleteMany({});
+  const promiseTen = ProductModel.deleteMany({});
+  const promiseEleven = InventoryModel.deleteMany({});
+  const promiseTwelve = SaleModel.deleteMany({});
+  const promiseThirteen = EventModel.deleteMany({});
   await Promise.all([
     promiseOne,
     promiseTwo,
@@ -113,7 +143,12 @@ async function deleteEverything() {
     promiseFive,
     promiseSix,
     promiseSeven,
-    promiseEight
+    promiseEight,
+    promiseNine,
+    promiseTen,
+    promiseEleven,
+    promiseTwelve,
+    promiseThirteen
   ]);
 }
 
@@ -129,9 +164,21 @@ async function createSuggestion(reader, text) {
   return await SuggestionModel.create(suggestion);
 }
 
+async function createSuggestionCompleted(reader, text) {
+  const suggestion = {
+    reader,
+    text,
+    sentDate: new Date(),
+    suggestionStatus: "Completed",
+    score: 10,
+    readingChapters: 5
+  };
+  return await SuggestionModel.create(suggestion);
+}
+
 export async function createEverything() {
   const rolesExists = await RoleModel.find();
-  if (rolesExists.length > 0) return;
+  ///if (rolesExists.length > 0) return;
   await deleteEverything();
   const superAdminRole = await createRole({
     code: "superAdmin",
@@ -157,10 +204,10 @@ export async function createEverything() {
     eventCreate: true,
     eventEdit: true,
     eventDelete: true,
-    reportRead: true,
-    reportCreate: true,
-    reportEdit: true,
-    reportDelete: true,
+    reportsRead: true,
+    reportsCreate: true,
+    reportsEdit: true,
+    reportsDelete: true,
     roleRead: true,
     roleCreate: true,
     roleEdit: true,
@@ -178,7 +225,11 @@ export async function createEverything() {
     eventRead: true,
     eventCreate: true,
     eventDelete: true,
-    eventEdit: true
+    eventEdit: true,
+    saleRead: true,
+    saleCreate: true,
+    saleEdit: true,
+    saleDelete: true
   });
   console.log("Role 1 created successfully");
   const admin1 = await createAdmin(
@@ -188,7 +239,7 @@ export async function createEverything() {
       email: "admin1@gmail.com",
       birthdate: "12/12/2000",
       phone: "8116690319",
-      nationality: "Mexico"
+      nationality: "México"
     },
     superAdminRole._id
   );
@@ -200,7 +251,7 @@ export async function createEverything() {
       email: "admin2@gmail.com",
       birthdate: "12/12/1996",
       phone: "8116690318",
-      nationality: "Mexico"
+      nationality: "México"
     },
     superAdminRole._id
   );
@@ -215,7 +266,7 @@ export async function createEverything() {
     email: "reader1@gmail.com",
     birthdate: "12/12/2000",
     phone: "8116690319",
-    nationality: "Mexico",
+    nationality: "México",
     readingProficiency: "4 to 6",
     facebookLink: "https://www.facebook.com/reader1",
     readFrom: "12-01-2019",
@@ -229,7 +280,7 @@ export async function createEverything() {
     email: "reader2@gmail.com",
     birthdate: "12/12/1996",
     phone: "8116690319",
-    nationality: "Mexico",
+    nationality: "México",
     readingProficiency: "4 to 6",
     facebookLink: "https://www.facebook.com/reader2",
     readFrom: "12-01-2019",
@@ -243,7 +294,7 @@ export async function createEverything() {
     email: "writer1@gmail.com",
     birthdate: "12/12/2000",
     phone: "8116690319",
-    nationality: "Mexico",
+    nationality: "México",
     pseudonym: "writer1"
   });
   console.log("Writer 1 created successfully");
@@ -253,7 +304,7 @@ export async function createEverything() {
     email: "writer2@gmail.com",
     birthdate: "12/12/1996",
     phone: "8116690319",
-    nationality: "Mexico",
+    nationality: "México",
     pseudonym: "writer2"
   });
   console.log("Writer 2 created successfully");
@@ -265,7 +316,17 @@ export async function createEverything() {
     registerNumber: "123asd",
     description: "asd zxc qwe asd zxc asd zxc qwe asd zxc",
     numberOfPages: 120,
-    numberOfChapters: 50
+    numberOfChapters: 50,
+    datesPerPhase:{
+      2 :new Date("2021-05-19T16:00:00Z"),
+      3: new Date("2021-05-20T20:00:00Z"),
+      4: new Date("2021-05-21T12:00:00Z"),
+      5: new Date("2021-05-22T15:00:00Z"),
+      6: new Date("2021-05-24T10:00:00Z"),
+      7: new Date("2021-05-25T07:00:00Z"),
+      8: new Date("2021-05-26T09:00:00Z"),
+      9: new Date("2021-05-27T14:00:00Z"),
+    }
   });
   console.log("Text 1 created successfully");
   const text2 = await createText({
@@ -273,17 +334,228 @@ export async function createEverything() {
     genres: genreIds,
     ageRange: "10-12",
     title: "Text B",
-    registerNumber: "123asd",
+    registerNumber: "12345asd",
     description: "asd zxc qwe asd zxc asd zxc qwe asd zxc",
     numberOfPages: 120,
-    numberOfChapters: 30
+    numberOfChapters: 30,
+    datesPerPhase:{
+      2 :new Date("2021-05-19T16:00:00Z"),
+      3: new Date("2021-05-19T23:00:00Z"),
+      4: new Date("2021-05-20T12:00:00Z"),
+      5: new Date("2021-05-25T11:00:00Z"),
+      6: new Date("2021-05-27T07:00:00Z"),
+      7: new Date("2021-05-27T20:00:00Z"),
+      8: new Date("2021-05-28T11:00:00Z"),
+      9: new Date("2021-05-29T13:00:00Z"),
+    }
   });
 
   console.log("Text 2 created successfully");
 
+  const text3 = await createText({
+    writer: writer1._id,
+    genres: genreIds,
+    ageRange: "10-12",
+    title: "Text C",
+    registerNumber: "1234asd",
+    description: "asd zxc qwe asd zxc asd zxc qwe asd zxc",
+    numberOfPages: 120,
+    numberOfChapters: 30,
+    isRejected: true
+  });
+
+  console.log("Text 3 created successfully");
+
+  const text4 = await createText({
+    writer: writer2._id,
+    genres: genreIds,
+    ageRange: "10-12",
+    title: "Text D",
+    registerNumber: "1234asd",
+    description: "asd zxc qwe asd zxc asd zxc qwe asd zxc",
+    numberOfPages: 120,
+    numberOfChapters: 30,
+    datesPerPhase:{
+      2 :new Date("2021-05-20T12:00:00Z"),
+      3: new Date("2021-05-20T18:00:00Z"),
+      4: new Date("2021-05-21T18:00:00Z"),
+      5: new Date("2021-05-22T23:00:00Z"),
+      6: new Date("2021-05-25T10:00:00Z"),
+      7: new Date("2021-05-26T01:00:00Z"),
+      8: new Date("2021-05-26T12:00:00Z"),
+      9: new Date("2021-05-27T11:00:00Z"),
+    }
+  });
+
+  console.log("Text 4 created successfully");
+
+  const text5 = await createText({
+    writer: writer2._id,
+    genres: genreIds,
+    ageRange: "10-12",
+    title: "Text E",
+    registerNumber: "1234asd",
+    description: "asd zxc qwe asd zxc asd zxc qwe asd zxc",
+    numberOfPages: 160,
+    numberOfChapters: 40,
+    isRejected: true
+  });
+
+  console.log("Text 5 created successfully");
+
+  var inventory1 = await createInventory({
+    writer: writer1._id,
+    items: [
+    ],
+  });
+
+  console.log("Inventory 1 created successfully");
+
+  const product1 = await createProduct({
+    name: "Sticker 1",
+    description: "Sticker 1 for Book",
+    price: 123,
+    stock: 10,
+    link: "https://semantic-ui.com/images/wireframe/image.png",
+    category: "Merchandise",
+  
+    inventory: inventory1._id
+  });
+
+  console.log("Product 1 created successfully");
+
+  const product2 = await createProduct({
+    name: "Book 1",
+    description: "Book 1",
+    price: 123,
+    stock: 10,
+    link: "https://semantic-ui.com/images/wireframe/image.png",
+    category: "Book",
+  
+    inventory: inventory1._id
+  });
+
+  console.log("Product 2 created successfully");
+
+  inventory1.items.push(product1)
+  inventory1.items.push(product2)
+  inventory1.save()
+
+  console.log("Inventory 1 updated successfully");
+
+  var inventory2 = await createInventory({
+    writer: writer2._id,
+    items: [
+    ],
+  });
+
+  console.log("Inventory 2 created successfully");
+
+  const product3 = await createProduct({
+    name: "Sticker 2",
+    description: "Sticker 2 for Book",
+    price: 123,
+    stock: 10,
+    link: "https://semantic-ui.com/images/wireframe/image.png",
+    category: "Merchandise",
+  
+    inventory: inventory2._id
+  });
+
+  console.log("Product 3 created successfully");
+
+  const product4 = await createProduct({
+    name: "Book 2",
+    description: "Book 2",
+    price: 123,
+    stock: 10,
+    link: "https://semantic-ui.com/images/wireframe/image.png",
+    category: "Book",
+  
+    inventory: inventory2._id
+  });
+
+  console.log("Product 4 created successfully");
+
+  inventory2.items.push(product3)
+  inventory2.items.push(product4)
+  inventory2.save()
+
+  console.log("Inventory 2 updated successfully");
+
+
+  const event1 = await createEvent({
+    name: "asd",
+    description: "asd",
+    place: "asd",
+    date: "2021-04-28",
+    time:"15:00"
+  });
+  
+  console.log("Event 1 created successfully");
+
+  const sale1 = await createSale({
+    createdBy: admin1._id, 
+    event: event1,
+    items: [
+      {
+        productId: product1,
+        name: "Sticker 1",
+        price: 123,
+        numberOfItems: 1,
+        subtotal: 123
+      },
+      {
+        productId: product2,
+        name: "Book 1",
+        price: 123,
+        numberOfItems: 1,
+        subtotal: 123
+      },
+      {
+        productId: product3,
+        name: "Sticker 2",
+        price: 123,
+        numberOfItems: 1,
+        subtotal: 123
+      }
+    ],
+    total: 369
+  });
+
+  console.log("Sale 1 created successfully");
+
+  const sale2 = await createSale({
+    createdBy: admin1._id, 
+    event: event1,
+    items: [
+      {
+        productId: product2,
+        name: "Book 1",
+        price: 123,
+        numberOfItems: 3,
+        subtotal: 123
+      },
+      {
+        productId: product3,
+        name: "Sticker 2",
+        price: 123,
+        numberOfItems: 5,
+        subtotal: 123
+      }
+    ],
+    total: 984
+  });
+
+  console.log("Sale 2 created successfully");
+
   await Promise.all([
     createSuggestion(reader1._id, text1._id),
-    createSuggestion(reader1._id, text2._id)
+    createSuggestion(reader1._id, text2._id),
+    createSuggestion(reader1._id, text3._id),
+    createSuggestion(reader1._id, text4._id),
+
+    createSuggestionCompleted(reader1._id, text5._id)    
   ]);
 
   console.log("Suggestions created successfully");

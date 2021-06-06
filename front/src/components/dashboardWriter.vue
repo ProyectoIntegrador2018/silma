@@ -20,6 +20,32 @@
     <v-btn color="primary" dark class="mb-2" @click="addText()"
       >Agregar Escrito</v-btn
     >
+
+    <div class="my-2" align="right">
+      <div class="btns-wrapper">
+        <v-menu offset-y open-on-hover>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn color="primary" v-bind="attrs" v-on="on">
+              <v-icon left>mdi-account-cog</v-icon>
+              MIS REPORTES
+            </v-btn>
+          </template>
+          <v-list>
+            <template v-for="(item, index) in writerTask">
+              <v-list-item
+                v-if="true"
+                :key="index"
+                :href="`${item.route}`"
+              >
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              </v-list-item>
+            </template>
+          </v-list>
+        </v-menu>
+      </div>
+    </div>
+
+
     <!-- Tabla de escritos registrados -->
     <Table :headers="headers" :items="data" @textDetails="seeTextDetails">
       <template #phase="{ props }">
@@ -108,6 +134,7 @@
 import Table from "@/components/table.vue";
 import { getRequest } from "@/utils/requests";
 import { phases } from "@/utils/constants.js";
+import { hasPermission } from "../utils/utils";
 
 export default {
   components: {
@@ -158,7 +185,16 @@ export default {
       ],
       dataDialog: null,
       newTextDialog: false,
-      rejectedTexts: []
+      rejectedTexts: [],
+      writerTask: [
+        {
+          title: "Mis Libros",
+          route: "/myBooks"
+        },
+        {
+          title: "Mis Ventas",
+          route: "/mySales"
+        }]
     };
   },
   asyncComputed: {
