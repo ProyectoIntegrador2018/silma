@@ -109,6 +109,7 @@ export default {
       hasPermission,
       dataTexts: [],
       dataWriters: [],
+      dataReaders: [],
       dataPhases: phases,
       tab: null,
       filter: '',
@@ -129,11 +130,6 @@ export default {
           tab: 'Rechazados',
           filter: 'rejected'
         },
-        // WIP
-        // {
-        //   tab: 'Leidos',
-        //   filter: ''
-        // },
         {
           tab: 'Fase',
           filter: 'phase'
@@ -191,7 +187,7 @@ export default {
       headersForAge:[
        {text: "Nombre", value: "name"},
        {text: "Email", value: "email"},
-       {text: "Edad", value: "birthdate"},
+       {text: "Edad", value: "age"},
        {text: "Nacionalidad", value: "nationality"}, 
       ],
       dataAuthorOrReader:[
@@ -207,30 +203,33 @@ export default {
     await this.getTexts();
     await this.getGenres();
     await this.composeAllWriters();
+    await this.composeAllReaders();
     this.updateLoading(false);
     this.isLoading = false;
   },
   methods: {
     changeFilter(newFilter) {
-      console.log(newFilter)
-      if(newFilter=== "writer"){
+      if(newFilter=== "writer") {
         this.filteredDataTexts=this.dataTexts.filter(val => {return val.writer === this.selectedWriter});
       }
-      else if (newFilter=== "author"){
-        this.calculateBirthDate();
-        this.ageDataText=this.dataWriters;
-        console.log(this.dataWriters)
+      else if (newFilter==="author") {
+        this.calculateBirthDate(this.dataWriters);
       }
-      else if(newFilter=="phase"){
+      else if (newFilter==="reader") {
+        this.calculateBirthDate(this.dataReaders);
+      }
+      else if(newFilter=="phase") {
         console.log(this.dataTexts)
         this.filteredDataTexts=this.dataTexts.filter(val => {return val.phase === this.selectedPhase})
       }
       this.filter = newFilter;
     },
-    calculateBirthDate() {
-      this.dataWriters.forEach((writer) => {
-        writer.birthdate= Math.floor((new Date() - new Date(writer.birthdate)) / 1000 /60 /60 /24 /365.25);
-      })
+    calculateBirthDate(dataAuthRead) {
+      var auxData = dataAuthRead;
+      auxData.forEach((user) => {
+        user.age = Math.floor((new Date() - new Date(user.birthdate)) / 1000 /60 /60 /24 /365.25);
+      });
+      this.ageDataText = auxData;
     },
     //Funcion que al inicio obtiene todos los textos en proceso
     async getTexts() {
@@ -281,6 +280,27 @@ export default {
         });
       }
       this.dataWriters = data;
+    },
+    //Funcion que se encarga de formatear los escritores con todos los datos de su modelo usuario y escritor
+    async composeAllReaders() {
+      this.token = this.$cookies.get("token");
+      const writers = await getRequest("readers", this.token);
+      var i;
+      var user;
+      var data = [];
+      for (i = 0; i < writers.length; i++) {
+        user = await getRequest("users/" + writers[i].user._id, this.token);
+        data.push({
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          birthdate: user.birthdate,
+          nationality: user.nationality,
+          pseudonym: writers[i].pseudonym,
+          isPlus: writers[i].isPlus
+        });
+      }
+      this.dataReaders = data;
     }
   }
 };
