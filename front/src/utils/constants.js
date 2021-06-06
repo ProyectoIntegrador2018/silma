@@ -333,11 +333,6 @@ export const phases = [
     label: "Maquetado",
     description: "Se trabaja en los interiores del libro."
   },
-  {
-    value: 9,
-    label: "Impresion",
-    description: "Se manda a imprimir un primer tiraje."
-  }
 ];
 
 export const chartLabels = [

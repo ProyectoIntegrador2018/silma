@@ -1,7 +1,7 @@
 <template>
   <div class="text-center">
     <v-select
-      style="width: 200px"
+      style="width: auto"
       hide-details
       class="my-0"
       :items="shownRoles"
