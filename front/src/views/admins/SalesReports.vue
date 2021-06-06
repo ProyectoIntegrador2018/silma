@@ -1,6 +1,14 @@
 <template>
   <v-container>
     <h1>Reportes de Ventas</h1>
+    <div class="add-btn-container pb-4">
+      <v-btn
+        v-if="hasPermission('saleCreate')"
+        color="primary"
+        @click="() => $router.push('/sales/create')"
+        >Agregar</v-btn
+      >
+    </div>
     <template>
       <v-card>
         <v-tabs
