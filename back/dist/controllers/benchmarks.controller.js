@@ -62,11 +62,6 @@ var initialPhases = {
     min: Number.MAX_VALUE,
     total: 0
   },
-  9: {
-    max: Number.MIN_VALUE,
-    min: Number.MAX_VALUE,
-    total: 0
-  },
   overall: {
     max: Number.MIN_VALUE,
     min: Number.MAX_VALUE,

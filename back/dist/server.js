@@ -52,8 +52,7 @@ _mongoose.default.connect(_config.default.MONGO_URL, {
 var db = _mongoose.default.connection; // Added check for DB connection
 
 if (!db) console.log("Error connecting db");else console.log("Db connected successfully");
-(0, _dataInit.createEverything)().catch(err => console.error(err)); // else if (config.ENV === "production") runProdDataInit();
-// API Routes
+if (_config.default.ENV !== "production") (0, _dataInit.createEverything)().catch(err => console.error(err));else if (_config.default.ENV === "production") (0, _prodDataInit.runProdDataInit)(); // API Routes
 
 var router = (0, _routes.createRoutes)(); // Attach error handlers to Express app
 
