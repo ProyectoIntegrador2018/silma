@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <h1>Ventas</h1>
-    <div class="add-btn-container">
+    <div class="add-btn-container pb-4">
       <v-btn
         v-if="hasPermission('saleCreate')"
         color="primary"
@@ -11,13 +11,6 @@
     </div>
     <div class="table-wrapper">
       <Table :items="sales" :headers="headers">
-        <!-- WIP: Falta formatear correctamente el nombre del evento -->
-        <template v-slot:[`item.event`]="{ item }">
-          {{ item.name }}
-        </template>
-
-        <!-- WIP: Falta formatear los productos que se vendieron en la venta, mostrar sus  -->
-        <!-- subtotales, cant de productos, nombre del producto, etc -->
         <template #actions="{ props }">
           <div class="actions-wrapper">
             <v-btn
@@ -92,8 +85,9 @@ export default {
       sales: [],
       headers: [
         { text: "Evento", value: "event" },
-        // { text: "Productos", value: "items" },
+        { text: "Cantidad", value: "quantity" },
         { text: "Total", value: "total" },
+        { text: "Fecha", value: "date" },
         { text: "Acciones", sortable: false, actions: true, align: "center" }
       ]
     };
@@ -108,7 +102,17 @@ export default {
       try {
         const token = this.$cookies.get("token");
         this.sales = await getRequest("sale/search", {}, token);
-        console.log(this.sales);
+        this.sales.forEach((sale) => {
+          if (sale.event != null) {
+            sale.event = sale.event.name  
+          } else {
+            sale.event = "N/A"
+          }
+          sale.quantity = 0
+          sale.items.forEach((product) => {
+            sale.quantity += product.numberOfItems
+          })
+        })
       } catch (error) {
         console.error(error);
         const message = getErrorMessage(error, Messages.SomethingWentWrong());

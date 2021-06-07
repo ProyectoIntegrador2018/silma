@@ -13,11 +13,16 @@
         }}</v-icon>
       </v-btn>
       <!-- User name -->
-      <v-toolbar-items class="hidden-xs" v-if="role == 'writer'">
+      <v-toolbar-items class="d-none d-sm-block" v-if="role == 'writer'">
         <v-btn 
         text
         @click="goTo('/inventario/'+userId)">Inventario </v-btn>
 
+      </v-toolbar-items>
+      <v-toolbar-items class="d-sm-none" v-if="role == 'writer'">
+        <v-btn 
+        text
+        @click="goTo('/inventario/'+userId)">Inv.. </v-btn>
       </v-toolbar-items>
       <v-spacer />
       <v-toolbar-title style="margin-right: 16px;">
@@ -29,7 +34,7 @@
       small
       text
       @click="logOut()"
-      style="margin-left: 16px; height: 48px;"
+      style="margin-left: 0.5em; height: 48px; width: auto; word-wrap: break-word;"
       >Cerrar Sesión</v-btn>
       <!-- Log out -->
     </v-toolbar>

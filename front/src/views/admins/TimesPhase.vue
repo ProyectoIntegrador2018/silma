@@ -38,7 +38,7 @@
                     <reportsTable :items="dataTimesTable" :headers="headers" :loading="isLoading">
                     </reportsTable>
                 </div>
-                <div class="table-wrapper"  v-if="item.tab == 'Grafica'" style="display: flex; flex-direction: row;">
+                <div class="table-wrapper"  v-if="item.tab == 'Grafica'" style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content:center;">
                   <div v-for="header in headersGraph"  :key="header.text" style="display: flex; flex-direction: column; align-items:center; justify-content:center;"> 
                     <h3>{{header.text}}</h3>
                     <PieChart  :chart-data="dataTimesGraph[header.value]" >
@@ -207,7 +207,7 @@ export default {
       console.log(this.dataTimesGraph)
       Object.values(data).forEach((value, key) =>{
         const parsedBenchmarks = this.parseBenchmarksGraph(value)
-        if(key < 9){
+        if(key < 8){
           Object.keys(value).forEach((attr, ind) =>{ 
             this.dataTimesGraph[attr].datasets[0].data.push(parsedBenchmarks[attr])
           })

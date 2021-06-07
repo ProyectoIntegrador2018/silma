@@ -290,6 +290,10 @@ export default {
     async getById() {
       try {
         this.sale = await getRequest(`sale/${this.id}`, false);
+        this.selectedEvent = this.sale.event;
+        this.items = this.sale.items;
+        this.selectedDate = this.sale.date;
+        this.total = this.sale.total;
       } catch (error) {
         console.error(error);
         const message = getErrorMessage(error, Messages.SomethingWentWrong());
@@ -348,6 +352,13 @@ export default {
       await postRequest("sale", this.sale, false);
     },
     async update() {
+      this.sale = {
+        createdBy: this.$cookies.get("user_id"),
+        event: this.selectedEvent,
+        items: this.items,
+        total: this.total,
+        date: this.selectedDate
+      }
       await patchRequest(`sale/${this.id}`, this.sale, false);
     },
     addItem() {
@@ -361,6 +372,7 @@ export default {
       if (this.items.length > 1) {
         this.items.splice(index, 1);
       }
+      this.calculateTotal();
     },
     calculateTotal() {
       this.total = this.items.map(item => item.subtotal).reduce((prev, next) => prev + next);

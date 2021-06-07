@@ -13,7 +13,7 @@
           <tr v-for="item in props.items" :key="item._id">
             <td v-for="header in displayedHeaders" :key="header.value">
               <div v-if="header.text == 'Fase'">
-                  {{item.phase !== 9 ? faseOptions[item.phase].label : "Total" }}
+                  {{item.phase !== 8 ? faseOptions[item.phase].label : "Total" }}
               </div>
               <div v-if="header.text == 'Acciones'">
                 <div style="margin: 2.5px 2.5px" v-if="item.go">
