@@ -19,7 +19,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "email-templates": "^7.0.5",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-fileupload": "^1.1.7-alpha.3",
     "express-jwt": "^5.3.3",
     "handlebars": "^4.7.6",
